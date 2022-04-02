@@ -29,7 +29,7 @@ POST https://push.learningman.top/{user_id}/send
 ## 构建
 构建前端后，执行
 ```shell
-go build -v github.com/ZNotify/Notify/server
+go build -v github.com/ZNotify/server
 ```
 
 ## 前端
