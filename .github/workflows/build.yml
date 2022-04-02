@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  IMAGE_NAME: notify-api
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Fetch frontend asset
+        run: |
+          wget https://github.com/ZNotify/frontend/releases/download/master/build.zip
+          unzip build.zip
+          rm build.zip
+          mv build static
+
+      - name: Build Server
+        run: go build -v github.com/ZNotify/server
+
+      - name: Bundle
+        run: zip server.zip server users.txt
+
+      - name: Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "master"
+          prerelease: true
+          files: server.zip
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Log into Docker Hub
+        uses: docker/login-action@master
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Log into GitHub Package
+        uses: docker/login-action@master
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@master
+        with:
+          tags: |
+            type=ref,event=branch
+          images: zxilly/${{ env.IMAGE_NAME }},ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
