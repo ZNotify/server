@@ -248,7 +248,15 @@ func main() {
 		// Insert message record
 		db.Create(message)
 
-		context.String(http.StatusOK, fmt.Sprintf("message %s sent to %s.", msgID, userID))
+		//context.String(http.StatusOK, fmt.Sprintf("message %s sent to %s.", msgID, userID))
+		context.SecureJSON(http.StatusOK, gin.H{
+			"id":         msgID,
+			"user_id":    userID,
+			"title":      title,
+			"content":    content,
+			"long":       long,
+			"created_at": message.CreatedAt.Format(time.RFC3339),
+		})
 	})
 
 	router.StaticFS("/fs", http.FS(pureFs))
