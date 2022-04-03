@@ -187,6 +187,9 @@ func main() {
 
 	router.POST("/:user_id/send", func(context *gin.Context) {
 		userID := context.Param("user_id")
+		// string to bool
+		dryRun := context.Request.URL.Query().Has("dry")
+
 		result := isUser(userID, users)
 		if !result {
 			context.String(http.StatusForbidden, "Unauthorized")
@@ -222,6 +225,11 @@ func main() {
 			registrationIDs = append(registrationIDs, tokens[i].RegistrationID)
 		}
 
+		if dryRun {
+			context.String(http.StatusOK, "Dry run")
+			return
+		}
+
 		err := push.SendViaMiPush(httpClient, miPushAuthHeader, message)
 		if err != nil {
 			context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
@@ -235,7 +243,7 @@ func main() {
 		// Insert message record
 		db.Create(message)
 
-		context.String(200, fmt.Sprintf("message %s sent to %s.", msgID, userID))
+		context.String(http.StatusOK, fmt.Sprintf("message %s sent to %s.", msgID, userID))
 	})
 
 	router.StaticFS("/fs", http.FS(pureFs))

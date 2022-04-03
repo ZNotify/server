@@ -18,10 +18,11 @@ server MIPUSH_TOKEN // MiPush 推送的 token
 ```
 POST https://push.learningman.top/{user_id}/send
 
-@path  user_id 用户 ID
-@param title   推送标题
-@param content 推送内容
-@param long    传送到客户端的长内容, 需要点击查看
+@path   user_id  用户 ID
+@param  title    推送标题
+@param  content  推送内容
+@param  long     传送到客户端的长内容, 需要点击查看
+@query  dry      传递此参数时，不会真正发送推送
 ```
 
 `long` 支持 markdown 格式， 支持使用表格扩展。
