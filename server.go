@@ -226,7 +226,12 @@ func main() {
 		}
 
 		if dryRun {
-			context.String(http.StatusOK, "Dry run")
+			ret := gin.H{
+				"title":   title,
+				"content": content,
+				"long":    long,
+			}
+			context.SecureJSON(http.StatusOK, ret)
 			return
 		}
 
