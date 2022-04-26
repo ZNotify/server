@@ -21,7 +21,7 @@ func checkInternetConnection() {
 	_, err := http.Get("https://www.google.com/robots.txt")
 	if err != nil {
 		fmt.Println("No internet connection")
-		fmt.Printf("%s", err)
+		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
 }
