@@ -6,7 +6,7 @@ require (
 	firebase.google.com/go/v4 v4.8.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
-	github.com/glebarez/sqlite v1.4.3
+	github.com/glebarez/sqlite v1.4.4
 	github.com/google/uuid v1.3.0
 	google.golang.org/api v0.75.0
 	gorm.io/gorm v1.23.5
@@ -19,7 +19,7 @@ require (
 	cloud.google.com/go/iam v0.3.0 // indirect
 	cloud.google.com/go/storage v1.22.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/glebarez/go-sqlite v1.16.0 // indirect
+	github.com/glebarez/go-sqlite v1.17.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.1 // indirect
@@ -50,8 +50,8 @@ require (
 	google.golang.org/grpc v1.46.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	modernc.org/libc v1.15.1 // indirect
+	modernc.org/libc v1.16.1 // indirect
 	modernc.org/mathutil v1.4.1 // indirect
-	modernc.org/memory v1.0.7 // indirect
-	modernc.org/sqlite v1.17.0 // indirect
+	modernc.org/memory v1.1.1 // indirect
+	modernc.org/sqlite v1.17.1 // indirect
 )
