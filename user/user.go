@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"bufio"
@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-// read file users.txt to get user list
-func readUsers() []string {
+// ReadUsers read file users.txt to get user list
+func ReadUsers() {
 	file, err := os.Open("users.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -21,7 +21,7 @@ func readUsers() []string {
 		}
 	}(file)
 
-	var users []string
+	users := make([]string, 8)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		users = append(users, scanner.Text())
@@ -31,12 +31,12 @@ func readUsers() []string {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	return users
 }
 
-// judge user if in the user list
-func isUser(user string, users []string) bool {
+var users []string
+
+// IsUser judge user if in the user list
+func IsUser(user string) bool {
 	for _, u := range users {
 		if u == user {
 			return true

@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-type Tokens struct {
+type FCMTokens struct {
 	ID             string
 	UserID         string
 	CreatedAt      time.Time

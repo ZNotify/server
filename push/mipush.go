@@ -3,7 +3,8 @@ package push
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/ZNotify/server/entity"
+	"github.com/ZNotify/server/config"
+	"github.com/ZNotify/server/db/entity"
 	"io"
 	"io/ioutil"
 	"math/big"
@@ -16,7 +17,7 @@ import (
 
 const APIURL = "https://api.xmpush.xiaomi.com/v2/message/user_account"
 
-func SendViaMiPush(client *http.Client, authHeader string, msg *entity.Message) error {
+func SendViaMiPush(msg *entity.Message) error {
 	n, _ := rand.Int(rand.Reader, big.NewInt(1000000))
 	notifyID := n.Int64()
 
@@ -54,10 +55,10 @@ func SendViaMiPush(client *http.Client, authHeader string, msg *entity.Message) 
 		APIURL,
 		strings.NewReader(postData))
 
-	req.Header.Set("Authorization", authHeader)
+	req.Header.Set("Authorization", fmt.Sprintf("key=%s", config.MiPushSecret))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := client.Do(req)
+	resp, err := config.MiPushClient.Do(req)
 
 	if err != nil {
 		return err
