@@ -10,6 +10,7 @@ import (
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/joho/godotenv/autoload"
 	"io/fs"
 	"net/http"
 )
@@ -20,10 +21,15 @@ var f embed.FS
 func main() {
 	var err error
 
+	go utils.CheckInternetConnection()
+
 	config.CheckMiPushSecret()
 	config.CheckFCMCredential()
+	config.CheckWebPushCert()
 
-	go utils.CheckInternetConnection()
+	push.InitMiPushClient()
+	push.InitFCMClient()
+	push.InitWebPushOption()
 
 	pureFs, err := fs.Sub(f, "static")
 	if err != nil {
@@ -31,6 +37,7 @@ func main() {
 	}
 
 	db.InitDB()
+
 	user.ReadUsers()
 
 	router := gin.Default()
@@ -42,6 +49,7 @@ func main() {
 	router.POST("/:user_id/send", handler.Send)
 
 	router.PUT("/:user_id/fcm/token", push.SetFCMToken)
+	router.PUT("/:user_id/web/sub", push.SetWebPushSubscription)
 
 	router.StaticFS("/fs", http.FS(pureFs))
 	router.GET("/", func(context *gin.Context) {

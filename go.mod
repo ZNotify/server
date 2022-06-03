@@ -4,10 +4,12 @@ go 1.18
 
 require (
 	firebase.google.com/go/v4 v4.8.0
+	github.com/SherClockHolmes/webpush-go v1.2.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
 	github.com/glebarez/sqlite v1.4.3
 	github.com/google/uuid v1.3.0
+	github.com/joho/godotenv v1.4.0
 	google.golang.org/api v0.75.0
 	gorm.io/gorm v1.23.5
 )
@@ -23,6 +25,7 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.1 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect

@@ -2,17 +2,37 @@ package push
 
 import (
 	"context"
+	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
+	"fmt"
 	"github.com/ZNotify/server/config"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"google.golang.org/api/option"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
+
+var FCMClient *messaging.Client
+
+func InitFCMClient() {
+	opt := option.WithCredentialsJSON(config.FCMCredential)
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		fmt.Println(fmt.Errorf("error initializing app: %v", err))
+		os.Exit(1)
+	}
+	FCMClient, err = app.Messaging(context.Background())
+	if err != nil {
+		fmt.Println(fmt.Errorf("error initializing app: %v", err))
+		os.Exit(1)
+	}
+}
 
 func SendViaFCM(msg *entity.Message) error {
 	var tokens []entity.FCMTokens
@@ -51,7 +71,7 @@ func SendViaFCM(msg *entity.Message) error {
 		},
 		Tokens: registrationIDs,
 	}
-	_, err := config.FCMClient.SendMulticast(context.Background(), &fcmMsg)
+	_, err := FCMClient.SendMulticast(context.Background(), &fcmMsg)
 	if err != nil {
 		return err
 	}
@@ -80,6 +100,7 @@ func SetFCMToken(context *gin.Context) {
 	// TODO: update user with same token
 	if cnt > 0 {
 		context.String(http.StatusNotModified, "Token already exists")
+		return
 	} else {
 		user := entity.FCMTokens{
 			ID:             uuid.New().String(),
@@ -88,5 +109,6 @@ func SetFCMToken(context *gin.Context) {
 		}
 		db.DB.Create(&user)
 		context.String(http.StatusOK, "Registration ID saved.")
+		return
 	}
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/ZNotify/server/config"
 	"github.com/ZNotify/server/db/entity"
 	"io"
-	"io/ioutil"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -16,6 +15,12 @@ import (
 )
 
 const APIURL = "https://api.xmpush.xiaomi.com/v2/message/user_account"
+
+var MiPushClient *http.Client
+
+func InitMiPushClient() {
+	MiPushClient = &http.Client{}
+}
 
 func SendViaMiPush(msg *entity.Message) error {
 	n, _ := rand.Int(rand.Reader, big.NewInt(1000000))
@@ -58,15 +63,7 @@ func SendViaMiPush(msg *entity.Message) error {
 	req.Header.Set("Authorization", fmt.Sprintf("key=%s", config.MiPushSecret))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := config.MiPushClient.Do(req)
-
-	if err != nil {
-		return err
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	fmt.Printf("%s", body)
+	resp, err := MiPushClient.Do(req)
 
 	if err != nil {
 		return err
@@ -75,7 +72,7 @@ func SendViaMiPush(msg *entity.Message) error {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			panic("Failed to Close Connection")
+			fmt.Println(err)
 		}
 	}(resp.Body)
 

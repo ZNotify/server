@@ -30,7 +30,7 @@ func InitDB() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = DB.AutoMigrate(&entity.Message{}, &entity.FCMTokens{})
+	err = DB.AutoMigrate(&entity.Message{}, &entity.FCMTokens{}, &entity.WebSubscription{})
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

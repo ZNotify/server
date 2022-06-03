@@ -42,15 +42,13 @@ func Send(context *gin.Context) {
 	}
 
 	if dryRun {
-		ret := gin.H{
-			"title":   title,
-			"content": content,
-			"long":    long,
-		}
+		ret := message.ToGinH()
 		context.SecureJSON(http.StatusOK, ret)
 		return
 	}
 
+	// TODO: not throw error when not all push failed
+	// TODO: send notification async
 	err = push.SendViaMiPush(message)
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
@@ -61,16 +59,14 @@ func Send(context *gin.Context) {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}
 
+	err = push.SendViaWebPush(message)
+	if err != nil {
+		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+	}
+
 	// Insert message record
 	db.DB.Create(message)
 
 	//context.String(http.StatusOK, fmt.Sprintf("message %s sent to %s.", msgID, userID))
-	context.SecureJSON(http.StatusOK, gin.H{
-		"id":         message.ID,
-		"user_id":    message.UserID,
-		"title":      message.Title,
-		"content":    message.Content,
-		"long":       message.Long,
-		"created_at": message.CreatedAt.Format(time.RFC3339),
-	})
+	context.SecureJSON(http.StatusOK, message.ToGinH())
 }
