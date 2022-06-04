@@ -25,7 +25,8 @@ func checkDB() {
 
 func InitDB() {
 	checkDB()
-	DB, err := gorm.Open(sqlite.Open("notify.db"), &gorm.Config{})
+	var err error
+	DB, err = gorm.Open(sqlite.Open("notify.db"), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

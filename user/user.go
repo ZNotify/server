@@ -21,7 +21,7 @@ func ReadUsers() {
 		}
 	}(file)
 
-	users := make([]string, 8)
+	users = make([]string, 0)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		users = append(users, scanner.Text())
