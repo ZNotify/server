@@ -52,11 +52,7 @@ func main() {
 	router.PUT("/:user_id/web/sub", push.SetWebPushSubscription)
 
 	router.StaticFS("/fs", http.FS(pureFs))
-	router.GET("/", func(context *gin.Context) {
-		context.FileFromFS("/", http.FS(pureFs))
-		// hardcode index.html, use this as a trick to get html file
-		// https://github.com/golang/go/blob/a7e16abb22f1b249d2691b32a5d20206282898f2/src/net/http/fs.go#L587
-	})
+	router.GET("/", handler.IndexWithFS(pureFs))
 
 	err = router.Run("0.0.0.0:14444")
 	if err != nil {
