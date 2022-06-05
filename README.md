@@ -5,18 +5,23 @@ Notify 服务端。
 ## 启动参数
 
 ```shell
-server MIPUSH_TOKEN // MiPush 推送的 token
+server 
+```
+```env
+MiPushSecret # MiPush Token
+FCMCredential # FCM Credential 文件内容
+VAPIDPublicKey # Web Push VAPID Public Key
+VAPIDPrivateKey # Web Push VAPID Private Key
 ```
 
-需要在同一目录下放置 FCM 的凭据文件，名称为 `notify.json`。
-
 数据库文件名称为 `notify.db`, `sqlite3` 格式。
+启动后，服务器将会监听 `http://0.0.0.0:14444` 
 
 在 `Docker` 中启动服务，如果想将数据库映射到宿主机，需要预先在宿主机上 `touch notify.db`, 并使用 `-v` 映射。
 
 ## 请求参数
 ```
-POST https://push.learningman.top/{user_id}/send
+POST http://host/{user_id}/send
 
 @path   user_id  用户 ID
 @param  title    推送标题
@@ -28,7 +33,7 @@ POST https://push.learningman.top/{user_id}/send
 `long` 支持 markdown 格式， 支持使用表格扩展。
 
 ## 构建
-构建前端后，执行
+构建前端后，将构建产物复制到 `/fs` 文件夹，执行
 ```shell
 go build -v github.com/ZNotify/server
 ```
