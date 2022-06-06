@@ -7,6 +7,9 @@ Notify 服务端。
 ```shell
 server 
 ```
+
+环境变量
+
 ```env
 MiPushSecret # MiPush Token
 FCMCredential # FCM Credential 文件内容
