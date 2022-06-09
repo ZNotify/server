@@ -52,6 +52,7 @@ func main() {
 	router.PUT("/:user_id/web/sub", push.SetWebPushSubscription)
 
 	router.StaticFS("/fs", http.FS(pureFs))
+	router.GET("/alive", handler.Alive)
 	router.GET("/", handler.IndexWithFS(pureFs))
 
 	err = router.Run("0.0.0.0:14444")
