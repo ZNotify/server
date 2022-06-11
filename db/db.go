@@ -10,21 +10,34 @@ import (
 
 var DB *gorm.DB
 
-func checkDB() {
-	// Determining whether notify.db is directory
+func checkDBFile() {
+	// Determining whether notify.db is exist
 	va, err := os.Stat("notify.db")
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	if va.IsDir() {
-		fmt.Println("notify.db is directory.")
-		os.Exit(1)
+		if os.IsNotExist(err) {
+			// Create notify.db file
+			fmt.Println("Creating notify.db file")
+			file, err := os.Create("notify.db")
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			err = file.Close()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		}
+	} else {
+		if va.IsDir() {
+			fmt.Println("notify.db is directory.")
+			os.Exit(1)
+		}
 	}
 }
 
 func InitDB() {
-	checkDB()
+	checkDBFile()
 	var err error
 	DB, err = gorm.Open(sqlite.Open("notify.db"), &gorm.Config{})
 	if err != nil {
