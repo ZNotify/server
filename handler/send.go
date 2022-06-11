@@ -21,6 +21,10 @@ func Send(context *gin.Context) {
 
 	// string to bool
 	dryRun := context.Request.URL.Query().Has("dry")
+	if dryRun {
+		context.String(http.StatusBadRequest, "Dry query param is not supported now.")
+		return
+	}
 
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")
@@ -41,9 +45,8 @@ func Send(context *gin.Context) {
 		CreatedAt: time.Now(),
 	}
 
-	if dryRun {
-		ret := message.ToGinH()
-		context.SecureJSON(http.StatusOK, ret)
+	if utils.IsTestInstance() {
+		context.SecureJSON(http.StatusOK, message.ToGinH())
 		return
 	}
 
@@ -67,6 +70,5 @@ func Send(context *gin.Context) {
 	// Insert message record
 	db.DB.Create(message)
 
-	//context.String(http.StatusOK, fmt.Sprintf("message %s sent to %s.", msgID, userID))
 	context.SecureJSON(http.StatusOK, message.ToGinH())
 }

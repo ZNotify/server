@@ -30,7 +30,9 @@ POST http://host/{user_id}/send
 @param  title    推送标题
 @param  content  推送内容
 @param  long     传送到客户端的长内容, 需要点击查看
-@query  dry      传递此参数时，不会真正发送推送
+
+已移除
+@query  dry      传递此参数时，不会真正发送推送 (请使用测试模式)
 ```
 
 `long` 支持 markdown 格式， 支持使用表格扩展。

@@ -37,3 +37,8 @@ func RequireAuth(c *gin.Context) (string, error) {
 	}
 	return userID, nil
 }
+
+func IsTestInstance() bool {
+	_, ok := os.LookupEnv("TEST")
+	return ok
+}
