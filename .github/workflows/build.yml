@@ -8,7 +8,6 @@ on:
 
 env:
   IMAGE_NAME: notify-api
-  TEST_IMAGE_NAME: notify-api-test
 
 permissions: write-all
 
@@ -74,14 +73,6 @@ jobs:
             type=ref,event=branch
           images: zxilly/${{ env.IMAGE_NAME }},ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
 
-      - name: Extract Test metadata
-        id: metatest
-        uses: docker/metadata-action@master
-        with:
-          tags: |
-            type=ref,event=branch
-          images: ghcr.io/${{ github.repository_owner }}/${{ env.TEST_IMAGE_NAME }}
-
       - name: Build and push Release Docker image
         uses: docker/build-push-action@v3
         with:
@@ -91,18 +82,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
-
-      - name: Build and push Test Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          file: Test.dockerfile
-          tags: ${{ steps.metatest.outputs.tags }}
-          labels: ${{ steps.metatest.outputs.labels }}
-          cache-from: type=gha, scope=${{ github.workflow }}
-          cache-to: type=gha, scope=${{ github.workflow }}
-
 
       - uses: actions/github-script@v3
         with:
