@@ -25,13 +25,7 @@ func Record(context *gin.Context) {
 
 	var ret []gin.H
 	for i := range messages {
-		ret = append(ret, gin.H{
-			"id":        messages[i].ID,
-			"title":     messages[i].Title,
-			"content":   messages[i].Content,
-			"long":      messages[i].Long,
-			"createdAt": messages[i].CreatedAt.Format(time.RFC3339),
-		})
+		ret = append(ret, messages[i].ToGinH())
 	}
 	context.JSON(http.StatusOK, ret)
 }
