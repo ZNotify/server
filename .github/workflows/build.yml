@@ -71,7 +71,7 @@ jobs:
           images: zxilly/${{ env.IMAGE_NAME }},ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
 
       - name: Extract Test metadata
-        id: testmeta
+        id: metatest
         uses: docker/metadata-action@master
         with:
           tags: |
