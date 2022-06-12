@@ -2,10 +2,8 @@ package main
 
 import (
 	"embed"
-	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/handler"
 	"github.com/ZNotify/server/push"
-	"github.com/ZNotify/server/user"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,17 +17,13 @@ var f embed.FS
 
 func main() {
 	var err error
-
-	go utils.CheckInternetConnection()
+	gin.SetMode(gin.ReleaseMode)
+	utils.GlobalInit()
 
 	pureFs, err := fs.Sub(f, "static")
 	if err != nil {
 		panic(err)
 	}
-
-	db.Init()
-	push.Init()
-	user.Init()
 
 	router := gin.Default()
 	router.Use(cors.Default())
