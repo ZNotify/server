@@ -3,8 +3,6 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"github.com/ZNotify/server/db"
-	"github.com/ZNotify/server/push"
 	"github.com/ZNotify/server/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -43,11 +41,4 @@ func RequireAuth(c *gin.Context) (string, error) {
 func IsTestInstance() bool {
 	_, ok := os.LookupEnv("TEST")
 	return ok
-}
-
-func GlobalInit() {
-	go CheckInternetConnection()
-	db.Init()
-	push.Init()
-	user.Init()
 }
