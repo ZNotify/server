@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
+	"github.com/ZNotify/server/user"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -11,7 +12,7 @@ import (
 )
 
 func Delete(context *gin.Context) {
-	userID, err := utils.RequireAuth(context)
+	userID, err := user.RequireAuth(context)
 	if err != nil {
 		utils.BreakOnError(context, err)
 		return

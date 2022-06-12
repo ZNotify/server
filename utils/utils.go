@@ -1,9 +1,7 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
-	"github.com/ZNotify/server/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -26,16 +24,6 @@ func CheckInternetConnection() {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
-}
-
-func RequireAuth(c *gin.Context) (string, error) {
-	userID := c.Param("user_id")
-	result := user.IsUser(userID)
-	if !result {
-		c.String(http.StatusForbidden, "Unauthorized")
-		return "", errors.New("Unauthorized")
-	}
-	return userID, nil
 }
 
 func IsTestInstance() bool {

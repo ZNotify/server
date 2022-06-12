@@ -6,6 +6,7 @@ import (
 	"github.com/SherClockHolmes/webpush-go"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
+	"github.com/ZNotify/server/user"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -89,7 +90,7 @@ func (p *WebPushProvider) check() error {
 }
 
 func SetWebPushSubscription(context *gin.Context) {
-	userID, err := utils.RequireAuth(context)
+	userID, err := user.RequireAuth(context)
 	if err != nil {
 		utils.BreakOnError(context, err)
 		return

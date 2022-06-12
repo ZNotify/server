@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
+	"github.com/ZNotify/server/user"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -94,7 +95,7 @@ func (p *FCMProvider) check() error {
 }
 
 func SetFCMToken(context *gin.Context) {
-	userID, err := utils.RequireAuth(context)
+	userID, err := user.RequireAuth(context)
 	if err != nil {
 		utils.BreakOnError(context, err)
 		return
@@ -117,12 +118,12 @@ func SetFCMToken(context *gin.Context) {
 		context.String(http.StatusNotModified, "Token already exists")
 		return
 	} else {
-		user := entity.FCMTokens{
+		userEntity := entity.FCMTokens{
 			ID:             uuid.New().String(),
 			UserID:         userID,
 			RegistrationID: tokenString,
 		}
-		db.DB.Create(&user)
+		db.DB.Create(&userEntity)
 		context.String(http.StatusOK, "Registration ID saved.")
 		return
 	}

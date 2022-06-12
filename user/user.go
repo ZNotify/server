@@ -2,8 +2,11 @@ package user
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"github.com/ZNotify/server/utils"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"os"
 )
 
@@ -49,4 +52,14 @@ func IsUser(user string) bool {
 		}
 	}
 	return false
+}
+
+func RequireAuth(c *gin.Context) (string, error) {
+	userID := c.Param("user_id")
+	result := IsUser(userID)
+	if !result {
+		c.String(http.StatusForbidden, "Unauthorized")
+		return "", errors.New("Unauthorized")
+	}
+	return userID, nil
 }
