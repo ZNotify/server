@@ -3,11 +3,19 @@ package user
 import (
 	"bufio"
 	"fmt"
+	"github.com/ZNotify/server/utils"
 	"os"
 )
 
+var users []string
+
 // Init read file users.txt to get user list
 func Init() {
+	if utils.IsTestInstance() {
+		users = append(users, "test")
+		return
+	}
+
 	file, err := os.Open("users.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -32,8 +40,6 @@ func Init() {
 		os.Exit(1)
 	}
 }
-
-var users []string
 
 // IsUser judge user if in the user list
 func IsUser(user string) bool {
