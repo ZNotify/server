@@ -17,7 +17,6 @@ var f embed.FS
 
 func main() {
 	var err error
-	gin.SetMode(gin.ReleaseMode)
 	utils.GlobalInit()
 
 	pureFs, err := fs.Sub(f, "static")
