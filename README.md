@@ -38,7 +38,7 @@ POST http://host/{user_id}/send
 `long` 支持 markdown 格式， 支持使用表格扩展。
 
 ## 构建
-构建前端后，将构建产物复制到 `/fs` 文件夹，执行
+构建前端后，将构建产物复制到 `/static` 文件夹，执行
 ```shell
 go build -v github.com/ZNotify/server
 ```
