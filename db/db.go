@@ -36,7 +36,7 @@ func checkDBFile() {
 	}
 }
 
-func InitDB() {
+func Init() {
 	checkDBFile()
 	var err error
 	DB, err = gorm.Open(sqlite.Open("notify.db"), &gorm.Config{})

@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-// ReadUsers read file users.txt to get user list
-func ReadUsers() {
+// Init read file users.txt to get user list
+func Init() {
 	file, err := os.Open("users.txt")
 	if err != nil {
 		fmt.Println(err)

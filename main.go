@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"github.com/ZNotify/server/config"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/handler"
 	"github.com/ZNotify/server/push"
@@ -23,22 +22,14 @@ func main() {
 
 	go utils.CheckInternetConnection()
 
-	config.CheckMiPushSecret()
-	config.CheckFCMCredential()
-	config.CheckWebPushCert()
-
-	push.InitMiPushClient()
-	push.InitFCMClient()
-	push.InitWebPushOption()
-
 	pureFs, err := fs.Sub(f, "static")
 	if err != nil {
 		panic(err)
 	}
 
-	db.InitDB()
-
-	user.ReadUsers()
+	db.Init()
+	push.Init()
+	user.Init()
 
 	router := gin.Default()
 	router.Use(cors.Default())

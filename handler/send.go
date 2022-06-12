@@ -50,19 +50,7 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	// TODO: not throw error when not all push failed
-	// TODO: send notification async
-	err = push.SendViaMiPush(message)
-	if err != nil {
-		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
-	}
-
-	err = push.SendViaFCM(message)
-	if err != nil {
-		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
-	}
-
-	err = push.SendViaWebPush(message)
+	err = push.Send(message)
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}

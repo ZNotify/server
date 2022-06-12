@@ -5,7 +5,6 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
 	"fmt"
-	"github.com/ZNotify/server/config"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
 	"github.com/ZNotify/server/utils"
@@ -18,23 +17,29 @@ import (
 	"time"
 )
 
-var FCMClient *messaging.Client
-
-func InitFCMClient() {
-	opt := option.WithCredentialsJSON(config.FCMCredential)
-	app, err := firebase.NewApp(context.Background(), nil, opt)
-	if err != nil {
-		fmt.Println(fmt.Errorf("error initializing app: %v", err))
-		os.Exit(1)
-	}
-	FCMClient, err = app.Messaging(context.Background())
-	if err != nil {
-		fmt.Println(fmt.Errorf("error initializing app: %v", err))
-		os.Exit(1)
-	}
+type FCMProvider struct {
+	FCMClient     *messaging.Client
+	FCMCredential []byte
 }
 
-func SendViaFCM(msg *entity.Message) error {
+func (p *FCMProvider) init() (Provider, error) {
+	err := p.check()
+	if err != nil {
+		return nil, err
+	}
+	opt := option.WithCredentialsJSON(p.FCMCredential)
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		return nil, err
+	}
+	p.FCMClient, err = app.Messaging(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
+}
+
+func (p *FCMProvider) send(msg *entity.Message) error {
 	var tokens []entity.FCMTokens
 	dbResult := db.DB.Where("user_id = ?", msg.UserID).Find(&tokens)
 	if dbResult.Error != nil {
@@ -71,11 +76,21 @@ func SendViaFCM(msg *entity.Message) error {
 		},
 		Tokens: registrationIDs,
 	}
-	_, err := FCMClient.SendMulticast(context.Background(), &fcmMsg)
+	_, err := p.FCMClient.SendMulticast(context.Background(), &fcmMsg)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (p *FCMProvider) check() error {
+	FCMCredential := []byte(os.Getenv("FCMCredential"))
+	if len(FCMCredential) == 0 {
+		return fmt.Errorf("FCMCredential is not set")
+	} else {
+		p.FCMCredential = FCMCredential
+		return nil
+	}
 }
 
 func SetFCMToken(context *gin.Context) {

@@ -2,8 +2,8 @@ package push
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/SherClockHolmes/webpush-go"
-	"github.com/ZNotify/server/config"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
 	"github.com/ZNotify/server/utils"
@@ -11,12 +11,36 @@ import (
 	"github.com/google/uuid"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
-var webPushOption *webpush.Options
-var webPushClient *http.Client = &http.Client{}
+var webPushClient = &http.Client{}
 
-func SendViaWebPush(msg *entity.Message) error {
+type WebPushProvider struct {
+	WebPushOption   *webpush.Options
+	WebPushClient   *http.Client
+	VAPIDPublicKey  string
+	VAPIDPrivateKey string
+}
+
+func (p *WebPushProvider) init() (Provider, error) {
+	err := p.check()
+	if err != nil {
+		return nil, err
+	}
+	p.WebPushOption = &webpush.Options{
+		HTTPClient:      webPushClient,
+		TTL:             60 * 60 * 24,
+		Subscriber:      "zxilly@outlook.com",
+		VAPIDPublicKey:  p.VAPIDPublicKey,
+		VAPIDPrivateKey: p.VAPIDPrivateKey,
+		Urgency:         webpush.UrgencyHigh, // Always send notification, even low battery
+	}
+	p.WebPushClient = &http.Client{}
+	return p, nil
+}
+
+func (p *WebPushProvider) send(msg *entity.Message) error {
 	var tokens []entity.WebSubscription
 	dbResult := db.DB.Where("user_id = ?", msg.UserID).Find(&tokens)
 	if dbResult.Error != nil {
@@ -43,24 +67,24 @@ func SendViaWebPush(msg *entity.Message) error {
 		if err != nil {
 			return err
 		}
-		_, err := webpush.SendNotification([]byte(data), s, webPushOption)
+		_, err := webpush.SendNotification([]byte(data), s, p.WebPushOption)
 		if err != nil {
 			return err
 		}
 	}
-	defer webPushClient.CloseIdleConnections()
 
 	return nil
 }
 
-func InitWebPushOption() {
-	webPushOption = &webpush.Options{
-		HTTPClient:      webPushClient,
-		TTL:             60 * 60 * 24,
-		Subscriber:      "zxilly@outlook.com",
-		VAPIDPublicKey:  config.VAPIDPublicKey,
-		VAPIDPrivateKey: config.VAPIDPrivateKey,
-		Urgency:         webpush.UrgencyHigh, // Always send notification, even low battery
+func (p *WebPushProvider) check() error {
+	VAPIDPublicKey := os.Getenv("VAPIDPublicKey")
+	VAPIDPrivateKey := os.Getenv("VAPIDPrivateKey")
+	if VAPIDPublicKey == "" || VAPIDPrivateKey == "" {
+		return fmt.Errorf("VAPIDPublicKey or VAPIDPrivateKey is empty")
+	} else {
+		p.VAPIDPublicKey = VAPIDPublicKey
+		p.VAPIDPrivateKey = VAPIDPrivateKey
+		return nil
 	}
 }
 

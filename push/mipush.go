@@ -3,12 +3,12 @@ package push
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/ZNotify/server/config"
 	"github.com/ZNotify/server/db/entity"
 	"io"
 	"math/big"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -16,13 +16,21 @@ import (
 
 const APIURL = "https://api.xmpush.xiaomi.com/v2/message/user_account"
 
-var MiPushClient *http.Client
-
-func InitMiPushClient() {
-	MiPushClient = &http.Client{}
+type MiPushProvider struct {
+	MiPushSecret string
+	MiPushClient *http.Client
 }
 
-func SendViaMiPush(msg *entity.Message) error {
+func (p *MiPushProvider) init() (Provider, error) {
+	err := p.check()
+	if err != nil {
+		return nil, err
+	}
+	p.MiPushClient = &http.Client{}
+	return p, nil
+}
+
+func (p *MiPushProvider) send(msg *entity.Message) error {
 	n, _ := rand.Int(rand.Reader, big.NewInt(1000000))
 	notifyID := n.Int64()
 
@@ -60,10 +68,10 @@ func SendViaMiPush(msg *entity.Message) error {
 		APIURL,
 		strings.NewReader(postData))
 
-	req.Header.Set("Authorization", fmt.Sprintf("key=%s", config.MiPushSecret))
+	req.Header.Set("Authorization", fmt.Sprintf("key=%s", p.MiPushSecret))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := MiPushClient.Do(req)
+	resp, err := p.MiPushClient.Do(req)
 
 	if err != nil {
 		return err
@@ -77,4 +85,14 @@ func SendViaMiPush(msg *entity.Message) error {
 	}(resp.Body)
 
 	return nil
+}
+
+func (p *MiPushProvider) check() error {
+	MiPushSecret := os.Getenv("MiPushSecret")
+	if MiPushSecret == "" {
+		return fmt.Errorf("MiPushSecret is not set")
+	} else {
+		p.MiPushSecret = MiPushSecret
+		return nil
+	}
 }
