@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/ZNotify/server/db/entity"
 	"github.com/ZNotify/server/utils"
+	"github.com/gin-gonic/gin"
 	"os"
 	"sync"
 )
@@ -12,17 +13,17 @@ import (
 type Provider interface {
 	send(msg *entity.Message) error
 	check() error
-	init() (Provider, error)
+	init(e *gin.Engine) (Provider, error)
 }
 
 var providers = []Provider{new(FCMProvider), new(WebPushProvider), new(MiPushProvider)}
 
-func Init() {
+func Init(e *gin.Engine) {
 	if utils.IsTestInstance() {
 		return
 	}
 	for _, v := range providers {
-		_, err := v.init()
+		_, err := v.init(e)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

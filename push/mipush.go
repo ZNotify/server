@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"github.com/ZNotify/server/db/entity"
+	"github.com/gin-gonic/gin"
 	"io"
 	"math/big"
 	"net/http"
@@ -21,7 +22,7 @@ type MiPushProvider struct {
 	MiPushClient *http.Client
 }
 
-func (p *MiPushProvider) init() (Provider, error) {
+func (p *MiPushProvider) init(e *gin.Engine) (Provider, error) {
 	err := p.check()
 	if err != nil {
 		return nil, err

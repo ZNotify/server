@@ -24,7 +24,7 @@ type WebPushProvider struct {
 	VAPIDPrivateKey string
 }
 
-func (p *WebPushProvider) init() (Provider, error) {
+func (p *WebPushProvider) init(e *gin.Engine) (Provider, error) {
 	err := p.check()
 	if err != nil {
 		return nil, err
@@ -38,6 +38,9 @@ func (p *WebPushProvider) init() (Provider, error) {
 		Urgency:         webpush.UrgencyHigh, // Always send notification, even low battery
 	}
 	p.WebPushClient = &http.Client{}
+
+	e.PUT("/:user_id/web/sub", webPushHandler)
+
 	return p, nil
 }
 
@@ -89,7 +92,7 @@ func (p *WebPushProvider) check() error {
 	}
 }
 
-func SetWebPushSubscription(context *gin.Context) {
+func webPushHandler(context *gin.Context) {
 	userID, err := user.RequireAuth(context)
 	if err != nil {
 		utils.BreakOnError(context, err)

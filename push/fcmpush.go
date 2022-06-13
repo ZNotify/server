@@ -23,7 +23,7 @@ type FCMProvider struct {
 	FCMCredential []byte
 }
 
-func (p *FCMProvider) init() (Provider, error) {
+func (p *FCMProvider) init(e *gin.Engine) (Provider, error) {
 	err := p.check()
 	if err != nil {
 		return nil, err
@@ -37,6 +37,9 @@ func (p *FCMProvider) init() (Provider, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	e.PUT("/:user_id/fcm/token", fcmTokenHandler)
+
 	return p, nil
 }
 
@@ -94,7 +97,7 @@ func (p *FCMProvider) check() error {
 	}
 }
 
-func SetFCMToken(context *gin.Context) {
+func fcmTokenHandler(context *gin.Context) {
 	userID, err := user.RequireAuth(context)
 	if err != nil {
 		utils.BreakOnError(context, err)

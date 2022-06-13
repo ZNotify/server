@@ -17,36 +17,37 @@ import (
 //go:embed static/*
 var f embed.FS
 
+var err error
+var pureFS fs.FS
+var router = gin.Default()
+
 func main() {
-	var err error
-
-	go utils.CheckInternetConnection()
-	db.Init()
-	push.Init()
-	user.Init()
-
-	pureFs, err := fs.Sub(f, "static")
-	if err != nil {
-		panic(err)
-	}
-
-	router := gin.Default()
-	router.Use(cors.Default())
-
 	router.GET("/:user_id/check", handler.Check)
 	router.GET("/:user_id/record", handler.Record)
 	router.DELETE("/:user_id/:id", handler.Delete)
 	router.POST("/:user_id/send", handler.Send)
 
-	router.PUT("/:user_id/fcm/token", push.SetFCMToken)
-	router.PUT("/:user_id/web/sub", push.SetWebPushSubscription)
+	router.StaticFS("/fs", http.FS(pureFS))
+	router.GET("/", handler.IndexWithFS(pureFS))
 
-	router.StaticFS("/fs", http.FS(pureFs))
 	router.GET("/alive", handler.Alive)
-	router.GET("/", handler.IndexWithFS(pureFs))
 
 	err = router.Run("0.0.0.0:14444")
 	if err != nil {
 		panic("Server failed to listen.")
+	}
+}
+
+func init() {
+	go utils.CheckInternetConnection()
+	db.Init()
+	push.Init(router)
+	user.Init()
+
+	router.Use(cors.Default())
+
+	pureFS, err = fs.Sub(f, "static")
+	if err != nil {
+		panic(err)
 	}
 }
