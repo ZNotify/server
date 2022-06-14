@@ -1,0 +1,28 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ master ]
+  repository_dispatch:
+    types: [ frontend_update ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Fetch frontend asset
+        run: |
+          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
+          unzip build.zip
+          rm build.zip
+          mv build static
+
+      - name: Run tests
+        run: go test -v github.com/ZNotify/server
