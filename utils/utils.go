@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -26,7 +27,22 @@ func CheckInternetConnection() {
 	}
 }
 
+var isTest = -1
+
 func IsTestInstance() bool {
+	if isTest != -1 {
+		return isTest == 1
+	}
 	_, ok := os.LookupEnv("TEST")
-	return ok
+	if ok {
+		isTest = 1
+		return true
+	}
+	f := flag.Lookup("test.v")
+	if f != nil {
+		isTest = 1
+		return true
+	}
+	isTest = 0
+	return false
 }
