@@ -29,9 +29,9 @@ func Init(e *gin.Engine) {
 	wg := sync.WaitGroup{}
 	wg.Add(len(providers))
 	for _, v := range providers {
-		providers := v
+		providers := &v
 		go func() {
-			err := providers.init(e)
+			err := (*providers).init(e)
 			if err != nil {
 				panic(err)
 			}
@@ -46,9 +46,9 @@ func Send(msg *entity.Message) error {
 	var wg sync.WaitGroup
 	wg.Add(len(providers))
 	for _, v := range providers {
-		provider := v
+		provider := &v
 		go func() {
-			pe := provider.send(msg)
+			pe := (*provider).send(msg)
 			if pe != nil {
 				errs = append(errs, pe)
 			}
