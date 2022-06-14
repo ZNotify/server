@@ -25,4 +25,4 @@ jobs:
           mv build static
 
       - name: Run tests
-        run: go test -v github.com/ZNotify/server
+        run: go test ./...
