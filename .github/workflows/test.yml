@@ -3,6 +3,7 @@ name: Run Tests
 on:
   push:
     branches: [ master ]
+  pull_request:
   repository_dispatch:
     types: [ frontend_update ]
 
@@ -10,6 +11,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         go: [ '1.14', '1.15', '1.16', '1.17', '1.18' ]
 
@@ -30,3 +32,15 @@ jobs:
 
       - name: Run tests
         run: go test ./...
+
+  release:
+    uses: ./.github/workflows/release.yml
+    needs: [ test ]
+    if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
+    secrets: inherit
+
+  docker:
+    uses: ./.github/workflows/docker.yml
+    needs: [ test ]
+    if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
+    secrets: inherit
