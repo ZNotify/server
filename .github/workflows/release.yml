@@ -1,10 +1,10 @@
 name: Build Release
 
 on:
-  push:
-    branches: [ master ]
-  repository_dispatch:
-    types: [ frontend_update ]
+  workflow_run:
+    workflows: [ "Run Tests" ]
+    types:
+      - completed
 
 env:
   IMAGE_NAME: notify-api
@@ -21,8 +21,6 @@ jobs:
     needs: [ test ]
     steps:
       - uses: actions/checkout@v3
-        with:
-          lfs: true
 
       - name: Set up Go
         uses: actions/setup-go@v2
