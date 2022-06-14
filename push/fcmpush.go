@@ -23,24 +23,20 @@ type FCMProvider struct {
 	FCMCredential []byte
 }
 
-func (p *FCMProvider) init(e *gin.Engine) (Provider, error) {
-	err := p.check()
-	if err != nil {
-		return nil, err
-	}
+func (p *FCMProvider) init(e *gin.Engine) error {
 	opt := option.WithCredentialsJSON(p.FCMCredential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	p.FCMClient, err = app.Messaging(context.Background())
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	e.PUT("/:user_id/fcm/token", fcmTokenHandler)
 
-	return p, nil
+	return nil
 }
 
 func (p *FCMProvider) send(msg *entity.Message) error {

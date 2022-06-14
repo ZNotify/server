@@ -24,11 +24,7 @@ type WebPushProvider struct {
 	VAPIDPrivateKey string
 }
 
-func (p *WebPushProvider) init(e *gin.Engine) (Provider, error) {
-	err := p.check()
-	if err != nil {
-		return nil, err
-	}
+func (p *WebPushProvider) init(e *gin.Engine) error {
 	p.WebPushOption = &webpush.Options{
 		HTTPClient:      webPushClient,
 		TTL:             60 * 60 * 24,
@@ -41,7 +37,7 @@ func (p *WebPushProvider) init(e *gin.Engine) (Provider, error) {
 
 	e.PUT("/:user_id/web/sub", webPushHandler)
 
-	return p, nil
+	return nil
 }
 
 func (p *WebPushProvider) send(msg *entity.Message) error {

@@ -2,18 +2,16 @@ package push
 
 import (
 	"errors"
-	"fmt"
 	"github.com/ZNotify/server/db/entity"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
-	"os"
 	"sync"
 )
 
 type Provider interface {
 	send(msg *entity.Message) error
 	check() error
-	init(e *gin.Engine) (Provider, error)
+	init(e *gin.Engine) error
 }
 
 var providers = []Provider{new(FCMProvider), new(WebPushProvider), new(MiPushProvider)}
@@ -23,12 +21,24 @@ func Init(e *gin.Engine) {
 		return
 	}
 	for _, v := range providers {
-		_, err := v.init(e)
+		err := v.check()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
 	}
+	wg := sync.WaitGroup{}
+	wg.Add(len(providers))
+	for _, v := range providers {
+		providers := v
+		go func() {
+			err := providers.init(e)
+			if err != nil {
+				panic(err)
+			}
+			wg.Done()
+		}()
+	}
+	wg.Wait()
 }
 
 func Send(msg *entity.Message) error {

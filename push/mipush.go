@@ -22,13 +22,9 @@ type MiPushProvider struct {
 	MiPushClient *http.Client
 }
 
-func (p *MiPushProvider) init(e *gin.Engine) (Provider, error) {
-	err := p.check()
-	if err != nil {
-		return nil, err
-	}
+func (p *MiPushProvider) init(e *gin.Engine) error {
 	p.MiPushClient = &http.Client{}
-	return p, nil
+	return nil
 }
 
 func (p *MiPushProvider) send(msg *entity.Message) error {
