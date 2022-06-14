@@ -1,6 +1,6 @@
 module github.com/ZNotify/server
 
-go 1.18
+go 1.17
 
 require (
 	firebase.google.com/go/v4 v4.8.0
