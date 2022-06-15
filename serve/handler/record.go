@@ -3,13 +3,14 @@ package handler
 import (
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
+	"github.com/ZNotify/server/serve/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 )
 
 func Record(context *gin.Context) {
-	userID := context.GetString("user_id")
+	userID := context.GetString(middleware.UserIdKey)
 
 	var messages []entity.Message
 	result := db.DB.Where("user_id = ?", userID).

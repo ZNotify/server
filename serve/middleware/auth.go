@@ -6,14 +6,16 @@ import (
 	"net/http"
 )
 
+const UserIdKey = "user_id"
+
 func Auth(c *gin.Context) {
-	userID, shouldCheck := c.Params.Get("user_id")
+	userID, shouldCheck := c.Params.Get(UserIdKey)
 	if !shouldCheck {
 		c.Next()
 		return
 	} else {
 		if user.IsUser(userID) {
-			c.Set("user_id", userID)
+			c.Set(UserIdKey, userID)
 			c.Next()
 			return
 		} else {

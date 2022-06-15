@@ -4,13 +4,14 @@ import (
 	"errors"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
+	"github.com/ZNotify/server/serve/middleware"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
 )
 
 func Delete(context *gin.Context) {
-	userID := context.GetString("user_id")
+	userID := context.GetString(middleware.UserIdKey)
 
 	id := context.Param("id")
 

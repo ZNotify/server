@@ -5,6 +5,7 @@ import (
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
 	"github.com/ZNotify/server/push"
+	"github.com/ZNotify/server/serve/middleware"
 	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ import (
 )
 
 func Send(context *gin.Context) {
-	userID := context.GetString("user_id")
+	userID := context.GetString(middleware.UserIdKey)
 
 	// string to bool
 	dryRun := context.Request.URL.Query().Has("dry")
