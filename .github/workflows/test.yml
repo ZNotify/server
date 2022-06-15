@@ -34,14 +34,32 @@ jobs:
       - name: Run tests
         run: go test ./...
 
+      - name: Build
+        run: go build -v github.com/ZNotify/server
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: server
+          path: server
+
+  test-js-sdk:
+    needs: [ test ]
+    uses: ZNotify/js-sdk/.github/workflows/test.yml
+    secrets: inherit
+
+  test-sdk:
+    needs: [ test-js-sdk ]
+    runs-on: ubuntu-latest
+
   release:
     uses: ./.github/workflows/release.yml
-    needs: [ test ]
+    needs: [ test-sdk ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
 
   docker:
     uses: ./.github/workflows/docker.yml
-    needs: [ test ]
+    needs: [ test-sdk ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
