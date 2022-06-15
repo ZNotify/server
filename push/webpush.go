@@ -6,8 +6,6 @@ import (
 	"github.com/SherClockHolmes/webpush-go"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/user"
-	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"io/ioutil"
@@ -89,11 +87,7 @@ func (p *WebPushProvider) check() error {
 }
 
 func webPushHandler(context *gin.Context) {
-	userID, err := user.RequireAuth(context)
-	if err != nil {
-		utils.BreakOnError(context, err)
-		return
-	}
+	userID := context.GetString("user_id")
 
 	token, err := ioutil.ReadAll(context.Request.Body)
 	if err != nil {

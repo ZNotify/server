@@ -5,7 +5,7 @@ Notify 服务端。
 ## 启动参数
 
 ```shell
-server 
+serve 
 ```
 
 环境变量
@@ -40,7 +40,7 @@ POST http://host/{user_id}/send
 ## 构建
 构建前端后，将构建产物复制到 `/static` 文件夹，执行
 ```shell
-go build -v github.com/ZNotify/server
+go build -v github.com/ZNotify/serve
 ```
 
 ## 前端

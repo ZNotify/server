@@ -4,19 +4,13 @@ import (
 	"errors"
 	"github.com/ZNotify/server/db"
 	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/user"
-	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
 )
 
 func Delete(context *gin.Context) {
-	userID, err := user.RequireAuth(context)
-	if err != nil {
-		utils.BreakOnError(context, err)
-		return
-	}
+	userID := context.GetString("user_id")
 
 	id := context.Param("id")
 
@@ -24,14 +18,21 @@ func Delete(context *gin.Context) {
 	result := db.DB.Where("user_id = ?", userID).
 		Where("id = ?", id).
 		First(&message)
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		context.String(http.StatusNotFound, "Not Found")
-		return
-	} else {
-		utils.BreakOnError(context, result.Error)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			context.String(http.StatusNotFound, "Not Found")
+			return
+		} else {
+			context.String(http.StatusInternalServerError, result.Error.Error())
+			return
+		}
 	}
+
 	result = db.DB.Delete(&message)
-	utils.BreakOnError(context, result.Error)
+	if result.Error != nil {
+		context.String(http.StatusInternalServerError, result.Error.Error())
+		return
+	}
 
 	context.String(http.StatusOK, "OK")
 	return

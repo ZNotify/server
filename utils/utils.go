@@ -3,19 +3,9 @@ package utils
 import (
 	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 )
-
-func BreakOnError(c *gin.Context, err error) {
-	if err != nil {
-		e := c.AbortWithError(500, err)
-		if e != nil {
-			panic(e)
-		}
-	}
-}
 
 // CheckInternetConnection Check internet connection to google
 func CheckInternetConnection() {

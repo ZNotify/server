@@ -8,7 +8,7 @@ import (
 )
 
 func Check(context *gin.Context) {
-	userID := context.Param("user_id")
+	userID := context.Query("user_id")
 	result := user.IsUser(userID)
 	context.String(http.StatusOK, strconv.FormatBool(result))
 	return
