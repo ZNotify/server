@@ -3,6 +3,7 @@ package utils
 import (
 	"flag"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 )
@@ -29,6 +30,10 @@ func IsTestInstance() bool {
 	}
 	f := flag.Lookup("test.v")
 	if f != nil {
+		isTest = 1
+		return true
+	}
+	if gin.Mode() == gin.TestMode {
 		isTest = 1
 		return true
 	}
