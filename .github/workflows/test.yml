@@ -50,6 +50,13 @@ jobs:
           go-version: 1.18
           cache: true
 
+      - name: Fetch frontend asset
+        run: |
+          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
+          unzip build.zip
+          rm build.zip
+          mv build static
+
       - name: Build
         run: go build -v github.com/ZNotify/server
 
