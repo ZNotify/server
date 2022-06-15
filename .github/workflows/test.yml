@@ -48,18 +48,14 @@ jobs:
     uses: ZNotify/js-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
-  test-sdk:
-    needs: [ test-js-sdk ]
-    runs-on: ubuntu-latest
-
   release:
     uses: ./.github/workflows/release.yml
-    needs: [ test-sdk ]
+    needs: [ test-js-sdk ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
 
   docker:
     uses: ./.github/workflows/docker.yml
-    needs: [ test-sdk ]
+    needs: [ test-js-sdk ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
