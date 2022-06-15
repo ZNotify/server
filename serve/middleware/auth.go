@@ -13,6 +13,7 @@ func Auth(c *gin.Context) {
 		return
 	} else {
 		if user.IsUser(userID) {
+			c.Set("user_id", userID)
 			c.Next()
 			return
 		} else {
