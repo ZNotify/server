@@ -7,6 +7,8 @@ on:
   repository_dispatch:
     types: [ frontend_update ]
 
+permissions: write-all
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -45,6 +47,15 @@ jobs:
 
   test-js-sdk:
     needs: [ test ]
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      security-events: write
+      repository-projects: write
+      deployments: write
+      id-token: write
+
     uses: ZNotify/js-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
