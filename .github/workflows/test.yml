@@ -45,7 +45,7 @@ jobs:
 
   test-js-sdk:
     needs: [ test ]
-    uses: ZNotify/js-sdk/.github/workflows/test.yml
+    uses: ZNotify/js-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-sdk:
