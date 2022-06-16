@@ -86,14 +86,24 @@ jobs:
     uses: ZNotify/kt-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
+  test-py-sdk:
+    needs: [ build-artifact ]
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      repository-projects: write
+    uses: ZNotify/py-sdk/.github/workflows/test.yml@master
+    secrets: inherit
+
   release:
     uses: ./.github/workflows/release.yml
-    needs: [ test-js-sdk, test-kt-sdk ]
+    needs: [ test-js-sdk, test-kt-sdk, test-py-sdk ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
 
   docker:
     uses: ./.github/workflows/docker.yml
-    needs: [ test-js-sdk, test-kt-sdk ]
+    needs: [ test-js-sdk, test-kt-sdk, test-py-sdk ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
