@@ -96,14 +96,20 @@ jobs:
     uses: ZNotify/py-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
+  test-sdks:
+    needs: [ test-js-sdk, test-kt-sdk, test-py-sdk ]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All SDKs passed!"
+
   release:
     uses: ./.github/workflows/release.yml
-    needs: [ test-js-sdk, test-kt-sdk, test-py-sdk ]
+    needs: [ test, test-sdks ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
 
   docker:
     uses: ./.github/workflows/docker.yml
-    needs: [ test-js-sdk, test-kt-sdk, test-py-sdk ]
+    needs: [ test, test-sdks ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
