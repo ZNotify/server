@@ -24,36 +24,12 @@ jobs:
           go-version: 1.18
           cache: true
 
-      - name: Fetch frontend asset
-        run: |
-          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
-          unzip build.zip
-          rm build.zip
-          mv build static
-
-      - name: Build Linux
-        run: go build -o server-linux
-        env:
-          GOOS: linux
-          GOARCH: amd64
-          GOAMD64: v3
-
-      - name: Build Windows
-        run: go build -o server-windows.exe
-        env:
-          GOOS: windows
-          GOARCH: amd64
-          GOAMD64: v3
-
-      - name: Build MacOS
-        run: go build -o server-macos
-        env:
-          GOOS: darwin
-          GOARCH: amd64
-          GOAMD64: v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: server
 
       - name: Bundle
-        run: zip server.zip users.txt server-linux server-windows.exe server-macos
+        run: zip server.zip server-linux server-windows.exe server-macos
 
       - name: Release
         uses: "marvinpinto/action-automatic-releases@latest"

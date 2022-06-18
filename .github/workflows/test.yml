@@ -62,21 +62,18 @@ jobs:
         env:
           GOOS: linux
           GOARCH: amd64
-          GOAMD64: v3
 
       - name: Build Windows
         run: go build -o server-windows.exe
         env:
           GOOS: windows
           GOARCH: amd64
-          GOAMD64: v3
 
       - name: Build MacOS
         run: go build -o server-macos
         env:
           GOOS: darwin
           GOARCH: amd64
-          GOAMD64: v3
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
