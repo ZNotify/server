@@ -57,14 +57,24 @@ jobs:
           rm build.zip
           mv build static
 
-      - name: Build
-        run: go build -v github.com/ZNotify/server
+      - name: Build Linux
+        run: go build -v github.com/ZNotify/server -o server-linux
+
+      - name: Build Windows
+        run: go build -v github.com/ZNotify/server -o server-windows.exe
+
+      - name: Build MacOS
+        run: go build -v github.com/ZNotify/server -o server-macos
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: server
-          path: server
+          path: |
+            server-linux
+            server-windows.exe
+            server-macos
+          if-no-files-found: error
 
   test-js-sdk:
     needs: [ build-artifact ]
