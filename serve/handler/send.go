@@ -5,8 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
-	"notify-api/db"
+	"notify-api/db/entity"
 	"notify-api/push"
+	"notify-api/push/providers"
 	"notify-api/serve/middleware"
 	"time"
 )
@@ -40,13 +41,23 @@ func Send(context *gin.Context) {
 		CreatedAt: time.Now(),
 	}
 
-	err := push.Send(message)
+	err := providers.Send(message)
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}
 
 	// Insert message record
-	db.DB.Create(message)
+	err = entity.MessageUtils.Add(
+		message.ID,
+		message.UserID,
+		message.Title,
+		message.Content,
+		message.Long,
+		message.CreatedAt)
+
+	if err != nil {
+		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+	}
 
 	context.SecureJSON(http.StatusOK, message)
 }

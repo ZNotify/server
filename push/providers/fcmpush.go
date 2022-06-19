@@ -6,11 +6,9 @@ import (
 	"firebase.google.com/go/v4/messaging"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"google.golang.org/api/option"
 	"io/ioutil"
 	"net/http"
-	"notify-api/db"
 	"notify-api/db/entity"
 	"notify-api/push"
 	"notify-api/serve/middleware"
@@ -40,11 +38,7 @@ func (p *FCMProvider) Init(e *gin.Engine) error {
 }
 
 func (p *FCMProvider) Send(msg *push.Message) error {
-	var tokens []entity.FCMTokens
-	dbResult := db.DB.Where("user_id = ?", msg.UserID).Find(&tokens)
-	if dbResult.Error != nil {
-		return dbResult.Error
-	}
+	var tokens = entity.FCMUtils.Get(msg.UserID)
 
 	var registrationIDs []string
 	for i := range tokens {
@@ -103,22 +97,21 @@ func fcmTokenHandler(context *gin.Context) {
 	}
 	tokenString := string(token)
 
-	var cnt int64
-	db.DB.Model(&entity.FCMTokens{}).
-		Where("user_id = ?", userID).
-		Where("registration_id = ?", tokenString).
-		Count(&cnt)
+	cnt, err := entity.FCMUtils.Count(userID, tokenString)
+	if err != nil {
+		context.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 	// TODO: update user with same token
 	if cnt > 0 {
 		context.String(http.StatusNotModified, "Token already exists")
 		return
 	} else {
-		userEntity := entity.FCMTokens{
-			ID:             uuid.New().String(),
-			UserID:         userID,
-			RegistrationID: tokenString,
+		err := entity.FCMUtils.Add(userID, tokenString)
+		if err != nil {
+			context.String(http.StatusInternalServerError, err.Error())
+			return
 		}
-		db.DB.Create(&userEntity)
 		context.String(http.StatusOK, "Registration ID saved.")
 		return
 	}
