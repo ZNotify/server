@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"github.com/ZNotify/server/db"
-	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/serve/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"notify-api/db"
+	"notify-api/db/entity"
+	"notify-api/serve/middleware"
 	"time"
 )
 
@@ -22,9 +22,5 @@ func Record(context *gin.Context) {
 		return
 	}
 
-	var ret []gin.H
-	for i := range messages {
-		ret = append(ret, messages[i].ToGinH())
-	}
-	context.JSON(http.StatusOK, ret)
+	context.JSON(http.StatusOK, messages)
 }

@@ -3,12 +3,12 @@ package push
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/ZNotify/server/db/entity"
 	"github.com/gin-gonic/gin"
 	"io"
 	"math/big"
 	"net/http"
 	"net/url"
+	"notify-api/db/entity"
 	"os"
 	"strconv"
 	"strings"

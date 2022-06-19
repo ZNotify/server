@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/ZNotify/server/web"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"notify-api/web"
 )
 
 var UI = http.FS(web.UI)

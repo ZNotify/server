@@ -2,14 +2,14 @@ package handler
 
 import (
 	"fmt"
-	"github.com/ZNotify/server/db"
-	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/push"
-	"github.com/ZNotify/server/serve/middleware"
-	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
+	"notify-api/db"
+	"notify-api/db/entity"
+	"notify-api/push"
+	"notify-api/serve/middleware"
+	"notify-api/utils"
 	"time"
 )
 
@@ -43,7 +43,7 @@ func Send(context *gin.Context) {
 	}
 
 	if utils.IsTestInstance() {
-		context.SecureJSON(http.StatusOK, message.ToGinH())
+		context.SecureJSON(http.StatusOK, message)
 		return
 	}
 
@@ -55,5 +55,5 @@ func Send(context *gin.Context) {
 	// Insert message record
 	db.DB.Create(message)
 
-	context.SecureJSON(http.StatusOK, message.ToGinH())
+	context.SecureJSON(http.StatusOK, message)
 }

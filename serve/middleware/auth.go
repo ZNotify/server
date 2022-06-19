@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"github.com/ZNotify/server/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"notify-api/user"
 )
 
 const UserIdKey = "user_id"

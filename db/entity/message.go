@@ -1,36 +1,14 @@
 package entity
 
 import (
-	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"time"
 )
 
 type Message struct {
-	ID        string
-	UserID    string
-	Title     string
-	Content   string
-	Long      string
-	CreatedAt time.Time
-}
-
-func (m Message) ToJSON() (string, error) {
-	data := m.ToGinH()
-	bytes, err := json.Marshal(data)
-	if err != nil {
-		return "", err
-	}
-	return string(bytes), nil
-}
-
-func (m Message) ToGinH() gin.H {
-	return gin.H{
-		"id":         m.ID,
-		"user_id":    m.UserID,
-		"title":      m.Title,
-		"content":    m.Content,
-		"long":       m.Long,
-		"created_at": m.CreatedAt.Format(time.RFC3339),
-	}
+	ID        string    `json:"id"`
+	UserID    string    `json:"user_id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	Long      string    `json:"long"`
+	CreatedAt time.Time `json:"created_at"`
 }

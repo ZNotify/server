@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/ZNotify/server/serve/handler"
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
+	"notify-api/serve/handler"
 )
 
 var err error

@@ -2,14 +2,14 @@ package main
 
 import (
 	"embed"
-	"github.com/ZNotify/server/db"
-	"github.com/ZNotify/server/push"
-	"github.com/ZNotify/server/serve/middleware"
-	"github.com/ZNotify/server/user"
-	"github.com/ZNotify/server/utils"
-	"github.com/ZNotify/server/web"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"notify-api/db"
+	"notify-api/push"
+	"notify-api/serve/middleware"
+	"notify-api/user"
+	"notify-api/utils"
+	"notify-api/web"
 )
 
 //go:embed "static/*"

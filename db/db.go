@@ -2,9 +2,9 @@ package db
 
 import (
 	"fmt"
-	"github.com/ZNotify/server/db/entity"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
+	"notify-api/db/entity"
 	"os"
 )
 

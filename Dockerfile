@@ -12,7 +12,7 @@ COPY . .
 RUN apk --update add --no-cache ca-certificates openssl git tzdata && \
 update-ca-certificates
 
-RUN go build -v -o /app/server github.com/ZNotify/server
+RUN go build -v -o /app/server
 
 FROM scratch
 

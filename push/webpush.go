@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/SherClockHolmes/webpush-go"
-	"github.com/ZNotify/server/db"
-	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/serve/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"io/ioutil"
 	"net/http"
+	"notify-api/db"
+	"notify-api/db/entity"
+	"notify-api/serve/middleware"
 	"os"
 )
 
@@ -55,7 +55,7 @@ func (p *WebPushProvider) send(msg *entity.Message) error {
 		return nil
 	}
 
-	data, err := msg.ToJSON()
+	data, err := json.Marshal(msg)
 	if err != nil {
 		return err
 	}

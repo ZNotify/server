@@ -2,12 +2,12 @@ package handler
 
 import (
 	"errors"
-	"github.com/ZNotify/server/db"
-	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/serve/middleware"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"notify-api/db"
+	"notify-api/db/entity"
+	"notify-api/serve/middleware"
 )
 
 func Delete(context *gin.Context) {

@@ -2,9 +2,9 @@ package push
 
 import (
 	"errors"
-	"github.com/ZNotify/server/db/entity"
-	"github.com/ZNotify/server/utils"
 	"github.com/gin-gonic/gin"
+	"notify-api/db/entity"
+	"notify-api/utils"
 	"sync"
 )
 

@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/ZNotify/server/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"notify-api/user"
 	"strconv"
 )
 
