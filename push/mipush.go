@@ -35,10 +35,9 @@ func (p *MiPushProvider) send(msg *entity.Message) error {
 	title := msg.Title
 	content := msg.Content
 	long := msg.Long
-
 	msgID := msg.ID
 
-	intentUriFormat := "intent:#Intent;launchFlags=0x14000000;component=top.learningman.push/.TranslucentActivity;S.userID=%s;S.long=%s;S.msgID=%s;S.title=%s;S.createdAt=%s;S.content=%s;end"
+	intentUriFormat := "intent:#Intent;launchFlags=0x14000000;component=top.learningman.push/.TranslucentActivity;S.user_id=%s;S.long=%s;S.msg_id=%s;S.title=%s;S.created_at=%s;S.content=%s;end"
 	intentUri := fmt.Sprintf(intentUriFormat,
 		url.PathEscape(msg.UserID),
 		url.PathEscape(long),

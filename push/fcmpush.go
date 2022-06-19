@@ -61,12 +61,12 @@ func (p *FCMProvider) send(msg *entity.Message) error {
 			Body:  msg.Content,
 		},
 		Data: map[string]string{
-			"userID":    msg.UserID,
-			"long":      msg.Long,
-			"msgID":     msg.ID,
-			"title":     msg.Title,
-			"content":   msg.Content,
-			"createdAt": msg.CreatedAt.Format(time.RFC3339),
+			"user_id":    msg.UserID,
+			"long":       msg.Long,
+			"msg_id":     msg.ID,
+			"title":      msg.Title,
+			"content":    msg.Content,
+			"created_at": msg.CreatedAt.Format(time.RFC3339),
 		},
 		Android: &messaging.AndroidConfig{
 			Notification: &messaging.AndroidNotification{

@@ -66,7 +66,7 @@ func (p *WebPushProvider) send(msg *entity.Message) error {
 		if err != nil {
 			return err
 		}
-		_, err := webpush.SendNotification([]byte(data), s, p.WebPushOption)
+		_, err := webpush.SendNotification(data, s, p.WebPushOption)
 		if err != nil {
 			return err
 		}
