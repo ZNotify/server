@@ -4,10 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
+	"notify-api/user"
 	"testing"
 )
 
 func TestCheck(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	user.Init()
 	t.Run("check success", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)

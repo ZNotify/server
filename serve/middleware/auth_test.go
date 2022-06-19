@@ -20,8 +20,9 @@ func (suite *AuthMiddlewareTestSuite) SetupTest() {
 	suite.recorder = httptest.NewRecorder()
 }
 
-func (suite *AuthMiddlewareTestSuite) SetupAllSuite() {
+func (suite *AuthMiddlewareTestSuite) SetupSuite() {
 	user.Init()
+	gin.SetMode(gin.TestMode)
 }
 
 func (suite *AuthMiddlewareTestSuite) TestNoNeedForAuth() {
