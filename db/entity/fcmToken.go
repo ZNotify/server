@@ -17,16 +17,17 @@ var FCMUtils = fcmTokensUtils{}
 
 type fcmTokensUtils struct{}
 
-func (t fcmTokensUtils) Add(userID string, regID string) error {
-	ret := db.DB.Create(FCMTokens{
+func (t fcmTokensUtils) Add(userID string, regID string) (FCMTokens, error) {
+	token := FCMTokens{
 		ID:             uuid.New().String(),
 		UserID:         userID,
 		RegistrationID: regID,
-	})
-	if ret.Error != nil {
-		return ret.Error
 	}
-	return nil
+	ret := db.DB.Create(&token)
+	if ret.Error != nil {
+		return FCMTokens{}, ret.Error
+	}
+	return token, nil
 }
 
 func (_ fcmTokensUtils) Count(userID string, regID string) (int64, error) {

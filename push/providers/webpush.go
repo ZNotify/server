@@ -97,7 +97,7 @@ func webPushHandler(context *gin.Context) {
 		context.String(http.StatusNotModified, "Token already exists")
 		return
 	} else {
-		err := entity.WebSubUtils.Add(userID, tokenString)
+		_, err := entity.WebSubUtils.Add(userID, tokenString)
 		if err != nil {
 			context.String(http.StatusInternalServerError, err.Error())
 			return

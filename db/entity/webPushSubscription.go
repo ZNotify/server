@@ -13,24 +13,21 @@ type WebSubscription struct {
 	Subscription string
 }
 
-func (s WebSubscription) Add() {
-	db.DB.Create(s)
-}
-
 type webSubModel struct{}
 
 var WebSubUtils = webSubModel{}
 
-func (_ webSubModel) Add(userID string, sub string) error {
-	ret := db.DB.Create(&WebSubscription{
+func (_ webSubModel) Add(userID string, sub string) (WebSubscription, error) {
+	s := WebSubscription{
 		ID:           uuid.New().String(),
 		UserID:       userID,
 		Subscription: sub,
-	})
-	if ret.Error != nil {
-		return ret.Error
 	}
-	return nil
+	ret := db.DB.Create(&s)
+	if ret.Error != nil {
+		return WebSubscription{}, ret.Error
+	}
+	return s, nil
 }
 
 func (_ webSubModel) Count(userID string, sub string) int64 {

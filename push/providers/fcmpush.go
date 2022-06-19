@@ -107,7 +107,7 @@ func fcmTokenHandler(context *gin.Context) {
 		context.String(http.StatusNotModified, "Token already exists")
 		return
 	} else {
-		err := entity.FCMUtils.Add(userID, tokenString)
+		_, err := entity.FCMUtils.Add(userID, tokenString)
 		if err != nil {
 			context.String(http.StatusInternalServerError, err.Error())
 			return

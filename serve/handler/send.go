@@ -32,7 +32,7 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	message := &push.Message{
+	pushMsg := &push.Message{
 		ID:        uuid.New().String(),
 		UserID:    userID,
 		Title:     title,
@@ -41,23 +41,23 @@ func Send(context *gin.Context) {
 		CreatedAt: time.Now(),
 	}
 
-	err := providers.Send(message)
+	err := providers.Send(pushMsg)
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}
 
 	// Insert message record
-	err = entity.MessageUtils.Add(
-		message.ID,
-		message.UserID,
-		message.Title,
-		message.Content,
-		message.Long,
-		message.CreatedAt)
+	msg, err := entity.MessageUtils.Add(
+		pushMsg.ID,
+		pushMsg.UserID,
+		pushMsg.Title,
+		pushMsg.Content,
+		pushMsg.Long,
+		pushMsg.CreatedAt)
 
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}
 
-	context.SecureJSON(http.StatusOK, message)
+	context.SecureJSON(http.StatusOK, msg)
 }
