@@ -1,4 +1,4 @@
-package push
+package providers
 
 import (
 	"encoding/json"
@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"notify-api/db"
 	"notify-api/db/entity"
+	"notify-api/push"
 	"notify-api/serve/middleware"
 	"os"
 )
@@ -23,7 +24,7 @@ type WebPushProvider struct {
 	VAPIDPrivateKey string
 }
 
-func (p *WebPushProvider) init(e *gin.Engine) error {
+func (p *WebPushProvider) Init(e *gin.Engine) error {
 	p.WebPushOption = &webpush.Options{
 		HTTPClient:      webPushClient,
 		TTL:             60 * 60 * 24,
@@ -39,7 +40,7 @@ func (p *WebPushProvider) init(e *gin.Engine) error {
 	return nil
 }
 
-func (p *WebPushProvider) send(msg *entity.Message) error {
+func (p *WebPushProvider) Send(msg *push.Message) error {
 	var tokens []entity.WebSubscription
 	dbResult := db.DB.Where("user_id = ?", msg.UserID).Find(&tokens)
 	if dbResult.Error != nil {
@@ -75,7 +76,7 @@ func (p *WebPushProvider) send(msg *entity.Message) error {
 	return nil
 }
 
-func (p *WebPushProvider) check() error {
+func (p *WebPushProvider) Check() error {
 	VAPIDPublicKey := os.Getenv("VAPIDPublicKey")
 	VAPIDPrivateKey := os.Getenv("VAPIDPrivateKey")
 	if VAPIDPublicKey == "" || VAPIDPrivateKey == "" {

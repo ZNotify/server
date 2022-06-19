@@ -3,35 +3,45 @@ package push
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"notify-api/db/entity"
+	"notify-api/push/providers"
 	"notify-api/utils"
 	"sync"
+	"time"
 )
 
 type Provider interface {
-	send(msg *entity.Message) error
-	check() error
-	init(e *gin.Engine) error
+	Send(msg *Message) error
+	Check() error
+	Init(e *gin.Engine) error
 }
 
-var providers = []Provider{new(FCMProvider), new(WebPushProvider), new(MiPushProvider)}
+type Message struct {
+	ID        string
+	UserID    string
+	Title     string
+	Content   string
+	Long      string
+	CreatedAt time.Time
+}
+
+var ps = []Provider{new(providers.FCMProvider), new(providers.MiPushProvider), new(providers.WebPushProvider)}
 
 func Init(e *gin.Engine) {
 	if utils.IsTestInstance() {
 		return
 	}
-	for _, v := range providers {
-		err := v.check()
+	for _, v := range ps {
+		err := v.Check()
 		if err != nil {
 			panic(err)
 		}
 	}
 	wg := sync.WaitGroup{}
-	wg.Add(len(providers))
-	for _, v := range providers {
-		providers := &v
+	wg.Add(len(ps))
+	for _, v := range ps {
+		p := &v
 		go func() {
-			err := (*providers).init(e)
+			err := (*p).Init(e)
 			if err != nil {
 				panic(err)
 			}
@@ -41,14 +51,14 @@ func Init(e *gin.Engine) {
 	wg.Wait()
 }
 
-func Send(msg *entity.Message) error {
+func Send(msg *Message) error {
 	var errs []error
 	var wg sync.WaitGroup
-	wg.Add(len(providers))
-	for _, v := range providers {
+	wg.Add(len(ps))
+	for _, v := range ps {
 		provider := &v
 		go func() {
-			pe := (*provider).send(msg)
+			pe := (*provider).Send(msg)
 			if pe != nil {
 				errs = append(errs, pe)
 			}

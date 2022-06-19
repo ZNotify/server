@@ -1,4 +1,4 @@
-package push
+package providers
 
 import (
 	"context"
@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"notify-api/db"
 	"notify-api/db/entity"
+	"notify-api/push"
 	"notify-api/serve/middleware"
 	"os"
 	"time"
@@ -22,7 +23,7 @@ type FCMProvider struct {
 	FCMCredential []byte
 }
 
-func (p *FCMProvider) init(e *gin.Engine) error {
+func (p *FCMProvider) Init(e *gin.Engine) error {
 	opt := option.WithCredentialsJSON(p.FCMCredential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
@@ -38,7 +39,7 @@ func (p *FCMProvider) init(e *gin.Engine) error {
 	return nil
 }
 
-func (p *FCMProvider) send(msg *entity.Message) error {
+func (p *FCMProvider) Send(msg *push.Message) error {
 	var tokens []entity.FCMTokens
 	dbResult := db.DB.Where("user_id = ?", msg.UserID).Find(&tokens)
 	if dbResult.Error != nil {
@@ -82,7 +83,7 @@ func (p *FCMProvider) send(msg *entity.Message) error {
 	return nil
 }
 
-func (p *FCMProvider) check() error {
+func (p *FCMProvider) Check() error {
 	FCMCredential := []byte(os.Getenv("FCMCredential"))
 	if len(FCMCredential) == 0 {
 		return fmt.Errorf("FCMCredential is not set")

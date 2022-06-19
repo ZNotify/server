@@ -6,10 +6,8 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"notify-api/db"
-	"notify-api/db/entity"
 	"notify-api/push"
 	"notify-api/serve/middleware"
-	"notify-api/utils"
 	"time"
 )
 
@@ -33,18 +31,13 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	message := &entity.Message{
+	message := &push.Message{
 		ID:        uuid.New().String(),
 		UserID:    userID,
 		Title:     title,
 		Content:   content,
 		Long:      long,
 		CreatedAt: time.Now(),
-	}
-
-	if utils.IsTestInstance() {
-		context.SecureJSON(http.StatusOK, message)
-		return
 	}
 
 	err := push.Send(message)

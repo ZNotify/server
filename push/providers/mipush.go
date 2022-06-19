@@ -1,4 +1,4 @@
-package push
+package providers
 
 import (
 	"crypto/rand"
@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"net/http"
 	"net/url"
-	"notify-api/db/entity"
+	"notify-api/push"
 	"os"
 	"strconv"
 	"strings"
@@ -22,12 +22,12 @@ type MiPushProvider struct {
 	MiPushClient *http.Client
 }
 
-func (p *MiPushProvider) init(e *gin.Engine) error {
+func (p *MiPushProvider) Init(e *gin.Engine) error {
 	p.MiPushClient = &http.Client{}
 	return nil
 }
 
-func (p *MiPushProvider) send(msg *entity.Message) error {
+func (p *MiPushProvider) Send(msg *push.Message) error {
 	n, _ := rand.Int(rand.Reader, big.NewInt(1000000))
 	notifyID := n.Int64()
 
@@ -83,7 +83,7 @@ func (p *MiPushProvider) send(msg *entity.Message) error {
 	return nil
 }
 
-func (p *MiPushProvider) check() error {
+func (p *MiPushProvider) Check() error {
 	MiPushSecret := os.Getenv("MiPushSecret")
 	if MiPushSecret == "" {
 		return fmt.Errorf("MiPushSecret is not set")
