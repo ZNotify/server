@@ -6,31 +6,32 @@ import (
 )
 
 type Message struct {
-	ID        string
-	UserID    string
-	Title     string
-	Content   string
-	Long      string
-	CreatedAt time.Time
+	ID        string    `json:"id"`
+	UserID    string    `json:"user_id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	Long      string    `json:"long"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type messageModel struct{}
 
 var MessageUtils = messageModel{}
 
-func (_ messageModel) Add(id string, userID string, title string, content string, long string, createdAt time.Time) error {
-	ret := db.DB.Create(&Message{
+func (_ messageModel) Add(id string, userID string, title string, content string, long string, createdAt time.Time) (Message, error) {
+	msg := Message{
 		ID:        id,
 		UserID:    userID,
 		Title:     title,
 		Content:   content,
 		Long:      long,
 		CreatedAt: createdAt,
-	})
-	if ret.Error != nil {
-		return ret.Error
 	}
-	return nil
+	ret := db.DB.Create(&msg)
+	if ret.Error != nil {
+		return Message{}, ret.Error
+	}
+	return msg, nil
 }
 
 func (_ messageModel) GetMessageInMonth(userID string) ([]Message, error) {
