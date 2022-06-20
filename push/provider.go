@@ -3,6 +3,7 @@ package push
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"notify-api/utils"
 	"sync"
 	"time"
 )
@@ -81,7 +82,7 @@ func (p *providers) Register(pv Provider) error {
 }
 
 func (p *providers) RegisterRouter(e *gin.Engine) error {
-	if len(p.providerMap) == 0 {
+	if len(p.providerMap) == 0 && !utils.IsTestInstance() {
 		return errors.New("providerMap is empty")
 	}
 	for _, v := range p.providerMap {

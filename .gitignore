@@ -109,3 +109,4 @@ notify.db
 server.exe
 web/static/
 notify.json
+*.exe
