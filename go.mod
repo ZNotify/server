@@ -10,7 +10,7 @@ require (
 	github.com/glebarez/sqlite v1.4.5
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.7.3
 	google.golang.org/api v0.84.0
 	gorm.io/gorm v1.23.6
 )
@@ -59,7 +59,7 @@ require (
 	google.golang.org/grpc v1.47.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/libc v1.16.8 // indirect
 	modernc.org/mathutil v1.4.1 // indirect
 	modernc.org/memory v1.1.1 // indirect
