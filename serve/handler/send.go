@@ -14,13 +14,6 @@ import (
 func Send(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
-	// string to bool
-	dryRun := context.Request.URL.Query().Has("dry")
-	if dryRun {
-		context.String(http.StatusBadRequest, "Dry query param is not supported now.")
-		return
-	}
-
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")
 	content := context.PostForm("content")
