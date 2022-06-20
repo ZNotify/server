@@ -24,8 +24,8 @@ func New() *gin.Engine {
 	user.Controller.Init()
 	web.Init()
 
-	setupRouter()
 	setupMiddleware()
+	setupRouter()
 
 	return router
 }
