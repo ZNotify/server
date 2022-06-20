@@ -32,7 +32,7 @@ jobs:
           wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
           unzip build.zip
           rm build.zip
-          mv build static
+          mv build web/static
 
       - name: Run tests
         run: go test ./...
