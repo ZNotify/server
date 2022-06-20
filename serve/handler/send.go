@@ -51,5 +51,5 @@ func Send(context *gin.Context) {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}
 
-	context.SecureJSON(http.StatusOK, msg)
+	context.JSON(http.StatusOK, msg)
 }
