@@ -11,7 +11,9 @@ type userController struct {
 	users []string
 }
 
-var Controller = userController{}
+var Controller = userController{
+	users: make([]string, 0),
+}
 
 // Init read file users.txt to get user list
 func (c *userController) Init() {
