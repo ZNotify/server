@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"notify-api/db/entity"
+	"notify-api/serve/entity/safeMessage"
 	"notify-api/serve/middleware"
 )
 
@@ -16,5 +17,5 @@ func Record(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, messages)
+	context.JSON(http.StatusOK, safeMessage.FromEntityMessageArray(messages))
 }
