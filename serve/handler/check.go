@@ -9,7 +9,7 @@ import (
 
 func Check(context *gin.Context) {
 	userID := context.Query("user_id")
-	result := user.IsUser(userID)
+	result := user.Controller.Is(userID)
 	context.String(http.StatusOK, strconv.FormatBool(result))
 	return
 }

@@ -14,7 +14,7 @@ func Auth(c *gin.Context) {
 		c.Next()
 		return
 	} else {
-		if user.IsUser(userID) {
+		if user.Controller.Is(userID) {
 			c.Set(UserIdKey, userID)
 			c.Next()
 			return

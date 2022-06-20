@@ -7,12 +7,16 @@ import (
 	"os"
 )
 
-var users []string
+type userController struct {
+	users []string
+}
+
+var Controller = userController{}
 
 // Init read file users.txt to get user list
-func Init() {
+func (c *userController) Init() {
 	if utils.IsTestInstance() {
-		users = append(users, "test")
+		c.users = append(c.users, "test")
 		return
 	}
 
@@ -29,10 +33,10 @@ func Init() {
 		}
 	}(file)
 
-	users = make([]string, 0)
+	c.users = make([]string, 0)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		users = append(users, scanner.Text())
+		c.users = append(c.users, scanner.Text())
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -41,9 +45,9 @@ func Init() {
 	}
 }
 
-// IsUser judge user if in the user list
-func IsUser(user string) bool {
-	for _, u := range users {
+// Is judge user if in the user list
+func (c *userController) Is(user string) bool {
+	for _, u := range c.users {
 		if u == user {
 			return true
 		}

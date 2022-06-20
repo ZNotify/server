@@ -22,7 +22,7 @@ type WebPushProvider struct {
 	VAPIDPrivateKey string
 }
 
-func (p *WebPushProvider) Init(e *gin.Engine) error {
+func (p *WebPushProvider) Init() error {
 	p.WebPushOption = &webpush.Options{
 		HTTPClient:      webPushClient,
 		TTL:             60 * 60 * 24,
@@ -32,8 +32,6 @@ func (p *WebPushProvider) Init(e *gin.Engine) error {
 		Urgency:         webpush.UrgencyHigh, // Always send notification, even low battery
 	}
 	p.WebPushClient = &http.Client{}
-
-	e.PUT("/:user_id/web/sub", webPushHandler)
 
 	return nil
 }
@@ -82,7 +80,11 @@ func (p *WebPushProvider) Check() error {
 	}
 }
 
-func webPushHandler(context *gin.Context) {
+func (p *WebPushProvider) ChannelName() string {
+	return "WebPush"
+}
+
+func (p *WebPushProvider) ProviderHandler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
 	token, err := ioutil.ReadAll(context.Request.Body)
@@ -104,4 +106,12 @@ func webPushHandler(context *gin.Context) {
 		}
 		context.String(http.StatusOK, "Subscription saved.")
 	}
+}
+
+func (p *WebPushProvider) ProviderHandlerPath() string {
+	return "/:user_id/web/sub"
+}
+
+func (p *WebPushProvider) ProviderHandlerMethod() string {
+	return "PUT"
 }

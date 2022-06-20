@@ -21,7 +21,7 @@ func (suite *AuthMiddlewareTestSuite) SetupTest() {
 }
 
 func (suite *AuthMiddlewareTestSuite) SetupSuite() {
-	user.Init()
+	user.Controller.Init()
 	gin.SetMode(gin.TestMode)
 }
 

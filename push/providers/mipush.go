@@ -3,7 +3,6 @@ package providers
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"math/big"
 	"net/http"
@@ -22,7 +21,7 @@ type MiPushProvider struct {
 	MiPushClient *http.Client
 }
 
-func (p *MiPushProvider) Init(e *gin.Engine) error {
+func (p *MiPushProvider) Init() error {
 	p.MiPushClient = &http.Client{}
 	return nil
 }
@@ -81,6 +80,10 @@ func (p *MiPushProvider) Send(msg *push.Message) error {
 	}(resp.Body)
 
 	return nil
+}
+
+func (p *MiPushProvider) ChannelName() string {
+	return "MiPush"
 }
 
 func (p *MiPushProvider) Check() error {

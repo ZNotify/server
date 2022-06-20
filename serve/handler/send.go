@@ -6,8 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"notify-api/db/entity"
-	"notify-api/push"
-	"notify-api/push/providers"
+	. "notify-api/push"
 	"notify-api/serve/middleware"
 	"time"
 )
@@ -32,7 +31,7 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	pushMsg := &push.Message{
+	pushMsg := &Message{
 		ID:        uuid.New().String(),
 		UserID:    userID,
 		Title:     title,
@@ -41,7 +40,7 @@ func Send(context *gin.Context) {
 		CreatedAt: time.Now(),
 	}
 
-	err := providers.Send(pushMsg)
+	err := Providers.Send(pushMsg)
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}

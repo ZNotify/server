@@ -107,5 +107,5 @@ gen
 vendor/
 notify.db
 server.exe
-static/
+web/static/
 notify.json

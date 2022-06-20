@@ -10,7 +10,7 @@ import (
 
 func TestCheck(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	user.Init()
+	user.Controller.Init()
 	t.Run("check success", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)

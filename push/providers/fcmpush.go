@@ -21,7 +21,7 @@ type FCMProvider struct {
 	FCMCredential []byte
 }
 
-func (p *FCMProvider) Init(e *gin.Engine) error {
+func (p *FCMProvider) Init() error {
 	opt := option.WithCredentialsJSON(p.FCMCredential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
@@ -31,8 +31,6 @@ func (p *FCMProvider) Init(e *gin.Engine) error {
 	if err != nil {
 		return err
 	}
-
-	e.PUT("/:user_id/fcm/token", fcmTokenHandler)
 
 	return nil
 }
@@ -87,7 +85,11 @@ func (p *FCMProvider) Check() error {
 	}
 }
 
-func fcmTokenHandler(context *gin.Context) {
+func (p *FCMProvider) ChannelName() string {
+	return "FCM"
+}
+
+func (p *FCMProvider) ProviderHandler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
 	token, err := ioutil.ReadAll(context.Request.Body)
@@ -115,4 +117,12 @@ func fcmTokenHandler(context *gin.Context) {
 		context.String(http.StatusOK, "Registration ID saved.")
 		return
 	}
+}
+
+func (p *FCMProvider) ProviderHandlerPath() string {
+	return "/:user_id/fcm/token"
+}
+
+func (p *FCMProvider) ProviderHandlerMethod() string {
+	return "PUT"
 }

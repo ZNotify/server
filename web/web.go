@@ -7,7 +7,10 @@ import (
 
 var UI fs.FS
 
-func Init(f *embed.FS) {
+//go:embed "static/*"
+var f embed.FS
+
+func Init() {
 	var err error
 	UI, err = fs.Sub(f, "static")
 	if err != nil {
