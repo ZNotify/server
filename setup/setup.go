@@ -51,7 +51,7 @@ func setupRouter() {
 	router.POST("/:user_id/send", handler.Send)
 	router.DELETE("/:user_id/:id", handler.Delete)
 
-	router.StaticFS("/fs", handler.UI)
+	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", handler.Index)
 
 	router.GET("/alive", handler.Alive)

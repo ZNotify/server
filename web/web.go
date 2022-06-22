@@ -3,17 +3,18 @@ package web
 import (
 	"embed"
 	"io/fs"
+	"net/http"
 )
 
-var UI fs.FS
+var StaticHttpFS http.FileSystem
 
 //go:embed "static/*"
 var f embed.FS
 
 func Init() {
-	var err error
-	UI, err = fs.Sub(f, "static")
+	FS, err := fs.Sub(f, "static")
 	if err != nil {
 		panic(err)
 	}
+	StaticHttpFS = http.FS(FS)
 }
