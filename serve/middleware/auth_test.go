@@ -25,15 +25,6 @@ func (suite *AuthMiddlewareTestSuite) SetupSuite() {
 	gin.SetMode(gin.TestMode)
 }
 
-func (suite *AuthMiddlewareTestSuite) TestNoNeedForAuth() {
-	suite.router.GET("/", Auth, func(c *gin.Context) {
-		c.String(http.StatusOK, "")
-	})
-	req := httptest.NewRequest("GET", "/", nil)
-	suite.router.ServeHTTP(suite.recorder, req)
-	suite.Equal(http.StatusOK, suite.recorder.Code)
-}
-
 func (suite *AuthMiddlewareTestSuite) TestAuthPassed() {
 	suite.router.GET("/:user_id/ok", Auth, func(c *gin.Context) {
 		c.String(http.StatusOK, "")
