@@ -3,14 +3,9 @@ package providers
 import (
 	"fmt"
 	"notify-api/push"
-	"notify-api/utils"
 )
 
 func Init() {
-	if utils.IsTestInstance() {
-		return
-	}
-
 	var err error
 
 	err = push.Providers.Register(new(FCMProvider))

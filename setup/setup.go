@@ -42,14 +42,13 @@ func checkConnection() {
 
 func setupMiddleware() {
 	router.Use(cors.Default())
-	router.Use(middleware.Auth)
 }
 
 func setupRouter() {
 	router.GET("/check", handler.Check)
-	router.GET("/:user_id/record", handler.Record)
-	router.POST("/:user_id/send", handler.Send)
-	router.DELETE("/:user_id/:id", handler.Delete)
+	router.GET("/:user_id/record", middleware.Auth, handler.Record)
+	router.POST("/:user_id/send", middleware.Auth, handler.Send)
+	router.DELETE("/:user_id/:id", middleware.Auth, handler.Delete)
 
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", handler.Index)
