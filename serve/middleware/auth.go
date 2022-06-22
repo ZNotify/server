@@ -9,9 +9,9 @@ import (
 const UserIdKey = "user_id"
 
 func Auth(c *gin.Context) {
-	userID, shouldCheck := c.Params.Get(UserIdKey)
-	if !shouldCheck {
-		c.Next()
+	userID, ok := c.Params.Get(UserIdKey)
+	if !ok {
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	} else {
 		if user.Controller.Is(userID) {

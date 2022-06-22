@@ -3,6 +3,7 @@ package push
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"notify-api/serve/middleware"
 	"notify-api/utils"
 	"sync"
 	"time"
@@ -39,6 +40,10 @@ var Providers = providers{
 }
 
 func (p *providers) Send(msg *Message) error {
+	if utils.IsTestInstance() {
+		return nil
+	}
+
 	var errs []error
 	var wg sync.WaitGroup
 	wg.Add(len(p.providerMap))
@@ -68,13 +73,15 @@ func (p *providers) Register(pv Provider) error {
 		return errors.New("providerMap already registered")
 	}
 
-	err := pv.Check()
-	if err != nil {
-		return err
-	}
-	err = pv.Init()
-	if err != nil {
-		return err
+	if !utils.IsTestInstance() {
+		err := pv.Check()
+		if err != nil {
+			return err
+		}
+		err = pv.Init()
+		if err != nil {
+			return err
+		}
 	}
 
 	p.providerMap[name] = pv
@@ -87,7 +94,7 @@ func (p *providers) RegisterRouter(e *gin.Engine) error {
 	}
 	for _, v := range p.providerMap {
 		if pv, ok := v.(ProvidersWithHandler); ok {
-			e.Handle(pv.ProviderHandlerMethod(), pv.ProviderHandlerPath(), pv.ProviderHandler)
+			e.Handle(pv.ProviderHandlerMethod(), pv.ProviderHandlerPath(), middleware.Auth, pv.ProviderHandler)
 		}
 	}
 	return nil
