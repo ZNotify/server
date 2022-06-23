@@ -21,8 +21,9 @@ func TestWebHandler(t *testing.T) {
 		if w.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
 		}
-		if w.Header().Get("Content-Type") != "image/x-icon" {
-			t.Errorf("Expected content type %s, got %s", "image/x-icon", w.Header().Get("Content-Type"))
+		if w.Header().Get("Content-Type") != "image/x-icon" ||
+			w.Header().Get("Content-Length") != "image/vnd.microsoft.icon" {
+			t.Errorf("Expected content type %s, got %s", "image/x-icon or image/vnd.microsoft.icon", w.Header().Get("Content-Type"))
 		}
 	})
 }
