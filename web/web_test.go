@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -16,14 +17,14 @@ func TestWebHandler(t *testing.T) {
 		r := gin.New()
 		r.StaticFS("/fs", StaticHttpFS)
 
-		req := httptest.NewRequest("GET", "/fs/favicon.ico", nil)
+		req := httptest.NewRequest("GET", "/fs/robots.txt", nil)
 		r.ServeHTTP(w, req)
 		if w.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
 		}
-		if w.Header().Get("Content-Type") != "image/x-icon" ||
-			w.Header().Get("Content-Length") != "image/vnd.microsoft.icon" {
-			t.Errorf("Expected content type %s, got %s", "image/x-icon or image/vnd.microsoft.icon", w.Header().Get("Content-Type"))
+
+		if !strings.Contains(w.Header().Get("Content-Type"), "text/plain") {
+			t.Errorf("Expected content type %s, got %s", "text/plain", w.Header().Get("Content-Type"))
 		}
 	})
 }
