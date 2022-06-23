@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestWeb(t *testing.T) {
+func TestIndex(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	web.Init()
 	t.Run("check html", func(t *testing.T) {
