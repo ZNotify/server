@@ -10,7 +10,7 @@ require (
 	github.com/glebarez/sqlite v1.4.5
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
-	github.com/stretchr/testify v1.7.4
+	github.com/stretchr/testify v1.7.5
 	google.golang.org/api v0.85.0
 	gorm.io/gorm v1.23.6
 )
