@@ -5,7 +5,7 @@ go 1.17
 require (
 	firebase.google.com/go/v4 v4.8.0
 	github.com/SherClockHolmes/webpush-go v1.2.0
-	github.com/gin-contrib/cors v1.3.1
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/glebarez/sqlite v1.4.5
 	github.com/google/uuid v1.3.0
