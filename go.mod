@@ -12,7 +12,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/stretchr/testify v1.8.0
 	google.golang.org/api v0.86.0
-	gorm.io/gorm v1.23.7
+	gorm.io/gorm v1.23.8
 )
 
 require (
