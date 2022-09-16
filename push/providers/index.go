@@ -14,12 +14,6 @@ func Init() {
 	} else {
 		fmt.Println("FCMProvider registered")
 	}
-	err = push.Providers.Register(new(MiPushProvider))
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("MiPushProvider registered")
-	}
 	err = push.Providers.Register(new(WebPushProvider))
 	if err != nil {
 		panic(err)
