@@ -10,7 +10,6 @@ import (
 	"notify-api/db/model"
 	"notify-api/push"
 	"notify-api/serve/middleware"
-	"notify-api/user"
 	"os"
 )
 
@@ -21,8 +20,6 @@ type WebPushProvider struct {
 	WebPushClient   *http.Client
 	VAPIDPublicKey  string
 	VAPIDPrivateKey string
-
-	subsCache map[string][]string
 }
 
 func (p *WebPushProvider) Init() error {
@@ -36,26 +33,17 @@ func (p *WebPushProvider) Init() error {
 	}
 	p.WebPushClient = &http.Client{}
 
-	users := user.Controller.Users()
-	p.subsCache = make(map[string][]string)
-	for _, v := range users {
-		tokens, err := model.WebSubUtils.Get(v)
-		if err != nil {
-			return err
-		}
-		var subs []string
-		for _, v := range tokens {
-			subs = append(subs, v.Subscription)
-		}
-		p.subsCache[v] = subs
-	}
-
 	return nil
 }
 
 func (p *WebPushProvider) Send(msg *push.Message) error {
-	if len(p.subsCache[msg.UserID]) == 0 {
-		return nil
+	var tokens []string
+	subs, err := model.WebSubUtils.Get(msg.UserID)
+	if err != nil {
+		return err
+	}
+	for _, v := range subs {
+		tokens = append(tokens, v.Subscription)
 	}
 
 	data, err := json.Marshal(msg)
@@ -63,7 +51,7 @@ func (p *WebPushProvider) Send(msg *push.Message) error {
 		return err
 	}
 
-	for _, v := range p.subsCache[msg.UserID] {
+	for _, v := range tokens {
 		s := &webpush.Subscription{}
 		err = json.Unmarshal([]byte(v), &s)
 		if err != nil {
@@ -114,7 +102,6 @@ func (p *WebPushProvider) ProviderHandler(context *gin.Context) {
 			context.String(http.StatusInternalServerError, err.Error())
 			return
 		}
-		p.subsCache[userID] = append(p.subsCache[userID], tokenString)
 		context.String(http.StatusOK, "Subscription saved.")
 	}
 }

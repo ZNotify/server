@@ -12,7 +12,6 @@ import (
 	"notify-api/db/model"
 	"notify-api/push"
 	"notify-api/serve/middleware"
-	"notify-api/user"
 	"os"
 	"time"
 )
@@ -20,8 +19,6 @@ import (
 type FCMProvider struct {
 	FCMClient     *messaging.Client
 	FCMCredential []byte
-
-	regIDCache map[string][]string
 }
 
 func (p *FCMProvider) Init() error {
@@ -35,26 +32,17 @@ func (p *FCMProvider) Init() error {
 		return err
 	}
 
-	users := user.Controller.Users()
-	p.regIDCache = make(map[string][]string)
-	for _, u := range users {
-		regs, err := model.FCMTokenUtils.Get(u)
-		if err != nil {
-			return err
-		}
-		tokens := make([]string, 0)
-		for _, r := range regs {
-			tokens = append(tokens, r.RegistrationID)
-		}
-		p.regIDCache[u] = tokens
-	}
 	return nil
 }
 
 func (p *FCMProvider) Send(msg *push.Message) error {
-
-	if len(p.regIDCache[msg.UserID]) == 0 {
-		return nil
+	var tokens []string
+	regs, err := model.FCMTokenUtils.Get(msg.UserID)
+	if err != nil {
+		return err
+	}
+	for _, v := range regs {
+		tokens = append(tokens, v.RegistrationID)
 	}
 
 	// https://firebase.google.com/docs/cloud-messaging/send-message#example-notification-click-action
@@ -76,9 +64,9 @@ func (p *FCMProvider) Send(msg *push.Message) error {
 				ClickAction: "TranslucentActivity",
 			},
 		},
-		Tokens: p.regIDCache[msg.UserID],
+		Tokens: tokens,
 	}
-	_, err := p.FCMClient.SendMulticast(context.Background(), &fcmMsg)
+	_, err = p.FCMClient.SendMulticast(context.Background(), &fcmMsg)
 	if err != nil {
 		return err
 	}
@@ -124,7 +112,6 @@ func (p *FCMProvider) ProviderHandler(context *gin.Context) {
 			context.String(http.StatusInternalServerError, err.Error())
 			return
 		}
-		p.regIDCache[userID] = append(p.regIDCache[userID], tokenString)
 		context.String(http.StatusOK, "Registration ID saved.")
 		return
 	}
