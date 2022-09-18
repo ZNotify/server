@@ -1,6 +1,6 @@
 module notify-api
 
-go 1.17
+go 1.18
 
 require (
 	firebase.google.com/go/v4 v4.8.0
@@ -9,6 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/glebarez/sqlite v1.4.6
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/websocket v1.5.0
 	github.com/joho/godotenv v1.4.0
 	github.com/stretchr/testify v1.8.0
 	google.golang.org/api v0.96.0

@@ -23,7 +23,7 @@ VAPIDPrivateKey # Web Push VAPID Private Key
 
 ## 请求参数
 ```
-POST http://host/{user_id}/send
+POST https://host/{user_id}/send
 
 @path   user_id  用户 ID
 @param  title    推送标题

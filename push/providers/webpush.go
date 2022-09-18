@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"github.com/SherClockHolmes/webpush-go"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"io"
 	"net/http"
-	"notify-api/db/entity"
+	"notify-api/db/model"
 	"notify-api/push"
 	"notify-api/serve/middleware"
+	"notify-api/user"
 	"os"
 )
 
@@ -20,6 +21,8 @@ type WebPushProvider struct {
 	WebPushClient   *http.Client
 	VAPIDPublicKey  string
 	VAPIDPrivateKey string
+
+	subsCache map[string][]string
 }
 
 func (p *WebPushProvider) Init() error {
@@ -33,18 +36,25 @@ func (p *WebPushProvider) Init() error {
 	}
 	p.WebPushClient = &http.Client{}
 
+	users := user.Controller.Users()
+	p.subsCache = make(map[string][]string)
+	for _, v := range users {
+		tokens, err := model.WebSubUtils.Get(v)
+		if err != nil {
+			return err
+		}
+		var subs []string
+		for _, v := range tokens {
+			subs = append(subs, v.Subscription)
+		}
+		p.subsCache[v] = subs
+	}
+
 	return nil
 }
 
 func (p *WebPushProvider) Send(msg *push.Message) error {
-	var tokens = entity.WebSubUtils.Get(msg.UserID)
-
-	var subs []string
-	for _, v := range tokens {
-		subs = append(subs, v.Subscription)
-	}
-
-	if len(subs) == 0 {
+	if len(p.subsCache[msg.UserID]) == 0 {
 		return nil
 	}
 
@@ -53,7 +63,7 @@ func (p *WebPushProvider) Send(msg *push.Message) error {
 		return err
 	}
 
-	for _, v := range subs {
+	for _, v := range p.subsCache[msg.UserID] {
 		s := &webpush.Subscription{}
 		err = json.Unmarshal([]byte(v), &s)
 		if err != nil {
@@ -87,23 +97,24 @@ func (p *WebPushProvider) ChannelName() string {
 func (p *WebPushProvider) ProviderHandler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
-	token, err := ioutil.ReadAll(context.Request.Body)
+	token, err := io.ReadAll(context.Request.Body)
 	if err != nil {
 		context.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	tokenString := string(token)
 
-	cnt := entity.WebSubUtils.Count(userID, tokenString)
+	cnt := model.WebSubUtils.Count(userID, tokenString)
 	if cnt > 0 {
 		context.String(http.StatusNotModified, "Token already exists")
 		return
 	} else {
-		_, err := entity.WebSubUtils.Add(userID, tokenString)
+		_, err := model.WebSubUtils.Add(userID, tokenString)
 		if err != nil {
 			context.String(http.StatusInternalServerError, err.Error())
 			return
 		}
+		p.subsCache[userID] = append(p.subsCache[userID], tokenString)
 		context.String(http.StatusOK, "Subscription saved.")
 	}
 }

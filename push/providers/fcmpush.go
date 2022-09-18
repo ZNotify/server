@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
-	"io/ioutil"
+	"io"
 	"net/http"
-	"notify-api/db/entity"
+	"notify-api/db/model"
 	"notify-api/push"
 	"notify-api/serve/middleware"
+	"notify-api/user"
 	"os"
 	"time"
 )
@@ -19,6 +20,8 @@ import (
 type FCMProvider struct {
 	FCMClient     *messaging.Client
 	FCMCredential []byte
+
+	regIDCache map[string][]string
 }
 
 func (p *FCMProvider) Init() error {
@@ -32,18 +35,25 @@ func (p *FCMProvider) Init() error {
 		return err
 	}
 
+	users := user.Controller.Users()
+	p.regIDCache = make(map[string][]string)
+	for _, u := range users {
+		regs, err := model.FCMTokenUtils.Get(u)
+		if err != nil {
+			return err
+		}
+		tokens := make([]string, 0)
+		for _, r := range regs {
+			tokens = append(tokens, r.RegistrationID)
+		}
+		p.regIDCache[u] = tokens
+	}
 	return nil
 }
 
 func (p *FCMProvider) Send(msg *push.Message) error {
-	var tokens = entity.FCMUtils.Get(msg.UserID)
 
-	var registrationIDs []string
-	for i := range tokens {
-		registrationIDs = append(registrationIDs, tokens[i].RegistrationID)
-	}
-
-	if len(registrationIDs) == 0 {
+	if len(p.regIDCache[msg.UserID]) == 0 {
 		return nil
 	}
 
@@ -66,7 +76,7 @@ func (p *FCMProvider) Send(msg *push.Message) error {
 				ClickAction: "TranslucentActivity",
 			},
 		},
-		Tokens: registrationIDs,
+		Tokens: p.regIDCache[msg.UserID],
 	}
 	_, err := p.FCMClient.SendMulticast(context.Background(), &fcmMsg)
 	if err != nil {
@@ -92,14 +102,14 @@ func (p *FCMProvider) ChannelName() string {
 func (p *FCMProvider) ProviderHandler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
-	token, err := ioutil.ReadAll(context.Request.Body)
+	token, err := io.ReadAll(context.Request.Body)
 	if err != nil {
 		context.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	tokenString := string(token)
 
-	cnt, err := entity.FCMUtils.Count(userID, tokenString)
+	cnt, err := model.FCMTokenUtils.Count(userID, tokenString)
 	if err != nil {
 		context.String(http.StatusInternalServerError, err.Error())
 		return
@@ -109,11 +119,12 @@ func (p *FCMProvider) ProviderHandler(context *gin.Context) {
 		context.String(http.StatusNotModified, "Token already exists")
 		return
 	} else {
-		_, err := entity.FCMUtils.Add(userID, tokenString)
+		_, err := model.FCMTokenUtils.Add(userID, tokenString)
 		if err != nil {
 			context.String(http.StatusInternalServerError, err.Error())
 			return
 		}
+		p.regIDCache[userID] = append(p.regIDCache[userID], tokenString)
 		context.String(http.StatusOK, "Registration ID saved.")
 		return
 	}

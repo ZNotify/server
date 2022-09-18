@@ -5,7 +5,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"notify-api/db/entity"
+	"notify-api/db"
 	"notify-api/push"
 	"notify-api/push/providers"
 	"notify-api/serve/handler"
@@ -19,9 +19,9 @@ var router = gin.Default()
 func New() *gin.Engine {
 	checkConnection()
 
-	entity.Init()
-	providers.Init()
+	db.Init()
 	user.Controller.Init()
+	providers.Init()
 	web.Init()
 
 	setupMiddleware()

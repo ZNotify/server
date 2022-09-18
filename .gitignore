@@ -110,3 +110,5 @@ server.exe
 web/static/
 notify.json
 *.exe
+data/
+!data/users.txt

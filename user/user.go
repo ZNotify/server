@@ -22,7 +22,7 @@ func (c *userController) Init() {
 		return
 	}
 
-	file, err := os.Open("users.txt")
+	file, err := os.Open("data/users.txt")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -55,4 +55,8 @@ func (c *userController) Is(user string) bool {
 		}
 	}
 	return false
+}
+
+func (c *userController) Users() []string {
+	return c.users
 }

@@ -16,10 +16,14 @@ type Provider interface {
 	ChannelName() string
 }
 
-type ProvidersWithHandler interface {
+type ProviderWithHandler interface {
 	ProviderHandler(ctx *gin.Context)
 	ProviderHandlerPath() string
 	ProviderHandlerMethod() string
+}
+
+type ProviderWithSpecialHandler interface {
+	Register(ctx *gin.Context) error
 }
 
 type Message struct {
@@ -93,7 +97,7 @@ func (p *providers) RegisterRouter(e *gin.Engine) error {
 		return errors.New("providerMap is empty")
 	}
 	for _, v := range p.providerMap {
-		if pv, ok := v.(ProvidersWithHandler); ok {
+		if pv, ok := v.(ProviderWithHandler); ok {
 			e.Handle(pv.ProviderHandlerMethod(), pv.ProviderHandlerPath(), middleware.Auth, pv.ProviderHandler)
 		}
 	}

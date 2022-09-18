@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"notify-api/db/entity"
+	"notify-api/db/model"
 	"notify-api/serve/middleware"
 )
 
@@ -12,7 +12,7 @@ func Delete(context *gin.Context) {
 
 	id := context.Param("id")
 
-	err := entity.MessageUtils.Delete(userID, id)
+	err := model.MessageUtils.Delete(userID, id)
 	if err != nil {
 		context.String(http.StatusInternalServerError, err.Error())
 		return
