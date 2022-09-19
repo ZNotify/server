@@ -19,7 +19,9 @@ func (_ messageUtils) Add(id string, userID string, title string, content string
 		Long:      long,
 		CreatedAt: createdAt,
 	}
+	RWLock.Lock()
 	ret := DB.Create(&msg)
+	RWLock.Unlock()
 	if ret.Error != nil {
 		return entity.Message{}, ret.Error
 	}

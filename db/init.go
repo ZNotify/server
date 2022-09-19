@@ -6,9 +6,12 @@ import (
 	"gorm.io/gorm"
 	"notify-api/db/entity"
 	"os"
+	"sync"
 )
 
 var DB *gorm.DB
+
+var RWLock = sync.RWMutex{}
 
 func checkDBFile() {
 	fa, err := os.Stat("data")

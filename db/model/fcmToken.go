@@ -16,7 +16,9 @@ func (t fcmTokensUtils) Add(userID string, regID string) (FCMTokens, error) {
 		UserID:         userID,
 		RegistrationID: regID,
 	}
+	db.RWLock.Lock()
 	ret := db.DB.Create(&token)
+	db.RWLock.Unlock()
 	if ret.Error != nil {
 		return FCMTokens{}, ret.Error
 	}

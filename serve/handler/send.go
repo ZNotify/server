@@ -9,8 +9,11 @@ import (
 	. "notify-api/push"
 	"notify-api/push/types"
 	"notify-api/serve/middleware"
+	"sync"
 	"time"
 )
+
+var lock = sync.RWMutex{}
 
 func Send(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
@@ -40,13 +43,18 @@ func Send(context *gin.Context) {
 	}
 
 	// Insert message record
+	lock.Lock()
+	time.Sleep(1 * time.Nanosecond)
+	// a trick to generate different timestamp for different message
+	// FIXME: use a increasing counter to generate different id
 	msg, err := model.MessageUtils.Add(
 		pushMsg.ID,
 		pushMsg.UserID,
 		pushMsg.Title,
 		pushMsg.Content,
 		pushMsg.Long,
-		pushMsg.CreatedAt)
+		time.Now())
+	lock.Unlock()
 
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))

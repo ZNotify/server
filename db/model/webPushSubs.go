@@ -16,7 +16,9 @@ func (_ webSubUtils) Add(userID string, sub string) (entity.WebSubscription, err
 		UserID:       userID,
 		Subscription: sub,
 	}
+	RWLock.Lock()
 	ret := DB.Create(&s)
+	RWLock.Unlock()
 	if ret.Error != nil {
 		return entity.WebSubscription{}, ret.Error
 	}
