@@ -1,4 +1,4 @@
-package providers
+package host
 
 import (
 	"github.com/gin-gonic/gin"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"notify-api/db/entity"
 	"notify-api/db/model"
-	"notify-api/push"
+	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"notify-api/user"
 	"time"
@@ -28,12 +28,12 @@ type Client struct {
 
 	conn *websocket.Conn
 
-	send chan entity.Message
+	send chan *entity.Message
 
 	userID string
 }
 
-type HostPushProvider struct {
+type WebSocketHost struct {
 	manager *Manager
 }
 
@@ -44,7 +44,7 @@ type Manager struct {
 
 	unregister chan *Client
 
-	broadcast chan entity.Message
+	broadcast chan *entity.Message
 }
 
 var upgrader = websocket.Upgrader{
@@ -104,7 +104,7 @@ func (c *Client) readRoutine() {
 	}
 }
 
-func (h *HostPushProvider) ProviderHandler(context *gin.Context) {
+func (h *WebSocketHost) Handler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 	from := context.GetHeader("X-Message-From")
 	if from == "" {
@@ -134,7 +134,7 @@ func (h *HostPushProvider) ProviderHandler(context *gin.Context) {
 	client := &Client{
 		manager: h.manager,
 		conn:    conn,
-		send:    make(chan entity.Message),
+		send:    make(chan *entity.Message),
 		userID:  userID,
 	}
 	h.manager.register <- client
@@ -143,11 +143,11 @@ func (h *HostPushProvider) ProviderHandler(context *gin.Context) {
 	go client.readRoutine()
 
 	for _, msg := range pendingMessages {
-		client.send <- msg
+		client.send <- &msg
 	}
 }
 
-func (h *HostPushProvider) pushRoutine() {
+func (h *WebSocketHost) pushRoutine() {
 	for {
 		select {
 		case client := <-h.manager.register:
@@ -162,49 +162,47 @@ func (h *HostPushProvider) pushRoutine() {
 			}
 
 		case msg := <-h.manager.broadcast:
-			var success int64 = 0
 			for v := range h.manager.userClients[msg.UserID] {
 				select {
 				case v.send <- msg:
-					success++
 				default:
 					h.manager.unregister <- v
 				}
-			}
-			if success == 0 {
-
 			}
 		}
 	}
 }
 
-func (h *HostPushProvider) Init() error {
+func (h *WebSocketHost) Start() error {
+	go h.pushRoutine()
+	return nil
+}
+
+func (h *WebSocketHost) Init() error {
 	h.manager = &Manager{
 		userClients: make(map[string]map[*Client]bool),
 		register:    make(chan *Client),
 		unregister:  make(chan *Client),
-		broadcast:   make(chan entity.Message),
+		broadcast:   make(chan *entity.Message),
 	}
 
 	for _, v := range user.Controller.Users() {
 		h.manager.userClients[v] = make(map[*Client]bool)
 	}
 
-	go h.pushRoutine()
-
 	return nil
 }
 
-func (h *HostPushProvider) ProviderHandlerPath() string {
+func (h *WebSocketHost) HandlerPath() string {
 	return "/:user_id/host/conn"
 }
 
-func (h *HostPushProvider) ProviderHandlerMethod() string {
+func (h *WebSocketHost) HandlerMethod() string {
 	return "GET"
 }
 
-func (h *HostPushProvider) Send(msg *push.Message) error {
-	eMsg := entity.Message{
+func (h *WebSocketHost) Send(msg *types.Message) error {
+	eMsg := &entity.Message{
 		ID:        msg.ID,
 		UserID:    msg.UserID,
 		Title:     msg.Title,
@@ -216,10 +214,6 @@ func (h *HostPushProvider) Send(msg *push.Message) error {
 	return nil
 }
 
-func (h *HostPushProvider) Check() error {
-	return nil
-}
-
-func (h *HostPushProvider) ChannelName() string {
+func (h *WebSocketHost) Name() string {
 	return "SelfHost"
 }

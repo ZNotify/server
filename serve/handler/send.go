@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"notify-api/db/model"
 	. "notify-api/push"
+	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"time"
 )
@@ -24,7 +25,7 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	pushMsg := &Message{
+	pushMsg := &types.Message{
 		ID:        uuid.New().String(),
 		UserID:    userID,
 		Title:     title,
@@ -33,7 +34,7 @@ func Send(context *gin.Context) {
 		CreatedAt: time.Now(),
 	}
 
-	err := Providers.Send(pushMsg)
+	err := Senders.Send(pushMsg)
 	if err != nil {
 		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 	}

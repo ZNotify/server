@@ -1,4 +1,4 @@
-package providers
+package provider
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"io"
 	"net/http"
 	"notify-api/db/model"
-	"notify-api/push"
+	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"os"
 	"time"
@@ -35,7 +35,7 @@ func (p *FCMProvider) Init() error {
 	return nil
 }
 
-func (p *FCMProvider) Send(msg *push.Message) error {
+func (p *FCMProvider) Send(msg *types.Message) error {
 	var tokens []string
 	regs, err := model.FCMTokenUtils.Get(msg.UserID)
 	if err != nil {
@@ -83,11 +83,11 @@ func (p *FCMProvider) Check() error {
 	}
 }
 
-func (p *FCMProvider) ChannelName() string {
+func (p *FCMProvider) Name() string {
 	return "FCM"
 }
 
-func (p *FCMProvider) ProviderHandler(context *gin.Context) {
+func (p *FCMProvider) Handler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
 	token, err := io.ReadAll(context.Request.Body)
@@ -117,10 +117,10 @@ func (p *FCMProvider) ProviderHandler(context *gin.Context) {
 	}
 }
 
-func (p *FCMProvider) ProviderHandlerPath() string {
+func (p *FCMProvider) HandlerPath() string {
 	return "/:user_id/fcm/token"
 }
 
-func (p *FCMProvider) ProviderHandlerMethod() string {
+func (p *FCMProvider) HandlerMethod() string {
 	return "PUT"
 }

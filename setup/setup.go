@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"notify-api/db"
 	"notify-api/push"
-	"notify-api/push/providers"
 	"notify-api/serve/handler"
 	"notify-api/serve/middleware"
 	"notify-api/user"
@@ -21,7 +20,7 @@ func New() *gin.Engine {
 
 	db.Init()
 	user.Controller.Init()
-	providers.Init()
+	push.Senders.Init()
 	web.Init()
 
 	setupMiddleware()
@@ -55,7 +54,7 @@ func setupRouter() {
 
 	router.GET("/alive", handler.Alive)
 
-	err := push.Providers.RegisterRouter(router)
+	err := push.Senders.RegisterRouter(router)
 	if err != nil {
 		panic(err)
 	}

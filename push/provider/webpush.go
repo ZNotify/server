@@ -1,4 +1,4 @@
-package providers
+package provider
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 	"notify-api/db/model"
-	"notify-api/push"
+	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"os"
 )
@@ -36,7 +36,7 @@ func (p *WebPushProvider) Init() error {
 	return nil
 }
 
-func (p *WebPushProvider) Send(msg *push.Message) error {
+func (p *WebPushProvider) Send(msg *types.Message) error {
 	var tokens []string
 	subs, err := model.WebSubUtils.Get(msg.UserID)
 	if err != nil {
@@ -78,11 +78,11 @@ func (p *WebPushProvider) Check() error {
 	}
 }
 
-func (p *WebPushProvider) ChannelName() string {
+func (p *WebPushProvider) Name() string {
 	return "WebPush"
 }
 
-func (p *WebPushProvider) ProviderHandler(context *gin.Context) {
+func (p *WebPushProvider) Handler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
 	token, err := io.ReadAll(context.Request.Body)
@@ -106,10 +106,10 @@ func (p *WebPushProvider) ProviderHandler(context *gin.Context) {
 	}
 }
 
-func (p *WebPushProvider) ProviderHandlerPath() string {
+func (p *WebPushProvider) HandlerPath() string {
 	return "/:user_id/web/sub"
 }
 
-func (p *WebPushProvider) ProviderHandlerMethod() string {
+func (p *WebPushProvider) HandlerMethod() string {
 	return "PUT"
 }
