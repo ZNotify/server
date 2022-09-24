@@ -4,6 +4,8 @@ import (
 	"flag"
 	"github.com/gin-gonic/gin"
 	"os"
+	"sync"
+	"time"
 )
 
 var isTest = -1
@@ -28,4 +30,18 @@ func IsTestInstance() bool {
 	}
 	isTest = 0
 	return false
+}
+
+func WaitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
+	c := make(chan struct{})
+	go func() {
+		defer close(c)
+		wg.Wait()
+	}()
+	select {
+	case <-c:
+		return false
+	case <-time.After(timeout):
+		return true
+	}
 }

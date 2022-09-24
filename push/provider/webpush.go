@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/SherClockHolmes/webpush-go"
@@ -11,6 +12,7 @@ import (
 	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"os"
+	"time"
 )
 
 var webPushClient = &http.Client{}
@@ -51,19 +53,39 @@ func (p *WebPushProvider) Send(msg *types.Message) error {
 		return err
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	size := len(tokens)
+	c := make(chan error, 0)
 	for _, v := range tokens {
 		s := &webpush.Subscription{}
 		err = json.Unmarshal([]byte(v), &s)
 		if err != nil {
 			return err
 		}
-		_, err := webpush.SendNotification(data, s, p.WebPushOption)
-		if err != nil {
-			return err
+
+		go func() {
+			_, err := webpush.SendNotificationWithContext(ctx, data, s, p.WebPushOption)
+			c <- err
+		}()
+	}
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case err := <-c:
+			if err != nil {
+				cancel()
+				return err
+			} else {
+				size--
+			}
+			if size == 0 {
+				return nil
+			}
 		}
 	}
-
-	return nil
 }
 
 func (p *WebPushProvider) Check() error {

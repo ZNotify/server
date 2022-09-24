@@ -2,6 +2,7 @@ package push
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"notify-api/push/host"
@@ -10,6 +11,7 @@ import (
 	"notify-api/serve/middleware"
 	"notify-api/utils"
 	"sync"
+	"time"
 )
 
 type senders struct {
@@ -29,23 +31,27 @@ func (p *senders) Send(msg *types.Message) error {
 		return nil
 	}
 
-	var errs []error
+	var errs []string
 	var wg sync.WaitGroup
 	wg.Add(len(p.senders))
 	for _, v := range p.senders {
-		go func(sender *types.Sender) {
-			pe := (*sender).Send(msg)
+		go func(sender types.Sender) {
+			defer wg.Done()
+			// log.Println("Sending message to", sender.Name())
+			pe := sender.Send(msg)
 			if pe != nil {
-				errs = append(errs, pe)
+				errString := fmt.Sprintf("Send message to %s failed: %v", sender.Name(), pe)
+				errs = append(errs, errString)
 			}
-			wg.Done()
-		}(&v)
+		}(v)
 	}
-	wg.Wait()
+	if utils.WaitTimeout(&wg, 5*time.Second) {
+		return errors.New("send timeout")
+	}
 	if len(errs) > 0 {
 		val := ""
 		for _, v := range errs {
-			val += v.Error() + "\n"
+			val += v + "\n"
 		}
 		return errors.New(val)
 	}
@@ -66,6 +72,8 @@ func (p *senders) Init() {
 			if err != nil {
 				log.Fatalf("Provider %s init failed: %s", pv.Name(), err)
 				return
+			} else {
+				log.Printf("Provider %s init success", pv.Name())
 			}
 		}
 
@@ -73,11 +81,15 @@ func (p *senders) Init() {
 			if err := hv.Init(); err != nil {
 				log.Fatalf("Host %s init failed: %s", hv.Name(), err)
 				return
+			} else {
+				log.Printf("Host %s init success", hv.Name())
 			}
 
 			if err := hv.Start(); err != nil {
 				log.Fatalf("Host %s start failed: %s", hv.Name(), err)
 				return
+			} else {
+				log.Printf("Host %s start success", hv.Name())
 			}
 		}
 	}

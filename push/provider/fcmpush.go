@@ -45,6 +45,10 @@ func (p *FCMProvider) Send(msg *types.Message) error {
 		tokens = append(tokens, v.RegistrationID)
 	}
 
+	if len(tokens) == 0 {
+		return nil
+	}
+
 	// https://firebase.google.com/docs/cloud-messaging/send-message#example-notification-click-action
 	fcmMsg := messaging.MulticastMessage{
 		Notification: &messaging.Notification{

@@ -10,6 +10,8 @@ import (
 	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"notify-api/user"
+	"notify-api/utils"
+	"sync"
 	"time"
 )
 
@@ -28,9 +30,11 @@ type Client struct {
 
 	conn *websocket.Conn
 
-	send chan *entity.Message
+	send *utils.UnboundedChan[*entity.Message]
 
 	userID string
+
+	once sync.Once
 }
 
 type WebSocketHost struct {
@@ -46,6 +50,8 @@ type Manager struct {
 
 	broadcast chan *entity.Message
 }
+
+type wsMessage entity.Message
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -64,17 +70,24 @@ func (c *Client) sendRoutine() {
 
 	for {
 		select {
-		case msg, ok := <-c.send:
+		case msg, ok := <-c.send.Out:
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 
 			if !ok {
 				_ = c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-			_ = c.conn.WriteJSON(msg)
+			wsMsg := wsMessage(*msg)
+			err := c.conn.WriteJSON(wsMsg)
+			if err != nil {
+				log.Printf("write message error: %v", err)
+				c.Close()
+				return
+			}
 		case <-ticker.C:
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				c.Close()
 				return
 			}
 		}
@@ -83,7 +96,6 @@ func (c *Client) sendRoutine() {
 
 func (c *Client) readRoutine() {
 	defer func() {
-		c.manager.unregister <- c
 		err := c.conn.Close()
 		if err != nil {
 			return
@@ -104,15 +116,27 @@ func (c *Client) readRoutine() {
 	}
 }
 
+func (c *Client) Close() {
+	c.once.Do(func() {
+		err := c.conn.Close()
+		if err != nil {
+			log.Printf("close client error: %v", err)
+			return
+		}
+		c.manager.unregister <- c
+		close(c.send.In)
+	})
+}
+
 func (h *WebSocketHost) Handler(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
-	from := context.GetHeader("X-Message-From")
-	if from == "" {
-		log.Printf("user %s connect without from header", userID)
+	since := context.GetHeader("X-Message-Since")
+	if since == "" {
+		log.Printf("user %s connect without since header", userID)
 		context.AbortWithStatus(http.StatusBadRequest)
 	}
 	// parse RFC3339
-	fromTime, err := time.Parse(time.RFC3339, from)
+	sinceTime, err := time.Parse(time.RFC3339Nano, since)
 	if err != nil {
 		log.Printf("parse time error: %v", err)
 		context.AbortWithStatus(http.StatusBadRequest)
@@ -120,7 +144,7 @@ func (h *WebSocketHost) Handler(context *gin.Context) {
 	}
 	// 2022-09-18T11:14:00+08:00 as zero point
 
-	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, fromTime)
+	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime)
 	if err != nil {
 		log.Printf("get user message error: %v", err)
 		return
@@ -134,39 +158,44 @@ func (h *WebSocketHost) Handler(context *gin.Context) {
 	client := &Client{
 		manager: h.manager,
 		conn:    conn,
-		send:    make(chan *entity.Message),
+		send:    utils.NewUnboundedChan[*entity.Message](2),
 		userID:  userID,
+		once:    sync.Once{},
 	}
 	h.manager.register <- client
 
+	for _, msg := range pendingMessages {
+		client.send.In <- &msg
+	}
+
 	go client.sendRoutine()
 	go client.readRoutine()
-
-	for _, msg := range pendingMessages {
-		client.send <- &msg
-	}
 }
 
-func (h *WebSocketHost) pushRoutine() {
+func (h *WebSocketHost) clientManageRoutine() {
+	log.Println("client manage routine start")
+	deleteClient := func(client *Client) {
+		if userMap, ok := h.manager.userClients[client.userID]; ok {
+			if _, ok := userMap[client]; ok {
+				delete(userMap, client)
+			}
+		}
+	}
+
 	for {
 		select {
 		case client := <-h.manager.register:
 			h.manager.userClients[client.userID][client] = true
 
 		case client := <-h.manager.unregister:
-			if userMap, ok := h.manager.userClients[client.userID]; ok {
-				if _, ok := userMap[client]; ok {
-					delete(userMap, client)
-					close(client.send)
-				}
-			}
+			deleteClient(client)
 
 		case msg := <-h.manager.broadcast:
-			for v := range h.manager.userClients[msg.UserID] {
+			for client := range h.manager.userClients[msg.UserID] {
 				select {
-				case v.send <- msg:
+				case client.send.In <- msg:
 				default:
-					h.manager.unregister <- v
+					deleteClient(client)
 				}
 			}
 		}
@@ -174,7 +203,7 @@ func (h *WebSocketHost) pushRoutine() {
 }
 
 func (h *WebSocketHost) Start() error {
-	go h.pushRoutine()
+	go h.clientManageRoutine()
 	return nil
 }
 
@@ -215,5 +244,5 @@ func (h *WebSocketHost) Send(msg *types.Message) error {
 }
 
 func (h *WebSocketHost) Name() string {
-	return "SelfHost"
+	return "WebsocketHost"
 }
