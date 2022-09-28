@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/joho/godotenv v1.4.0
 	github.com/stretchr/testify v1.8.0
-	google.golang.org/api v0.97.0
+	google.golang.org/api v0.98.0
 	gorm.io/gorm v1.23.10
 )
 
