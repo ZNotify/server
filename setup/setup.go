@@ -46,7 +46,9 @@ func setupMiddleware() {
 func setupRouter() {
 	router.GET("/check", handler.Check)
 	router.GET("/:user_id/record", middleware.Auth, handler.Record)
+	router.GET("/:user_id/:id", middleware.Auth, handler.RecordDetail)
 	router.POST("/:user_id/send", middleware.Auth, handler.Send)
+	router.PUT("/:user_id/send", middleware.Auth, handler.Send)
 	router.DELETE("/:user_id/:id", middleware.Auth, handler.Delete)
 
 	router.StaticFS("/fs", web.StaticHttpFS)

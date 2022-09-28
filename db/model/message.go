@@ -28,9 +28,19 @@ func (_ messageUtils) Add(id string, userID string, title string, content string
 	return msg, nil
 }
 
-func (_ messageUtils) Get(id string) (entity.Message, error) {
+func (_ messageUtils) GetOrEmpty(id string) (entity.Message, error) {
 	var msg entity.Message
-	ret := DB.Where("id = ?", id).First(&msg)
+	var cnt int64
+
+	ret := DB.Model(entity.Message{}).Where("id = ?", id).Count(&cnt)
+	if ret.Error != nil {
+		return entity.Message{}, ret.Error
+	}
+	if cnt == 0 {
+		return entity.Message{}, nil
+	}
+
+	ret = DB.Where("id = ?", id).First(&msg)
 	if ret.Error != nil {
 		return entity.Message{}, ret.Error
 	}
