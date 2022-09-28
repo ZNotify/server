@@ -76,7 +76,6 @@ func (p *WebPushProvider) Send(msg *types.Message) error {
 			return ctx.Err()
 		case err := <-c:
 			if err != nil {
-				cancel()
 				return err
 			} else {
 				size--
