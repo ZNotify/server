@@ -144,7 +144,7 @@ func (h *WebSocketHost) Handler(context *gin.Context) {
 	}
 	// 2022-09-18T11:14:00+08:00 as zero point
 
-	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime)
+	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime.Add(time.Nanosecond*100))
 	if err != nil {
 		log.Printf("get user message error: %v", err)
 		return
