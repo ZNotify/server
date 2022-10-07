@@ -117,7 +117,7 @@ jobs:
 
   release:
     uses: ./.github/workflows/release.yml
-    needs: [ test ]
+    needs: [ build-artifact ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
 
