@@ -118,11 +118,7 @@ func (c *Client) readRoutine() {
 
 func (c *Client) Close() {
 	c.once.Do(func() {
-		err := c.conn.Close()
-		if err != nil {
-			log.Printf("close client error: %v", err)
-			return
-		}
+		_ = c.conn.Close()
 		c.manager.unregister <- c
 		close(c.send.In)
 	})
