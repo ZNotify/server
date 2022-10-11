@@ -49,11 +49,11 @@ func setupRouter() {
 	router.GET("/:user_id/:id", middleware.Auth, handler.RecordDetail)
 	router.POST("/:user_id/send", middleware.Auth, handler.Send)
 	router.PUT("/:user_id/send", middleware.Auth, handler.Send)
+	router.PUT("/:user_id/token/:channel/:device_id", middleware.Auth, handler.Token)
 	router.DELETE("/:user_id/:id", middleware.Auth, handler.Delete)
 
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", handler.Index)
-
 	router.GET("/alive", handler.Alive)
 
 	err := push.Senders.RegisterRouter(router)

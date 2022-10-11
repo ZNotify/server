@@ -102,35 +102,3 @@ func (p *WebPushProvider) Check() error {
 func (p *WebPushProvider) Name() string {
 	return "WebPush"
 }
-
-func (p *WebPushProvider) Handler(context *gin.Context) {
-	userID := context.GetString(middleware.UserIdKey)
-
-	token, err := io.ReadAll(context.Request.Body)
-	if err != nil {
-		context.String(http.StatusBadRequest, err.Error())
-		return
-	}
-	tokenString := string(token)
-
-	cnt := model.WebSubUtils.Count(userID, tokenString)
-	if cnt > 0 {
-		context.String(http.StatusNotModified, "Token already exists")
-		return
-	} else {
-		_, err := model.WebSubUtils.Add(userID, tokenString)
-		if err != nil {
-			context.String(http.StatusInternalServerError, err.Error())
-			return
-		}
-		context.String(http.StatusOK, "Subscription saved.")
-	}
-}
-
-func (p *WebPushProvider) HandlerPath() string {
-	return "/:user_id/web/sub"
-}
-
-func (p *WebPushProvider) HandlerMethod() string {
-	return "PUT"
-}

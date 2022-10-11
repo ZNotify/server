@@ -5,7 +5,6 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
 	"io"
 	"net/http"
@@ -89,42 +88,4 @@ func (p *FCMProvider) Check() error {
 
 func (p *FCMProvider) Name() string {
 	return "FCM"
-}
-
-func (p *FCMProvider) Handler(context *gin.Context) {
-	userID := context.GetString(middleware.UserIdKey)
-
-	token, err := io.ReadAll(context.Request.Body)
-	if err != nil {
-		context.String(http.StatusBadRequest, err.Error())
-		return
-	}
-	tokenString := string(token)
-
-	cnt, err := model.FCMTokenUtils.Count(userID, tokenString)
-	if err != nil {
-		context.String(http.StatusInternalServerError, err.Error())
-		return
-	}
-	// TODO: update user with same token
-	if cnt > 0 {
-		context.String(http.StatusNotModified, "Token already exists")
-		return
-	} else {
-		_, err := model.FCMTokenUtils.Add(userID, tokenString)
-		if err != nil {
-			context.String(http.StatusInternalServerError, err.Error())
-			return
-		}
-		context.String(http.StatusOK, "Registration ID saved.")
-		return
-	}
-}
-
-func (p *FCMProvider) HandlerPath() string {
-	return "/:user_id/fcm/token"
-}
-
-func (p *FCMProvider) HandlerMethod() string {
-	return "PUT"
 }
