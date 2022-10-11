@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"notify-api/db/entity"
 	"notify-api/serve/middleware"
 )
 
@@ -12,7 +11,6 @@ func Token(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
 	channel := context.Param("channel")
-	pro
 
 	deviceID := context.Param("device_id")
 	if len(deviceID) != 36 {
@@ -27,6 +25,9 @@ func Token(context *gin.Context) {
 	}
 	tokenString := string(token)
 
-	entity.PushTokenUtils.CreateOrUpdate(userID, deviceID, tokenString)
+	_ = channel
+	_ = tokenString
+	_ = userID
+	// entity.PushTokenUtils.CreateOrUpdate(userID, deviceID, tokenString)
 
 }
