@@ -45,15 +45,20 @@ func setupMiddleware() {
 
 func setupRouter() {
 	router.GET("/check", handler.Check)
+
 	router.GET("/:user_id/record", middleware.Auth, handler.Record)
 	router.GET("/:user_id/:id", middleware.Auth, handler.RecordDetail)
+	router.DELETE("/:user_id/:id", middleware.Auth, handler.RecordDelete)
+
 	router.POST("/:user_id/send", middleware.Auth, handler.Send)
 	router.PUT("/:user_id/send", middleware.Auth, handler.Send)
-	router.PUT("/:user_id/token/:channel/:device_id", middleware.Auth, handler.Token)
-	router.DELETE("/:user_id/:id", middleware.Auth, handler.Delete)
+
+	router.PUT("/:user_id/token/:device_id", middleware.Auth, handler.Token)
+	router.DELETE("/:user_id/token/:device_id", middleware.Auth, handler.TokenDelete)
 
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", handler.Index)
+
 	router.GET("/alive", handler.Alive)
 
 	err := push.Senders.RegisterRouter(router)

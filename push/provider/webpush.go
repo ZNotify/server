@@ -5,12 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/SherClockHolmes/webpush-go"
-	"github.com/gin-gonic/gin"
-	"io"
 	"net/http"
 	"notify-api/db/model"
 	"notify-api/push/types"
-	"notify-api/serve/middleware"
 	"os"
 	"time"
 )
@@ -40,13 +37,7 @@ func (p *WebPushProvider) Init() error {
 
 func (p *WebPushProvider) Send(msg *types.Message) error {
 	var tokens []string
-	subs, err := model.WebSubUtils.Get(msg.UserID)
-	if err != nil {
-		return err
-	}
-	for _, v := range subs {
-		tokens = append(tokens, v.Subscription)
-	}
+	tokens, err := model.TokenUtils.GetChannelTokens(msg.UserID, p.Name())
 
 	data, err := json.Marshal(msg)
 	if err != nil {

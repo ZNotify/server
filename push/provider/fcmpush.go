@@ -6,11 +6,8 @@ import (
 	"firebase.google.com/go/v4/messaging"
 	"fmt"
 	"google.golang.org/api/option"
-	"io"
-	"net/http"
 	"notify-api/db/model"
 	"notify-api/push/types"
-	"notify-api/serve/middleware"
 	"os"
 	"time"
 )
@@ -36,13 +33,7 @@ func (p *FCMProvider) Init() error {
 
 func (p *FCMProvider) Send(msg *types.Message) error {
 	var tokens []string
-	regs, err := model.FCMTokenUtils.Get(msg.UserID)
-	if err != nil {
-		return err
-	}
-	for _, v := range regs {
-		tokens = append(tokens, v.RegistrationID)
-	}
+	tokens, err := model.TokenUtils.GetChannelTokens(msg.UserID, p.Name())
 
 	if len(tokens) == 0 {
 		return nil

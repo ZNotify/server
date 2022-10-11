@@ -26,6 +26,15 @@ var Senders = senders{
 	},
 }
 
+func (p *senders) Has(channel string) bool {
+	for _, v := range p.senders {
+		if v.Name() == channel {
+			return true
+		}
+	}
+	return false
+}
+
 func (p *senders) Send(msg *types.Message) error {
 	if utils.IsTestInstance() {
 		return nil

@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"notify-api/db/entity"
 	"notify-api/db/model"
 )
 
@@ -15,13 +15,13 @@ func RecordDetail(context *gin.Context) {
 		return
 	}
 
-	message, err := model.MessageUtils.GetOrEmpty(messageID)
+	message, err := model.MessageUtils.Get(messageID)
 	if err != nil {
+		if errors.Is(err, model.ErrRecordNotFound) {
+			context.String(http.StatusNotFound, "Message not found.")
+			return
+		}
 		context.String(http.StatusInternalServerError, err.Error())
-		return
-	}
-	if message == entity.EmptyMessage {
-		context.String(http.StatusNotFound, "Message not found.")
 		return
 	}
 

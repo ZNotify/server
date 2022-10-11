@@ -2,32 +2,34 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"io"
 	"net/http"
+	"notify-api/db/model"
+	"notify-api/push"
 	"notify-api/serve/middleware"
+	"notify-api/utils"
 )
 
 func Token(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
-	channel := context.Param("channel")
-
 	deviceID := context.Param("device_id")
-	if len(deviceID) != 36 {
+	if !utils.IsUUID(deviceID) {
 		context.String(http.StatusBadRequest, "Invalid device id")
 		return
 	}
 
-	token, err := io.ReadAll(context.Request.Body)
-	if err != nil {
-		context.String(http.StatusBadRequest, err.Error())
+	channel := context.PostForm("channel")
+	if !push.Senders.Has(channel) {
+		context.String(http.StatusBadRequest, "Invalid channel")
 		return
 	}
-	tokenString := string(token)
 
-	_ = channel
-	_ = tokenString
-	_ = userID
-	// entity.PushTokenUtils.CreateOrUpdate(userID, deviceID, tokenString)
+	token := context.PostForm("token")
 
+	_, err := model.TokenUtils.CreateOrUpdate(userID, deviceID, channel, token)
+	if err != nil {
+		context.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	context.String(http.StatusOK, "OK")
 }

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/gin-gonic/gin"
 	"os"
+	"regexp"
 	"sync"
 	"time"
 )
@@ -30,6 +31,12 @@ func IsTestInstance() bool {
 	}
 	isTest = 0
 	return false
+}
+
+var uuidRe = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
+
+func IsUUID(uuid string) bool {
+	return uuidRe.MatchString(uuid)
 }
 
 func WaitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {

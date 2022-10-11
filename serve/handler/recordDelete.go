@@ -7,7 +7,7 @@ import (
 	"notify-api/serve/middleware"
 )
 
-func Delete(context *gin.Context) {
+func RecordDelete(context *gin.Context) {
 	userID := context.GetString(middleware.UserIdKey)
 
 	id := context.Param("id")
