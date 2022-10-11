@@ -68,8 +68,7 @@ func Init() {
 	}
 	err = DB.AutoMigrate(
 		&entity.Message{},
-		&entity.FCMTokens{},
-		&entity.WebSubscription{},
+		&entity.PushToken{},
 	)
 	if err != nil {
 		fmt.Println(err)
