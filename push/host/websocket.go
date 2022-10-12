@@ -242,5 +242,5 @@ func (h *WebSocketHost) Send(msg *types.Message) error {
 }
 
 func (h *WebSocketHost) Name() string {
-	return "WebsocketHost"
+	return "WebSocketHost"
 }
