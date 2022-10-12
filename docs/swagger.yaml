@@ -14,6 +14,22 @@ definitions:
       user_id:
         type: string
     type: object
+  types.BadRequestResponse:
+    properties:
+      body:
+        type: string
+      code:
+        default: 400
+        type: integer
+    type: object
+  types.NotFoundResponse:
+    properties:
+      body:
+        type: string
+      code:
+        default: 404
+        type: integer
+    type: object
   types.Response-array_entity_Message:
     properties:
       body:
@@ -38,6 +54,14 @@ definitions:
         $ref: '#/definitions/entity.Message'
       code:
         default: 200
+        type: integer
+    type: object
+  types.UnauthorizedResponse:
+    properties:
+      body:
+        type: string
+      code:
+        default: 401
         type: integer
     type: object
 info:
@@ -86,7 +110,7 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Delete message record
     get:
       description: Get message record detail of a message
@@ -111,15 +135,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/types.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/types.UnauthorizedResponse'
         "404":
-          description: Message not Found
+          description: Not Found
           schema:
-            type: string
+            $ref: '#/definitions/types.NotFoundResponse'
       summary: Get message record detail
   /{user_id}/record:
     get:
@@ -140,7 +164,7 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Get record
   /{user_id}/send:
     post:
@@ -174,11 +198,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/types.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
     put:
       description: Send notification to user_id
@@ -211,11 +235,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/types.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
   /{user_id}/token/{device_id}:
     delete:
@@ -270,13 +294,13 @@ paths:
           schema:
             $ref: '#/definitions/types.Response-bool'
         "400":
-          description: Invalid device id or channel
+          description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/types.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Create or update token
   /alive:
     get:
@@ -298,7 +322,7 @@ paths:
         required: true
         type: string
       produces:
-      - text/plain
+      - application/json
       responses:
         "200":
           description: OK

@@ -1,6 +1,7 @@
 package types
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,27 @@ func (c *Ctx) JSONResult(value any) {
 		Body: value,
 	}
 	c.JSON(http.StatusOK, ret)
+}
+
+func (c *Ctx) JSONError(code int, value string) {
+	switch code {
+	case http.StatusBadRequest:
+		c.JSON(http.StatusBadRequest, BadRequestResponse{
+			Code: code,
+			Body: value,
+		})
+	case http.StatusUnauthorized:
+		c.JSON(http.StatusUnauthorized, UnauthorizedResponse{
+			Code: code,
+			Body: value,
+		})
+	case http.StatusInternalServerError:
+		c.JSON(http.StatusInternalServerError, InternalServerErrorResponse{
+			Code: code,
+			Body: value,
+		})
+		log.Printf("Internal Server Error:\n%s", value)
+	}
 }
 
 func WrapHandler(handler func(*Ctx)) gin.HandlerFunc {

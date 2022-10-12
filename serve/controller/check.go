@@ -7,7 +7,7 @@ import (
 
 // Check godoc
 // @Summary Check if the user_id is valid
-// @Produce plain
+// @Produce json
 // @Param   user_id query    string true "user_id"
 // @Success 200     {object} types.Response[bool]
 // @Router  /check [get]

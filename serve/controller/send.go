@@ -22,8 +22,8 @@ import (
 // @Param       long    formData string false "long"
 // @Produce     json
 // @Success     200 {object} types.Response[entity.Message]
-// @Failure     400 {string} string "Bad Request"
-// @Failure     401 {string} string "Unauthorized"
+// @Failure     400 {object} types.BadRequestResponse
+// @Failure     401 {object} types.UnauthorizedResponse
 // @Router      /{user_id}/send [post]
 // @Router      /{user_id}/send [put]
 func Send(context *types.Ctx) {
@@ -33,7 +33,7 @@ func Send(context *types.Ctx) {
 	long := context.PostForm("long")
 
 	if content == "" {
-		context.String(http.StatusBadRequest, "Content can not be empty.")
+		context.JSONError(http.StatusBadRequest, "Content can not be empty.")
 		return
 	}
 
@@ -48,7 +48,7 @@ func Send(context *types.Ctx) {
 
 	err := Senders.Send(pushMsg)
 	if err != nil {
-		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		context.JSONError(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 		return
 	}
 
@@ -65,7 +65,7 @@ func Send(context *types.Ctx) {
 		time.Now())
 
 	if err != nil {
-		context.String(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		context.JSONError(http.StatusInternalServerError, fmt.Sprintf("%s", err))
 		return
 	}
 

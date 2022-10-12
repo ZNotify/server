@@ -60,7 +60,7 @@ const docTemplate = `{
         "/check": {
             "get": {
                 "produces": [
-                    "text/plain"
+                    "application/json"
                 ],
                 "summary": "Check if the user_id is valid",
                 "parameters": [
@@ -124,7 +124,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
                         }
                     }
                 }
@@ -175,13 +175,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
                         }
                     }
                 }
@@ -230,13 +230,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
                         }
                     }
                 }
@@ -287,15 +287,15 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid device id or channel",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
                         }
                     }
                 }
@@ -365,19 +365,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
                         }
                     },
                     "404": {
-                        "description": "Message not Found",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.NotFoundResponse"
                         }
                     }
                 }
@@ -414,7 +414,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
                         }
                     }
                 }
@@ -442,6 +442,30 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "string"
+                }
+            }
+        },
+        "types.BadRequestResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 400
+                }
+            }
+        },
+        "types.NotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 404
                 }
             }
         },
@@ -481,6 +505,18 @@ const docTemplate = `{
                 "code": {
                     "type": "integer",
                     "default": 200
+                }
+            }
+        },
+        "types.UnauthorizedResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 401
                 }
             }
         }

@@ -14,14 +14,14 @@ import (
 // @Param       id      path string true "id"
 // @Produce     json
 // @Success     200 {object} types.Response[bool]
-// @Failure     401 {string} string "Unauthorized"
+// @Failure     401 {object} types.UnauthorizedResponse
 // @Router      /{user_id}/{id} [delete]
 func RecordDelete(context *types.Ctx) {
 	id := context.Param("id")
 
 	err := model.MessageUtils.Delete(context.UserID, id)
 	if err != nil {
-		context.String(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, err.Error())
 		return
 	}
 

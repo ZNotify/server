@@ -15,30 +15,30 @@ import (
 // @Param       id      path string true "id"
 // @Produce     json
 // @Success     200 {object} types.Response[entity.Message]
-// @Failure     400 {string} string "Bad Request"
-// @Failure     401 {string} string "Unauthorized"
-// @Failure     404 {string} string "Message not Found"
+// @Failure     400 {object} types.BadRequestResponse
+// @Failure     401 {object} types.UnauthorizedResponse
+// @Failure     404 {object} types.NotFoundResponse
 // @Router      /{user_id}/{id} [get]
 func RecordDetail(context *types.Ctx) {
 	messageID := context.Param("id")
 
 	if messageID == "" {
-		context.String(http.StatusBadRequest, "Message ID can not be empty.")
+		context.JSONError(http.StatusBadRequest, "Message ID can not be empty.")
 		return
 	}
 
 	message, err := model.MessageUtils.Get(messageID)
 	if err != nil {
 		if errors.Is(err, model.ErrRecordNotFound) {
-			context.String(http.StatusNotFound, "Message not found.")
+			context.JSONError(http.StatusNotFound, "Message not found.")
 			return
 		}
-		context.String(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	if message.UserID != context.UserID {
-		context.String(http.StatusUnauthorized, "You are not the owner of this message.")
+		context.JSONError(http.StatusUnauthorized, "You are not the owner of this message.")
 		return
 	}
 

@@ -20,7 +20,7 @@ func TokenDelete(context *types.Ctx) {
 
 	err := model.TokenUtils.Delete(context.UserID, deviceId)
 	if err != nil {
-		context.String(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, err.Error())
 		return
 	}
 

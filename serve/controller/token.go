@@ -18,19 +18,19 @@ import (
 // @Param       token     formData string true "token"
 // @Produce     json
 // @Success     200 {object} types.Response[bool]
-// @Failure     400 {string} string "Invalid device id or channel"
-// @Failure     401 {string} string "Unauthorized"
+// @Failure     400 {object} types.BadRequestResponse
+// @Failure     401 {object} types.UnauthorizedResponse
 // @Router      /{user_id}/token/{device_id} [put]
 func Token(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {
-		context.String(http.StatusBadRequest, "Invalid device id")
+		context.JSONError(http.StatusBadRequest, "Invalid device id")
 		return
 	}
 
 	channel := context.PostForm("channel")
 	if !push.Senders.Has(channel) {
-		context.String(http.StatusBadRequest, "Invalid channel")
+		context.JSONError(http.StatusBadRequest, "Invalid channel")
 		return
 	}
 
@@ -38,7 +38,7 @@ func Token(context *types.Ctx) {
 
 	_, err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
 	if err != nil {
-		context.String(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, err.Error())
 		return
 	}
 	context.JSONResult(true)
