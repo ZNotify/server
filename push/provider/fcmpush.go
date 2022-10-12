@@ -2,14 +2,16 @@ package provider
 
 import (
 	"context"
-	firebase "firebase.google.com/go/v4"
-	"firebase.google.com/go/v4/messaging"
 	"fmt"
-	"google.golang.org/api/option"
-	"notify-api/db/model"
-	"notify-api/push/types"
 	"os"
 	"time"
+
+	firebase "firebase.google.com/go/v4"
+	"firebase.google.com/go/v4/messaging"
+	"google.golang.org/api/option"
+
+	"notify-api/db/model"
+	"notify-api/push/types"
 )
 
 type FCMProvider struct {

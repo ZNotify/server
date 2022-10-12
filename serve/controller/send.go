@@ -1,20 +1,32 @@
-package handler
+package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
+	"time"
+
+	"github.com/google/uuid"
+
 	"notify-api/db/model"
 	. "notify-api/push"
-	"notify-api/push/types"
-	"notify-api/serve/middleware"
-	"time"
+	pushTypes "notify-api/push/types"
+	"notify-api/serve/types"
 )
 
-func Send(context *gin.Context) {
-	userID := context.GetString(middleware.UserIdKey)
-
+// Send godoc
+// @Summary     Send notification
+// @Description Send notification to user_id
+// @Param       user_id path     string true  "user_id"
+// @Param       title   formData string false "title"
+// @Param       content formData string true  "content"
+// @Param       long    formData string false "long"
+// @Produce     json
+// @Success     200 {object} types.Response[entity.Message]
+// @Failure     400 {string} string "Bad Request"
+// @Failure     401 {string} string "Unauthorized"
+// @Router      /{user_id}/send [post]
+// @Router      /{user_id}/send [put]
+func Send(context *types.Ctx) {
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")
 	content := context.PostForm("content")
@@ -25,9 +37,9 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	pushMsg := &types.Message{
+	pushMsg := &pushTypes.Message{
 		ID:        uuid.New().String(),
-		UserID:    userID,
+		UserID:    context.UserID,
 		Title:     title,
 		Content:   content,
 		Long:      long,
@@ -57,6 +69,6 @@ func Send(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, msg)
+	context.JSONResult(msg)
 	return
 }

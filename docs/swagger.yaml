@@ -1,0 +1,318 @@
+definitions:
+  entity.Message:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      long:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: string
+    type: object
+  types.Response-array_entity_Message:
+    properties:
+      body:
+        items:
+          $ref: '#/definitions/entity.Message'
+        type: array
+      code:
+        default: 200
+        type: integer
+    type: object
+  types.Response-bool:
+    properties:
+      body:
+        type: boolean
+      code:
+        default: 200
+        type: integer
+    type: object
+  types.Response-entity_Message:
+    properties:
+      body:
+        $ref: '#/definitions/entity.Message'
+      code:
+        default: 200
+        type: integer
+    type: object
+info:
+  contact:
+    name: Issues
+    url: https://github.com/ZNotify/server/issues
+  description: This is Znotify api server.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Notify API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Provide UI
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: html
+          schema:
+            type: string
+      summary: Web Index
+  /{user_id}/{id}:
+    delete:
+      description: Delete message record with id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Delete message record
+    get:
+      description: Get message record detail of a message
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-entity_Message'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Message not Found
+          schema:
+            type: string
+      summary: Get message record detail
+  /{user_id}/record:
+    get:
+      description: Get recent 30days message record of user
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-array_entity_Message'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Get record
+  /{user_id}/send:
+    post:
+      description: Send notification to user_id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: title
+        in: formData
+        name: title
+        type: string
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: long
+        in: formData
+        name: long
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-entity_Message'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Send notification
+    put:
+      description: Send notification to user_id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: title
+        in: formData
+        name: title
+        type: string
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: long
+        in: formData
+        name: long
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-entity_Message'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Send notification
+  /{user_id}/token/{device_id}:
+    delete:
+      description: Delete token of device
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: device_id
+        in: path
+        name: device_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+      summary: Delete token
+    put:
+      description: Create or update token of device
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: device_id
+        in: path
+        name: device_id
+        required: true
+        type: string
+      - description: channelm should be a valid UUID
+        in: formData
+        name: channel
+        required: true
+        type: string
+      - description: token
+        in: formData
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+        "400":
+          description: Invalid device id or channel
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Create or update token
+  /alive:
+    get:
+      description: Check if the server is alive
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Server Heartbeat
+  /check:
+    get:
+      parameters:
+      - description: user_id
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+      summary: Check if the user_id is valid
+  /docs:
+    get:
+      produces:
+      - text/plain
+      responses:
+        "301":
+          description: Moved Permanently
+          schema:
+            type: string
+      summary: Redirect to docs
+swagger: "2.0"

@@ -14,8 +14,6 @@ type Message struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-var EmptyMessage = Message{}
-
 func (m Message) MarshalJSON() ([]byte, error) {
 	type Alias Message
 	return json.Marshal(&struct {

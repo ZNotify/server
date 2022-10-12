@@ -36,6 +36,8 @@ POST https://host/{user_id}/send
 
 `long` 支持 markdown 格式， 支持使用表格扩展。
 
+> 完整的请求参数请参考 [API 文档](https://push.learningman.top/docs)
+
 ## 构建
 构建前端后，将构建产物复制到 `/web/static` 文件夹，执行
 ```shell

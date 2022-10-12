@@ -11,7 +11,7 @@ var StaticHttpFS http.FileSystem
 //go:embed "static/*"
 var f embed.FS
 
-func Init() {
+func init() {
 	FS, err := fs.Sub(f, "static")
 	if err != nil {
 		panic(err)

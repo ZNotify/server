@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/SherClockHolmes/webpush-go"
 	"net/http"
-	"notify-api/db/model"
-	"notify-api/push/types"
 	"os"
 	"time"
+
+	"github.com/SherClockHolmes/webpush-go"
+
+	"notify-api/db/model"
+	"notify-api/push/types"
 )
 
 var webPushClient = &http.Client{}

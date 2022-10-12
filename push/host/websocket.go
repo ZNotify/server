@@ -1,18 +1,20 @@
 package host
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"sync"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+
 	"notify-api/db/entity"
 	"notify-api/db/model"
 	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"notify-api/user"
 	"notify-api/utils"
-	"sync"
-	"time"
 )
 
 const (

@@ -2,13 +2,19 @@ package setup
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"notify-api/db"
+	"notify-api/docs"
 	"notify-api/push"
-	"notify-api/serve/handler"
+	"notify-api/serve/controller"
 	"notify-api/serve/middleware"
+	"notify-api/serve/types"
 	"notify-api/user"
 	"notify-api/web"
 )
@@ -21,7 +27,8 @@ func New() *gin.Engine {
 	db.Init()
 	user.Controller.Init()
 	push.Senders.Init()
-	web.Init()
+
+	setupDoc()
 
 	setupMiddleware()
 	setupRouter()
@@ -43,23 +50,38 @@ func setupMiddleware() {
 	router.Use(cors.Default())
 }
 
+func setupDoc() {
+	if gin.Mode() == gin.ReleaseMode {
+		docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, "https")
+	} else {
+		docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, "http")
+	}
+
+}
+
 func setupRouter() {
-	router.GET("/check", handler.Check)
+	router.GET("/check", types.WrapHandler(controller.Check))
+	router.GET("/alive", types.WrapHandler(controller.Alive))
 
-	router.GET("/:user_id/record", middleware.Auth, handler.Record)
-	router.GET("/:user_id/:id", middleware.Auth, handler.RecordDetail)
-	router.DELETE("/:user_id/:id", middleware.Auth, handler.RecordDelete)
+	userGroup := router.Group("/:user_id")
+	userGroup.Use(middleware.UserAuth)
+	{
+		userGroup.GET("/record", types.WrapHandler(controller.Record))
+		userGroup.GET("/:id", types.WrapHandler(controller.RecordDetail))
+		userGroup.DELETE("/:id", types.WrapHandler(controller.RecordDelete))
 
-	router.POST("/:user_id/send", middleware.Auth, handler.Send)
-	router.PUT("/:user_id/send", middleware.Auth, handler.Send)
+		userGroup.POST("/send", types.WrapHandler(controller.Send))
+		userGroup.PUT("/send", types.WrapHandler(controller.Send))
 
-	router.PUT("/:user_id/token/:device_id", middleware.Auth, handler.Token)
-	router.DELETE("/:user_id/token/:device_id", middleware.Auth, handler.TokenDelete)
+		userGroup.PUT("/token/:device_id", types.WrapHandler(controller.Token))
+		userGroup.DELETE("/token/:device_id", types.WrapHandler(controller.TokenDelete))
+	}
+
+	router.GET("/docs", types.WrapHandler(controller.DocIndex))
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.StaticFS("/fs", web.StaticHttpFS)
-	router.GET("/", handler.Index)
-
-	router.GET("/alive", handler.Alive)
+	router.GET("/", types.WrapHandler(controller.WebIndex))
 
 	err := push.Senders.RegisterRouter(router)
 	if err != nil {

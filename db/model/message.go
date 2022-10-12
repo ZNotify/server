@@ -1,9 +1,10 @@
 package model
 
 import (
+	"time"
+
 	. "notify-api/db"
 	"notify-api/db/entity"
-	"time"
 )
 
 type messageUtils struct{}

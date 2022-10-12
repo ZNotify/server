@@ -3,15 +3,17 @@ package push
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
+	"sync"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
 	"notify-api/push/host"
 	"notify-api/push/provider"
 	"notify-api/push/types"
 	"notify-api/serve/middleware"
 	"notify-api/utils"
-	"sync"
-	"time"
 )
 
 type senders struct {
@@ -110,7 +112,7 @@ func (p *senders) RegisterRouter(e *gin.Engine) error {
 	}
 	for _, v := range p.senders {
 		if pv, ok := v.(types.SenderWithHandler); ok {
-			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), middleware.Auth, pv.Handler)
+			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), middleware.UserAuth, pv.Handler)
 		}
 		if pv, ok := v.(types.SenderWithSpecialHandler); ok {
 			err := pv.CustomRegister(e)

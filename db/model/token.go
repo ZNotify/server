@@ -2,6 +2,7 @@ package model
 
 import (
 	"gorm.io/gorm/clause"
+
 	. "notify-api/db"
 	"notify-api/db/entity"
 )

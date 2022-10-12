@@ -1,8 +1,9 @@
 package types
 
 import (
-	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Sender interface {

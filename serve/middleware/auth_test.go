@@ -1,12 +1,14 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/suite"
 	"net/http"
 	"net/http/httptest"
-	"notify-api/user"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/suite"
+
+	"notify-api/user"
 )
 
 type AuthMiddlewareTestSuite struct {
@@ -26,7 +28,7 @@ func (suite *AuthMiddlewareTestSuite) SetupSuite() {
 }
 
 func (suite *AuthMiddlewareTestSuite) TestAuthPassed() {
-	suite.router.GET("/:user_id/ok", Auth, func(c *gin.Context) {
+	suite.router.GET("/:user_id/ok", UserAuth, func(c *gin.Context) {
 		c.String(http.StatusOK, "")
 	})
 	req := httptest.NewRequest("GET", "/test/ok", nil)
@@ -35,7 +37,7 @@ func (suite *AuthMiddlewareTestSuite) TestAuthPassed() {
 }
 
 func (suite *AuthMiddlewareTestSuite) TestAuthFailed() {
-	suite.router.GET("/:user_id/ok", Auth, func(c *gin.Context) {
+	suite.router.GET("/:user_id/ok", UserAuth, func(c *gin.Context) {
 		suite.FailNow("Not authed, should not be called")
 	})
 	req := httptest.NewRequest("GET", "/error/ok", nil)

@@ -3,8 +3,9 @@ package user
 import (
 	"bufio"
 	"fmt"
-	"notify-api/utils"
 	"os"
+
+	"notify-api/utils"
 )
 
 type userController struct {

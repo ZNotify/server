@@ -2,11 +2,12 @@ package utils
 
 import (
 	"flag"
-	"github.com/gin-gonic/gin"
 	"os"
 	"regexp"
 	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 var isTest = -1
