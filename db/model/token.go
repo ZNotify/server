@@ -1,8 +1,6 @@
 package model
 
 import (
-	"gorm.io/gorm/clause"
-
 	. "notify-api/db"
 	"notify-api/db/entity"
 )
@@ -12,26 +10,28 @@ type tokenModel struct{}
 var TokenUtils = tokenModel{}
 
 // CreateOrUpdate always use the new token
-func (_ tokenModel) CreateOrUpdate(userID string, deviceID string, channel string, token string) (entity.PushToken, error) {
-	pt := entity.PushToken{
-		UserID:   userID,
-		DeviceID: deviceID,
-		Channel:  channel,
-		Token:    token,
+func (_ tokenModel) CreateOrUpdate(userID string, deviceID string, channel string, token string) error {
+	ptn := map[string]interface{}{
+		"channel": channel,
+		"token":   token,
 	}
-	ret := DB.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "user_id"}, {Name: "device_id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"token", "channel", "updated_at"}),
-	}).Create(&pt)
-	if ret.Error != nil {
-		return entity.PushToken{}, ret.Error
-	}
-	return pt, nil
+	var pt entity.PushToken
+	RWLock.Lock()
+	ret := DB.
+		Where(entity.PushToken{UserID: userID, DeviceID: deviceID}).
+		Assign(ptn).
+		FirstOrCreate(&pt)
+	RWLock.Unlock()
+
+	return ret.Error
 }
 
 func (_ tokenModel) GetChannelTokens(userID string, channel string) ([]string, error) {
 	var pts []entity.PushToken
-	ret := DB.Where("user_id = ? AND channel = ?", userID, channel).Find(&pts)
+	ret := DB.Where(&entity.PushToken{
+		UserID:  userID,
+		Channel: channel,
+	}).Find(&pts)
 	if ret.Error != nil {
 		return nil, ret.Error
 	}
@@ -43,7 +43,12 @@ func (_ tokenModel) GetChannelTokens(userID string, channel string) ([]string, e
 }
 
 func (_ tokenModel) Delete(userID string, deviceID string) error {
-	ret := DB.Where("user_id = ? AND device_id = ?", userID, deviceID).Delete(entity.PushToken{})
+	RWLock.Lock()
+	ret := DB.Delete(entity.PushToken{
+		UserID:   userID,
+		DeviceID: deviceID,
+	})
+	RWLock.Unlock()
 	if ret.Error != nil {
 		return ret.Error
 	}

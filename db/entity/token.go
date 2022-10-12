@@ -5,7 +5,7 @@ import (
 )
 
 type PushToken struct {
-	ID        string
+	ID        uint
 	UserID    string
 	CreatedAt time.Time
 	UpdateAt  time.Time

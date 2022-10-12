@@ -284,7 +284,6 @@ paths:
       - description: token
         in: formData
         name: token
-        required: true
         type: string
       produces:
       - application/json

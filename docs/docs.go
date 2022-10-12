@@ -275,8 +275,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "token",
                         "name": "token",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     }
                 ],
                 "responses": {

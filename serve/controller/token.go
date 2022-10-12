@@ -14,10 +14,10 @@ import (
 // Token godoc
 // @Summary     Create or update token
 // @Description Create or update token of device
-// @Param       user_id   path     string true "user_id"
-// @Param       device_id path     string true "device_id should be a valid UUID"
-// @Param       channel   formData string true "channel"
-// @Param       token     formData string true "token"
+// @Param       user_id   path     string true  "user_id"
+// @Param       device_id path     string true  "device_id should be a valid UUID"
+// @Param       channel   formData string true  "channel"
+// @Param       token     formData string false "token"
 // @Produce     json
 // @Success     200 {object} types.Response[bool]
 // @Failure     400 {object} types.BadRequestResponse
@@ -38,7 +38,7 @@ func Token(context *types.Ctx) {
 
 	token := context.PostForm("token")
 
-	_, err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
+	err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
 	if err != nil {
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
