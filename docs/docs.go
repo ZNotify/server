@@ -259,14 +259,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "device_id",
+                        "description": "device_id should be a valid UUID",
                         "name": "device_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "channelm should be a valid UUID",
+                        "description": "channel",
                         "name": "channel",
                         "in": "formData",
                         "required": true

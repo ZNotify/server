@@ -271,12 +271,12 @@ paths:
         name: user_id
         required: true
         type: string
-      - description: device_id
+      - description: device_id should be a valid UUID
         in: path
         name: device_id
         required: true
         type: string
-      - description: channelm should be a valid UUID
+      - description: channel
         in: formData
         name: channel
         required: true
