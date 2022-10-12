@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"errors"
 	"net/http"
+
+	"github.com/pkg/errors"
 
 	"notify-api/db/model"
 	"notify-api/serve/types"
@@ -23,22 +24,22 @@ func RecordDetail(context *types.Ctx) {
 	messageID := context.Param("id")
 
 	if messageID == "" {
-		context.JSONError(http.StatusBadRequest, "Message ID can not be empty.")
+		context.JSONError(http.StatusBadRequest, errors.New("message ID can not be empty"))
 		return
 	}
 
 	message, err := model.MessageUtils.Get(messageID)
 	if err != nil {
 		if errors.Is(err, model.ErrRecordNotFound) {
-			context.JSONError(http.StatusNotFound, "Message not found.")
+			context.JSONError(http.StatusNotFound, errors.New("Message not found."))
 			return
 		}
-		context.JSONError(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
 	if message.UserID != context.UserID {
-		context.JSONError(http.StatusUnauthorized, "You are not the owner of this message.")
+		context.JSONError(http.StatusUnauthorized, errors.New("You are not authorized to access this message."))
 		return
 	}
 

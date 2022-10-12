@@ -3,6 +3,8 @@ package controller
 import (
 	"net/http"
 
+	"github.com/pkg/errors"
+
 	"notify-api/db/model"
 	"notify-api/serve/types"
 )
@@ -21,7 +23,7 @@ func RecordDelete(context *types.Ctx) {
 
 	err := model.MessageUtils.Delete(context.UserID, id)
 	if err != nil {
-		context.JSONError(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 

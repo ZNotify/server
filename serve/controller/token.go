@@ -3,6 +3,8 @@ package controller
 import (
 	"net/http"
 
+	"github.com/pkg/errors"
+
 	"notify-api/db/model"
 	"notify-api/push"
 	"notify-api/serve/types"
@@ -24,13 +26,13 @@ import (
 func Token(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {
-		context.JSONError(http.StatusBadRequest, "Invalid device id")
+		context.JSONError(http.StatusBadRequest, errors.New("device_id should be a valid UUID"))
 		return
 	}
 
 	channel := context.PostForm("channel")
 	if !push.Senders.Has(channel) {
-		context.JSONError(http.StatusBadRequest, "Invalid channel")
+		context.JSONError(http.StatusBadRequest, errors.New("channel is not supported"))
 		return
 	}
 
@@ -38,7 +40,7 @@ func Token(context *types.Ctx) {
 
 	_, err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
 	if err != nil {
-		context.JSONError(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 	context.JSONResult(true)

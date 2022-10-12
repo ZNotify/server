@@ -3,6 +3,8 @@ package controller
 import (
 	"net/http"
 
+	"github.com/pkg/errors"
+
 	"notify-api/db/model"
 	"notify-api/serve/types"
 )
@@ -20,7 +22,7 @@ func TokenDelete(context *types.Ctx) {
 
 	err := model.TokenUtils.Delete(context.UserID, deviceId)
 	if err != nil {
-		context.JSONError(http.StatusInternalServerError, err.Error())
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 

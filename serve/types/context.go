@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -23,24 +24,25 @@ func (c *Ctx) JSONResult(value any) {
 	c.JSON(http.StatusOK, ret)
 }
 
-func (c *Ctx) JSONError(code int, value string) {
+func (c *Ctx) JSONError(code int, err error) {
 	switch code {
 	case http.StatusBadRequest:
 		c.JSON(http.StatusBadRequest, BadRequestResponse{
 			Code: code,
-			Body: value,
+			Body: err.Error(),
 		})
 	case http.StatusUnauthorized:
 		c.JSON(http.StatusUnauthorized, UnauthorizedResponse{
 			Code: code,
-			Body: value,
+			Body: err.Error(),
 		})
 	case http.StatusInternalServerError:
+		errString := fmt.Sprintf("%+v", err)
 		c.JSON(http.StatusInternalServerError, InternalServerErrorResponse{
 			Code: code,
-			Body: value,
+			Body: errString,
 		})
-		log.Printf("Internal Server Error:\n%s", value)
+		log.Printf("Internal Server Error:\n%s", errString)
 	}
 }
 

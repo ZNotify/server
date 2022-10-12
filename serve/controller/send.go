@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 
 	"notify-api/db/model"
 	. "notify-api/push"
@@ -33,7 +33,7 @@ func Send(context *types.Ctx) {
 	long := context.PostForm("long")
 
 	if content == "" {
-		context.JSONError(http.StatusBadRequest, "Content can not be empty.")
+		context.JSONError(http.StatusBadRequest, errors.New("content can not be empty"))
 		return
 	}
 
@@ -48,7 +48,7 @@ func Send(context *types.Ctx) {
 
 	err := Senders.Send(pushMsg)
 	if err != nil {
-		context.JSONError(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
@@ -65,7 +65,7 @@ func Send(context *types.Ctx) {
 		time.Now())
 
 	if err != nil {
-		context.JSONError(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
