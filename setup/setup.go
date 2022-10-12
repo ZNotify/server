@@ -2,6 +2,7 @@ package setup
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -16,6 +17,7 @@ import (
 	"notify-api/serve/middleware"
 	"notify-api/serve/types"
 	"notify-api/user"
+	"notify-api/utils"
 	"notify-api/web"
 )
 
@@ -37,6 +39,11 @@ func New() *gin.Engine {
 }
 
 func checkConnection() {
+	if utils.IsTestInstance() || gin.Mode() == gin.DebugMode {
+		log.Println("Skip connection check in non-production env.")
+		return
+	}
+
 	go func() {
 		_, err := http.Get("https://www.google.com/robots.txt")
 		if err != nil {
