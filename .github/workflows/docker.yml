@@ -21,6 +21,9 @@ jobs:
           rm build.zip
           mv build web/static
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@master
 
@@ -50,6 +53,7 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha, scope=${{ github.workflow }}
