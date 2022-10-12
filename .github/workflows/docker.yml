@@ -10,6 +10,10 @@ permissions: write-all
 
 jobs:
   build:
+    strategy:
+      max-parallel: 3
+      matrix:
+          platform: [linux/amd64, linux/arm64, linux/arm/v7]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -46,7 +50,7 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha, scope=${{ github.workflow }}
