@@ -1,15 +1,16 @@
-FROM golang:1.19-alpine as builder
+FROM golang:latest as builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64
+    GOOS=linux
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
 COPY . .
 
-RUN apk --update add --no-cache ca-certificates openssl git tzdata wget unzip && \
+RUN apt update && apt install -y ca-certificates openssl git tzdata wget unzip && \
 update-ca-certificates
 
 RUN wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip && \
