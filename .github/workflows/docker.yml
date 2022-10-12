@@ -14,13 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Fetch frontend asset
-        run: |
-          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
-          unzip build.zip
-          rm build.zip
-          mv build web/static
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 

@@ -9,8 +9,13 @@ WORKDIR /app
 
 COPY . .
 
-RUN apk --update add --no-cache ca-certificates openssl git tzdata && \
+RUN apk --update add --no-cache ca-certificates openssl git tzdata wget unzip && \
 update-ca-certificates
+
+RUN wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip && \
+          unzip build.zip && \
+          rm build.zip && \
+          mv build web/static
 
 RUN go build -v -o /app/server
 
