@@ -88,3 +88,12 @@ jobs:
           OWNER: orgs/ZNotify
           PACKAGE_NAME: notify-api
           PER_PAGE: 100
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    environment: production
+    steps:
+      - name: Deploy to production
+        run: |
+          curl -X POST ${{ secrets.DEPLOY_URL }}
