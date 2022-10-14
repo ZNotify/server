@@ -1,4 +1,4 @@
-FROM golang:latest as builder
+FROM golang:1.19-alpine as builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
@@ -10,8 +10,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt update && apt install -y ca-certificates openssl tzdata && \
-update-ca-certificates
+RUN apk --update add --no-cache ca-certificates openssl tzdata && \
+    update-ca-certificates
 
 RUN go build -v -o /app/server
 
