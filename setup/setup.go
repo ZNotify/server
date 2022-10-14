@@ -82,6 +82,11 @@ func setupRouter() {
 
 		userGroup.PUT("/token/:device_id", types.WrapHandler(controller.Token))
 		userGroup.DELETE("/token/:device_id", types.WrapHandler(controller.TokenDelete))
+
+		err := push.Senders.RegisterRouter(userGroup)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	router.GET("/docs", types.WrapHandler(controller.DocIndex))
@@ -90,8 +95,4 @@ func setupRouter() {
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", types.WrapHandler(controller.WebIndex))
 
-	err := push.Senders.RegisterRouter(router)
-	if err != nil {
-		panic(err)
-	}
 }

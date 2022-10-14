@@ -12,7 +12,7 @@ import (
 	"notify-api/push/host"
 	"notify-api/push/provider"
 	"notify-api/push/types"
-	"notify-api/serve/middleware"
+	serveTypes "notify-api/serve/types"
 	"notify-api/utils"
 )
 
@@ -106,19 +106,13 @@ func (p *senders) Init() {
 	}
 }
 
-func (p *senders) RegisterRouter(e *gin.Engine) error {
+func (p *senders) RegisterRouter(e *gin.RouterGroup) error {
 	if len(p.senders) == 0 && !utils.IsTestInstance() {
 		return errors.New("no sender found")
 	}
 	for _, v := range p.senders {
 		if pv, ok := v.(types.SenderWithHandler); ok {
-			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), middleware.UserAuth, pv.Handler)
-		}
-		if pv, ok := v.(types.SenderWithSpecialHandler); ok {
-			err := pv.CustomRegister(e)
-			if err != nil {
-				return err
-			}
+			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), serveTypes.WrapHandler(pv.Handler))
 		}
 	}
 	return nil

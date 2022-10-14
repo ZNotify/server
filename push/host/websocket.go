@@ -6,13 +6,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 
 	"notify-api/db/entity"
 	"notify-api/db/model"
-	"notify-api/push/types"
-	"notify-api/serve/middleware"
+	pushTypes "notify-api/push/types"
+	"notify-api/serve/types"
 	"notify-api/user"
 	"notify-api/utils"
 )
@@ -126,13 +125,15 @@ func (c *Client) Close() {
 	})
 }
 
-func (h *WebSocketHost) Handler(context *gin.Context) {
-	userID := context.GetString(middleware.UserIdKey)
+func (h *WebSocketHost) Handler(context *types.Ctx) {
+	userID := context.UserID
+
 	since := context.GetHeader("X-Message-Since")
 	if since == "" {
 		log.Printf("user %s connect without since header", userID)
 		context.AbortWithStatus(http.StatusBadRequest)
 	}
+
 	// parse RFC3339
 	sinceTime, err := time.Parse(time.RFC3339Nano, since)
 	if err != nil {
@@ -221,14 +222,14 @@ func (h *WebSocketHost) Init() error {
 }
 
 func (h *WebSocketHost) HandlerPath() string {
-	return "/:user_id/host/conn"
+	return "/host/conn"
 }
 
 func (h *WebSocketHost) HandlerMethod() string {
 	return "GET"
 }
 
-func (h *WebSocketHost) Send(msg *types.Message) error {
+func (h *WebSocketHost) Send(msg *pushTypes.Message) error {
 	eMsg := &entity.Message{
 		ID:        msg.ID,
 		UserID:    msg.UserID,

@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"notify-api/serve/types"
 )
 
 type Sender interface {
@@ -24,13 +24,9 @@ type Host interface {
 
 type SenderWithHandler interface {
 	Sender
-	Handler(ctx *gin.Context)
+	Handler(ctx *types.Ctx)
 	HandlerPath() string
 	HandlerMethod() string
-}
-
-type SenderWithSpecialHandler interface {
-	CustomRegister(ctx *gin.Engine) error
 }
 
 type Message struct {
