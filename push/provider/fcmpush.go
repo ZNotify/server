@@ -8,6 +8,7 @@ import (
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
+	"github.com/pkg/errors"
 	"google.golang.org/api/option"
 
 	"notify-api/db/model"
@@ -36,6 +37,10 @@ func (p *FCMProvider) Init() error {
 func (p *FCMProvider) Send(msg *types.Message) error {
 	var tokens []string
 	tokens, err := model.TokenUtils.GetChannelTokens(msg.UserID, p.Name())
+
+	if err != nil {
+		return errors.WithStack(err)
+	}
 
 	if len(tokens) == 0 {
 		return nil

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/SherClockHolmes/webpush-go"
+	"github.com/pkg/errors"
 
 	"notify-api/db/model"
 	"notify-api/push/types"
@@ -40,6 +41,12 @@ func (p *WebPushProvider) Init() error {
 func (p *WebPushProvider) Send(msg *types.Message) error {
 	var tokens []string
 	tokens, err := model.TokenUtils.GetChannelTokens(msg.UserID, p.Name())
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	if len(tokens) == 0 {
+		return nil
+	}
 
 	data, err := json.Marshal(msg)
 	if err != nil {
