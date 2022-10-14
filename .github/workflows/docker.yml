@@ -14,6 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+          cache: true
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -42,6 +48,16 @@ jobs:
           tags: |
             type=ref,event=branch
           images: zxilly/${{ env.IMAGE_NAME }},ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+
+      - name: Fetch static assets
+        run: |
+          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
+          unzip build.zip
+          rm build.zip
+          mv build web/static
+
+      - name: Fetch dependencies
+        run: go mod vendor
 
       - name: Build and push Release Docker image
         uses: docker/build-push-action@v3
