@@ -57,6 +57,12 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@master
 
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'
+          check-latest: true
+          cache: true
+
       - name: Log into Docker Hub
         uses: docker/login-action@master
         with:
@@ -69,6 +75,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Go Vendor
+        run: go mod vendor
 
       - name: Extract Release metadata
         id: meta
