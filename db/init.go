@@ -2,11 +2,13 @@ package db
 
 import (
 	"fmt"
-	"github.com/glebarez/sqlite"
-	"gorm.io/gorm"
-	"notify-api/db/entity"
 	"os"
 	"sync"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+
+	"notify-api/db/entity"
 )
 
 var DB *gorm.DB
