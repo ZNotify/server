@@ -111,3 +111,5 @@ notify.json
 *.exe
 data/
 !data/users.txt
+.idea/
+!.idea/codeStyles/*

@@ -42,14 +42,20 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'repository_dispatch'
     needs: [ test ]
+    env:
+      CGO_ENABLED: 1
+      GOARCH: amd64
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
           cache: true
+
+      - name: Setup Zig
+      - uses: goto-bus-stop/setup-zig@v1
 
       - name: Fetch frontend asset
         run: |
@@ -59,22 +65,25 @@ jobs:
           mv build web/static
 
       - name: Build Linux
-        run: go build -o server-linux
+        run: go build -o server-linux -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static"
         env:
           GOOS: linux
-          GOARCH: amd64
+          CC: "zig cc -target x86_64-linux"
+          CXX: "zig c++ -target x86_64-linux"
 
       - name: Build Windows
-        run: go build -o server-windows.exe
+        run: go build -o server-windows.exe -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static"
         env:
           GOOS: windows
-          GOARCH: amd64
+          CC: "zig cc -target x86_64-pc-windows-gnu"
+          CXX: "zig c++ -target x86_64-pc-windows-gnu"
 
       - name: Build MacOS
-        run: go build -o server-macos
+        run: go build -o server-macos -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static"
         env:
           GOOS: darwin
-          GOARCH: amd64
+          CC: "zig cc -target x86_64-apple-darwin"
+          CXX: "zig c++ -target x86_64-apple-darwin"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
