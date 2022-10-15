@@ -55,7 +55,7 @@ jobs:
           cache: true
 
       - name: Setup Zig
-      - uses: goto-bus-stop/setup-zig@v1
+        uses: goto-bus-stop/setup-zig@v1
 
       - name: Fetch frontend asset
         run: |
