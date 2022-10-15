@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 
 	"notify-api/db/entity"

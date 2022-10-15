@@ -43,7 +43,6 @@ jobs:
     if: github.event_name != 'repository_dispatch'
     needs: [ test ]
     env:
-      CGO_ENABLED: 1
       GOARCH: amd64
     steps:
       - uses: actions/checkout@v3
@@ -54,9 +53,6 @@ jobs:
           go-version: 1.19
           cache: true
 
-      - name: Setup Zig
-        uses: goto-bus-stop/setup-zig@v1
-
       - name: Fetch frontend asset
         run: |
           wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
@@ -65,25 +61,19 @@ jobs:
           mv build web/static
 
       - name: Build Linux
-        run: go build -o server-linux -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static"
+        run: go build -o server-linux
         env:
           GOOS: linux
-          CC: "zig cc -target x86_64-linux"
-          CXX: "zig c++ -target x86_64-linux"
 
       - name: Build Windows
-        run: go build -o server-windows.exe -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static"
+        run: go build -o server-windows.exe
         env:
           GOOS: windows
-          CC: "zig cc -target x86_64-pc-windows-gnu"
-          CXX: "zig c++ -target x86_64-pc-windows-gnu"
 
       - name: Build MacOS
-        run: go build -o server-macos -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static"
+        run: go build -o server-macos
         env:
           GOOS: darwin
-          CC: "zig cc -target x86_64-apple-darwin"
-          CXX: "zig c++ -target x86_64-apple-darwin"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3

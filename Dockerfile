@@ -1,20 +1,17 @@
 FROM golang:1.19-alpine as builder
 
-ENV GO111MODULE=on \
-    GOOS=linux
-
 WORKDIR /app
 
 COPY . .
 
-RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip alpine-sdk
+RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip gcc musl-dev
 
 RUN wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip && \
           unzip build.zip && \
           rm build.zip && \
           mv build web/static
 
-RUN go build -v -o /app/server -a -tags netgo -installsuffix netgo -ldflags "-linkmode external -extldflags -static" notify-api
+RUN go build -v -o /app/server -ldflags "-s -w" notify-api
 
 FROM scratch
 
