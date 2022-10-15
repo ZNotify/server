@@ -49,13 +49,6 @@ jobs:
             type=ref,event=branch
           images: zxilly/${{ env.IMAGE_NAME }},ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
 
-      - name: Fetch static assets
-        run: |
-          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
-          unzip build.zip
-          rm build.zip
-          mv build web/static
-
       - name: Fetch dependencies
         run: go mod vendor
 
