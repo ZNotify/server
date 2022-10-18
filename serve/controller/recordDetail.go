@@ -30,7 +30,7 @@ func RecordDetail(context *types.Ctx) {
 
 	message, err := model.MessageUtils.Get(messageID)
 	if err != nil {
-		if errors.Is(err, model.ErrRecordNotFound) {
+		if errors.Is(err, model.ErrNotFound) {
 			context.JSONError(http.StatusNotFound, errors.New("Message not found."))
 			return
 		}

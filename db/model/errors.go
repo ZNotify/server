@@ -6,4 +6,4 @@ import (
 	"gorm.io/gorm"
 )
 
-var ErrRecordNotFound = gorm.ErrRecordNotFound
+var ErrNotFound = gorm.ErrRecordNotFound

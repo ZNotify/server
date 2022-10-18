@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/pkg/errors"
 
+	"notify-api/db"
 	"notify-api/db/entity"
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
@@ -21,7 +23,7 @@ const (
 
 	pongWait = 60 * time.Second
 
-	pingPeriod = (pongWait * 9) / 10
+	pingPeriod = (pongWait * 7) / 10
 
 	maxMessageSize = 512
 )
@@ -33,7 +35,8 @@ type Client struct {
 
 	send *utils.UnboundedChan[*entity.Message]
 
-	userID string
+	userID   string
+	deviceID string
 
 	once sync.Once
 }
@@ -78,8 +81,18 @@ func (c *Client) sendRoutine() {
 				_ = c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
+
+			db.RWLock.Lock()
+			err := model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.String())
+			if err != nil {
+				log.Printf("create or update token error: %v", err)
+				db.RWLock.Unlock()
+				continue
+			}
+			db.RWLock.Unlock()
+
 			wsMsg := wsMessage(*msg)
-			err := c.conn.WriteJSON(wsMsg)
+			err = c.conn.WriteJSON(wsMsg)
 			if err != nil {
 				log.Printf("write message error: %v", err)
 				c.Close()
@@ -123,52 +136,6 @@ func (c *Client) Close() {
 		c.manager.unregister <- c
 		close(c.send.In)
 	})
-}
-
-func (h *WebSocketHost) Handler(context *types.Ctx) {
-	userID := context.UserID
-
-	since := context.GetHeader("X-Message-Since")
-	if since == "" {
-		log.Printf("user %s connect without since header", userID)
-		context.AbortWithStatus(http.StatusBadRequest)
-	}
-
-	// parse RFC3339
-	sinceTime, err := time.Parse(time.RFC3339Nano, since)
-	if err != nil {
-		log.Printf("parse time error: %v", err)
-		context.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-	// 2022-09-18T11:14:00+08:00 as zero point
-
-	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime)
-	if err != nil {
-		log.Printf("get user message error: %v", err)
-		return
-	}
-
-	conn, err := upgrader.Upgrade(context.Writer, context.Request, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	client := &Client{
-		manager: h.manager,
-		conn:    conn,
-		send:    utils.NewUnboundedChan[*entity.Message](2),
-		userID:  userID,
-		once:    sync.Once{},
-	}
-	h.manager.register <- client
-
-	for _, msg := range pendingMessages {
-		client.send.In <- &msg
-	}
-
-	go client.sendRoutine()
-	go client.readRoutine()
 }
 
 func (h *WebSocketHost) clientManageRoutine() {
@@ -227,6 +194,70 @@ func (h *WebSocketHost) HandlerPath() string {
 
 func (h *WebSocketHost) HandlerMethod() string {
 	return "GET"
+}
+
+func (h *WebSocketHost) Handler(context *types.Ctx) {
+	userID := context.UserID
+
+	deviceId := context.GetHeader("X-Device-ID")
+	if deviceId == "" {
+		log.Printf("user %s connect without since header", userID)
+		context.JSONError(http.StatusBadRequest, errors.New("no device id"))
+	}
+
+	token, err := model.TokenUtils.GetDeviceToken(userID, deviceId)
+	if err != nil {
+		if err == model.ErrNotFound {
+			log.Printf("user %s device %s token not found", userID, deviceId)
+			context.JSONError(http.StatusUnauthorized, errors.New("token not found"))
+			return
+		} else {
+			log.Printf("get user %s token error: %v", userID, err)
+			context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
+			return
+		}
+	}
+	if token.Channel != h.Name() {
+		log.Printf("user %s channel not match", userID)
+		context.JSONError(http.StatusBadRequest, errors.New("user current channel is not WebSocket"))
+		return
+	}
+
+	sinceTime, err := time.Parse(time.RFC3339Nano, token.Token)
+	if err != nil {
+		log.Printf("parse time error: %v", err)
+		context.JSONError(http.StatusBadRequest, errors.WithStack(err))
+		return
+	}
+	// 2022-09-18T11:14:00+08:00 as zero point
+
+	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime)
+	if err != nil {
+		log.Printf("get user message error: %v", err)
+		return
+	}
+
+	conn, err := upgrader.Upgrade(context.Writer, context.Request, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	client := &Client{
+		manager:  h.manager,
+		conn:     conn,
+		send:     utils.NewUnboundedChan[*entity.Message](2),
+		userID:   userID,
+		deviceID: deviceId,
+		once:     sync.Once{},
+	}
+	h.manager.register <- client
+
+	for _, msg := range pendingMessages {
+		client.send.In <- &msg
+	}
+
+	go client.sendRoutine()
+	go client.readRoutine()
 }
 
 func (h *WebSocketHost) Send(msg *pushTypes.Message) error {

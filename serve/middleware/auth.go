@@ -13,7 +13,10 @@ const UserIdKey = "user_id"
 func UserAuth(c *gin.Context) {
 	userID, ok := c.Params.Get(UserIdKey)
 	if !ok {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"code": http.StatusUnauthorized,
+			"body": "User ID not exist",
+		})
 		return
 	} else {
 		if user.Controller.Is(userID) {
@@ -21,7 +24,10 @@ func UserAuth(c *gin.Context) {
 			c.Next()
 			return
 		} else {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"code": http.StatusUnauthorized,
+				"body": "User " + userID + " is not valid",
+			})
 			return
 		}
 	}
