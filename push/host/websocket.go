@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 
-	"notify-api/db"
 	"notify-api/db/entity"
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
@@ -21,9 +20,9 @@ import (
 const (
 	writeWait = 10 * time.Second
 
-	pongWait = 60 * time.Second
+	timeout = 60 * time.Second
 
-	pingPeriod = (pongWait * 7) / 10
+	pingPeriod = (timeout * 7) / 10
 
 	maxMessageSize = 512
 )
@@ -66,19 +65,16 @@ func (c *Client) sendRoutine() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		err := c.conn.Close()
-		if err != nil {
-			return
-		}
+		c.Close()
 	}()
 
 	for {
 		select {
 		case msg, ok := <-c.send.Out:
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-
 			if !ok {
 				_ = c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				log.Printf("client %s %s send chan exit", c.userID, c.deviceID)
 				return
 			}
 
@@ -90,17 +86,15 @@ func (c *Client) sendRoutine() {
 				return
 			}
 
-			db.RWLock.Lock()
-			err = model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.String())
+			err = model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.Format(time.RFC3339Nano))
 			if err != nil {
 				log.Printf("create or update token error: %v", err)
-				db.RWLock.Unlock()
 				continue
 			}
-			db.RWLock.Unlock()
 		case <-ticker.C:
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				log.Printf("ping error: %v", err)
 				c.Close()
 				return
 			}
@@ -110,20 +104,18 @@ func (c *Client) sendRoutine() {
 
 func (c *Client) readRoutine() {
 	defer func() {
-		err := c.conn.Close()
-		if err != nil {
-			return
-		}
+		c.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
-	_ = c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.conn.SetPongHandler(func(string) error { _ = c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	_ = c.conn.SetReadDeadline(time.Now().Add(timeout))
+	c.conn.SetPongHandler(func(string) error { _ = c.conn.SetReadDeadline(time.Now().Add(timeout)); return nil })
+	c.conn.SetPingHandler(func(string) error { _ = c.conn.SetReadDeadline(time.Now().Add(timeout)); return nil })
 	for {
 		_, _, err := c.conn.ReadMessage()
 		if err != nil {
-			normalCodes := []int{websocket.CloseNormalClosure, websocket.CloseGoingAway, websocket.CloseAbnormalClosure}
+			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure}
 			if websocket.IsUnexpectedCloseError(err, normalCodes...) {
-				log.Printf("websocket close error: %v", err)
+				log.Printf("client %s %s read routine exit %v", c.userID, c.deviceID, err)
 			}
 			break
 		}

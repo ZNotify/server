@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	. "notify-api/db"
 	"notify-api/db/entity"
 )
@@ -11,25 +13,26 @@ var TokenUtils = tokenModel{}
 
 // CreateOrUpdate always use the new token
 func (_ tokenModel) CreateOrUpdate(userID string, deviceID string, channel string, token string) error {
-	ptn := entity.PushToken{
-		DeviceID: deviceID,
-		UserID:   userID,
-		Channel:  channel,
-		Token:    token,
-	}
-
-	// delete old token
-	RWLock.Lock()
-	ret := DB.Where(&entity.PushToken{
-		DeviceID: deviceID,
-	}).Delete(entity.PushToken{})
-	RWLock.Unlock()
+	var pt entity.PushToken
+	RWLock.RLock()
+	ret := DB.
+		Where(entity.PushToken{UserID: userID, DeviceID: deviceID}).
+		FirstOrInit(&pt)
+	RWLock.RUnlock()
 	if ret.Error != nil {
 		return ret.Error
 	}
 
+	// FIXME: use register mechanism to process token
+	if channel == "WebSocketHost" && token == "" {
+		pt.Token = time.Now().Format(time.RFC3339Nano)
+	} else {
+		pt.Token = token
+	}
+	pt.Channel = channel
+
 	RWLock.Lock()
-	ret = DB.Create(&ptn)
+	ret = DB.Save(&pt)
 	RWLock.Unlock()
 
 	return ret.Error
@@ -37,10 +40,12 @@ func (_ tokenModel) CreateOrUpdate(userID string, deviceID string, channel strin
 
 func (_ tokenModel) GetChannelTokens(userID string, channel string) ([]string, error) {
 	var pts []entity.PushToken
+	RWLock.RLock()
 	ret := DB.Where(&entity.PushToken{
 		UserID:  userID,
 		Channel: channel,
 	}).Find(&pts)
+	RWLock.RUnlock()
 	if ret.Error != nil {
 		return nil, ret.Error
 	}
@@ -53,10 +58,12 @@ func (_ tokenModel) GetChannelTokens(userID string, channel string) ([]string, e
 
 func (_ tokenModel) GetDeviceToken(userID string, deviceID string) (entity.PushToken, error) {
 	var pt entity.PushToken
+	RWLock.RLock()
 	ret := DB.Where(&entity.PushToken{
 		UserID:   userID,
 		DeviceID: deviceID,
 	}).First(&pt)
+	RWLock.RUnlock()
 	if ret.Error != nil {
 		return entity.PushToken{}, ret.Error
 	}

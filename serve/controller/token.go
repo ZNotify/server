@@ -38,6 +38,12 @@ func Token(context *types.Ctx) {
 
 	token := context.PostForm("token")
 
+	// FIXME: use register mechanism to avoid
+	if channel == "WebSocketHost" && token != "" {
+		context.JSONError(http.StatusBadRequest, errors.New("token should be empty for WebSocketHost"))
+		return
+	}
+
 	err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
 	if err != nil {
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

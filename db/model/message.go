@@ -32,7 +32,9 @@ func (_ messageUtils) Add(id string, userID string, title string, content string
 func (_ messageUtils) Get(id string) (entity.Message, error) {
 	var msg entity.Message
 
+	RWLock.RLock()
 	ret := DB.Model(entity.Message{}).Where("id = ?", id).First(&msg)
+	RWLock.RUnlock()
 	if ret.Error != nil {
 		return entity.Message{}, ret.Error
 	}
@@ -42,10 +44,12 @@ func (_ messageUtils) Get(id string) (entity.Message, error) {
 
 func (_ messageUtils) GetUserMessageAfter(userID string, after time.Time) ([]entity.Message, error) {
 	var messages []entity.Message
+	RWLock.RLock()
 	ret := DB.Where("user_id = ?", userID).
 		Where("created_at > ?", after).
 		Order("created_at asc").
 		Find(&messages)
+	RWLock.RUnlock()
 	if ret.Error != nil {
 		return nil, ret.Error
 	}
@@ -54,10 +58,12 @@ func (_ messageUtils) GetUserMessageAfter(userID string, after time.Time) ([]ent
 
 func (_ messageUtils) GetMessageInMonth(userID string) ([]entity.Message, error) {
 	var messages []entity.Message
+	RWLock.RLock()
 	ret := DB.Where("user_id = ?", userID).
 		Where("created_at > ?", time.Now().AddDate(0, 0, -30)).
 		Order("created_at desc").
 		Find(&messages)
+	RWLock.RUnlock()
 	if ret.Error != nil {
 		return nil, ret.Error
 	}
@@ -65,9 +71,11 @@ func (_ messageUtils) GetMessageInMonth(userID string) ([]entity.Message, error)
 }
 
 func (_ messageUtils) Delete(userID string, msgID string) error {
+	RWLock.Lock()
 	ret := DB.Where("user_id = ?", userID).
 		Where("id = ?", msgID).
 		Delete(&entity.Message{})
+	RWLock.Unlock()
 	if ret.Error != nil {
 		return ret.Error
 	}
