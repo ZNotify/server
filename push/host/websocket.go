@@ -82,22 +82,22 @@ func (c *Client) sendRoutine() {
 				return
 			}
 
+			wsMsg := wsMessage(*msg)
+			err := c.conn.WriteJSON(wsMsg)
+			if err != nil {
+				log.Printf("write message error: %v", err)
+				c.Close()
+				return
+			}
+
 			db.RWLock.Lock()
-			err := model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.String())
+			err = model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.String())
 			if err != nil {
 				log.Printf("create or update token error: %v", err)
 				db.RWLock.Unlock()
 				continue
 			}
 			db.RWLock.Unlock()
-
-			wsMsg := wsMessage(*msg)
-			err = c.conn.WriteJSON(wsMsg)
-			if err != nil {
-				log.Printf("write message error: %v", err)
-				c.Close()
-				return
-			}
 		case <-ticker.C:
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
@@ -201,7 +201,7 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 
 	deviceId := context.GetHeader("X-Device-ID")
 	if deviceId == "" {
-		log.Printf("user %s connect without since header", userID)
+		log.Printf("user %s connect without device ID", userID)
 		context.JSONError(http.StatusBadRequest, errors.New("no device id"))
 	}
 
@@ -252,12 +252,13 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 	}
 	h.manager.register <- client
 
-	for _, msg := range pendingMessages {
-		client.send.In <- &msg
-	}
-
 	go client.sendRoutine()
 	go client.readRoutine()
+
+	for _, msg := range pendingMessages {
+		msg := msg
+		client.send.In <- &msg
+	}
 }
 
 func (h *WebSocketHost) Send(msg *pushTypes.Message) error {
