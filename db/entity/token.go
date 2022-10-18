@@ -5,11 +5,10 @@ import (
 )
 
 type PushToken struct {
-	ID        uint
+	ID        uint `gorm:"primary_key"`
 	UserID    string
 	CreatedAt time.Time
-	UpdateAt  time.Time
-	DeviceID  string
+	DeviceID  string `gorm:"unique_index:idx_device_id"`
 	Channel   string
 	Token     string
 }

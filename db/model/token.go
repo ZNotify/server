@@ -12,26 +12,24 @@ var TokenUtils = tokenModel{}
 // CreateOrUpdate always use the new token
 func (_ tokenModel) CreateOrUpdate(userID string, deviceID string, channel string, token string) error {
 	ptn := entity.PushToken{
-		Channel: channel,
-		Token:   token,
+		DeviceID: deviceID,
+		UserID:   userID,
+		Channel:  channel,
+		Token:    token,
 	}
 
 	// delete old token
 	RWLock.Lock()
-	ret := DB.Delete(entity.PushToken{
+	ret := DB.Where(&entity.PushToken{
 		DeviceID: deviceID,
-	})
+	}).Delete(entity.PushToken{})
 	RWLock.Unlock()
 	if ret.Error != nil {
 		return ret.Error
 	}
 
-	var pt entity.PushToken
 	RWLock.Lock()
-	ret = DB.
-		Where(entity.PushToken{UserID: userID, DeviceID: deviceID}).
-		Assign(ptn).
-		FirstOrCreate(&pt)
+	ret = DB.Create(&ptn)
 	RWLock.Unlock()
 
 	return ret.Error
