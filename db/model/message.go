@@ -11,14 +11,14 @@ type messageUtils struct{}
 
 var MessageUtils = messageUtils{}
 
-func (_ messageUtils) Add(id string, userID string, title string, content string, long string, createdAt time.Time) (entity.Message, error) {
+func (_ messageUtils) Add(id string, userID string, title string, content string, long string) (entity.Message, error) {
 	msg := entity.Message{
 		ID:        id,
 		UserID:    userID,
 		Title:     title,
 		Content:   content,
 		Long:      long,
-		CreatedAt: createdAt,
+		CreatedAt: time.Now().Add(time.Nanosecond * 10),
 	}
 	RWLock.Lock()
 	ret := DB.Create(&msg)

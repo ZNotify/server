@@ -53,7 +53,6 @@ func Send(context *types.Ctx) {
 	}
 
 	// Insert message record
-	time.Sleep(1 * time.Nanosecond)
 	// a trick to generate different timestamp for different message
 	// FIXME: use an increasing counter to generate different id
 	msg, err := model.MessageUtils.Add(
@@ -62,7 +61,7 @@ func Send(context *types.Ctx) {
 		pushMsg.Title,
 		pushMsg.Content,
 		pushMsg.Long,
-		time.Now())
+	)
 
 	if err != nil {
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
