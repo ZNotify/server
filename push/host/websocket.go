@@ -20,7 +20,7 @@ import (
 const (
 	writeWait = 10 * time.Second
 
-	timeout = 60 * time.Second
+	timeout = 5 * time.Minute
 
 	pingPeriod = (timeout * 7) / 10
 
@@ -61,7 +61,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func (c *Client) sendRoutine() {
+func (c *Client) writeRoutine() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -74,7 +74,6 @@ func (c *Client) sendRoutine() {
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				_ = c.conn.WriteMessage(websocket.CloseMessage, []byte{})
-				log.Printf("client %s %s send chan exit", c.userID, c.deviceID)
 				return
 			}
 
@@ -108,12 +107,10 @@ func (c *Client) readRoutine() {
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	_ = c.conn.SetReadDeadline(time.Now().Add(timeout))
-	c.conn.SetPongHandler(func(string) error { _ = c.conn.SetReadDeadline(time.Now().Add(timeout)); return nil })
-	c.conn.SetPingHandler(func(string) error { _ = c.conn.SetReadDeadline(time.Now().Add(timeout)); return nil })
 	for {
 		_, _, err := c.conn.ReadMessage()
 		if err != nil {
-			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure}
+			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure, websocket.CloseInternalServerErr}
 			if websocket.IsUnexpectedCloseError(err, normalCodes...) {
 				log.Printf("client %s %s read routine exit %v", c.userID, c.deviceID, err)
 			}
@@ -244,7 +241,17 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 	}
 	h.manager.register <- client
 
-	go client.sendRoutine()
+	client.conn.SetPongHandler(func(string) error {
+		_ = client.conn.SetReadDeadline(time.Now().Add(timeout))
+		return nil
+	})
+	client.conn.SetPingHandler(func(string) error {
+		_ = client.conn.SetReadDeadline(time.Now().Add(timeout))
+		_ = client.conn.WriteMessage(websocket.PongMessage, nil)
+		return nil
+	})
+
+	go client.writeRoutine()
 	go client.readRoutine()
 
 	for _, msg := range pendingMessages {
