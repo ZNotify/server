@@ -20,7 +20,7 @@ import (
 const (
 	writeWait = 10 * time.Second
 
-	timeout = 5 * time.Minute
+	timeout = 30 * time.Second
 
 	pingPeriod = (timeout * 7) / 10
 
