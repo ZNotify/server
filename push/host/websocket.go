@@ -22,8 +22,6 @@ const (
 
 	timeout = 30 * time.Second
 
-	pingPeriod = (timeout * 7) / 10
-
 	maxMessageSize = 512
 )
 
@@ -62,22 +60,21 @@ var upgrader = websocket.Upgrader{
 }
 
 func (c *Client) writeRoutine() {
-	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		ticker.Stop()
 		c.Close()
 	}()
 
 	for {
 		select {
 		case msg, ok := <-c.send.Out:
-			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				_ = c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				_ = c.conn.WriteControl(websocket.CloseMessage, []byte{}, time.Now().Add(writeWait))
 				return
 			}
 
 			wsMsg := wsMessage(*msg)
+
+			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			err := c.conn.WriteJSON(wsMsg)
 			if err != nil {
 				log.Printf("write message error: %v", err)
@@ -89,13 +86,6 @@ func (c *Client) writeRoutine() {
 			if err != nil {
 				log.Printf("create or update token error: %v", err)
 				continue
-			}
-		case <-ticker.C:
-			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				log.Printf("ping error: %v", err)
-				c.Close()
-				return
 			}
 		}
 	}
@@ -112,7 +102,7 @@ func (c *Client) readRoutine() {
 		if err != nil {
 			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure, websocket.CloseInternalServerErr}
 			if websocket.IsUnexpectedCloseError(err, normalCodes...) {
-				log.Printf("client %s %s read routine exit %v", c.userID, c.deviceID, err)
+				log.Printf("client %s %s read routine exit %v", c.userID, c.deviceID[0:7], err)
 			}
 			break
 		}
@@ -120,7 +110,9 @@ func (c *Client) readRoutine() {
 }
 
 func (c *Client) Close() {
+	log.Printf("client %s %s try close", c.userID, c.deviceID[0:7])
 	c.once.Do(func() {
+		log.Printf("client %s %s real close", c.userID, c.deviceID[0:7])
 		_ = c.conn.Close()
 		c.manager.unregister <- c
 		close(c.send.In)
@@ -241,13 +233,11 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 	}
 	h.manager.register <- client
 
-	client.conn.SetPongHandler(func(string) error {
-		_ = client.conn.SetReadDeadline(time.Now().Add(timeout))
-		return nil
-	})
 	client.conn.SetPingHandler(func(string) error {
 		_ = client.conn.SetReadDeadline(time.Now().Add(timeout))
-		_ = client.conn.WriteMessage(websocket.PongMessage, nil)
+
+		_ = client.conn.SetWriteDeadline(time.Now().Add(writeWait))
+		_ = client.conn.WriteControl(websocket.PongMessage, []byte{}, time.Now().Add(writeWait))
 		return nil
 	})
 
