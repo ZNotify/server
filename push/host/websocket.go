@@ -22,6 +22,8 @@ const (
 
 	timeout = 30 * time.Second
 
+	pingPeriod = (timeout * 7) / 10
+
 	maxMessageSize = 512
 )
 
@@ -60,7 +62,9 @@ var upgrader = websocket.Upgrader{
 }
 
 func (c *Client) writeRoutine() {
+	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		ticker.Stop()
 		c.Close()
 	}()
 
@@ -87,6 +91,12 @@ func (c *Client) writeRoutine() {
 				log.Printf("create or update token error: %v", err)
 				continue
 			}
+		case <-ticker.C:
+			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
+				log.Printf("ping error: %v", err)
+				c.Close()
+				return
+			}
 		}
 	}
 }
@@ -96,9 +106,8 @@ func (c *Client) readRoutine() {
 		c.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
-	_ = c.conn.SetReadDeadline(time.Now().Add(timeout))
 	for {
-		_, _, err := c.conn.ReadMessage()
+		_, _, err := c.conn.NextReader()
 		if err != nil {
 			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure, websocket.CloseInternalServerErr}
 			if websocket.IsUnexpectedCloseError(err, normalCodes...) {
@@ -232,14 +241,6 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 		once:     sync.Once{},
 	}
 	h.manager.register <- client
-
-	client.conn.SetPingHandler(func(string) error {
-		_ = client.conn.SetReadDeadline(time.Now().Add(timeout))
-
-		_ = client.conn.SetWriteDeadline(time.Now().Add(writeWait))
-		_ = client.conn.WriteControl(websocket.PongMessage, []byte{}, time.Now().Add(writeWait))
-		return nil
-	})
 
 	go client.writeRoutine()
 	go client.readRoutine()
