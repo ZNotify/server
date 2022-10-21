@@ -193,6 +193,7 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 	if deviceId == "" {
 		log.Printf("user %s connect without device ID", userID)
 		context.JSONError(http.StatusBadRequest, errors.New("no device id"))
+		return
 	}
 
 	token, err := model.TokenUtils.GetDeviceToken(userID, deviceId)
