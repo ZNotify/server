@@ -18,7 +18,7 @@ jobs:
         id: check
         uses: actions/github-script@v6
         with:
-          script:
+          script: |
             const commit_message = context.payload.head_commit.message
             const should_deploy = commitMessage.includes('[deploy]')
             core.setOutput('should_deploy', should_deploy)
