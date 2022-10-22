@@ -25,7 +25,9 @@ func (_ tokenModel) CreateOrUpdate(userID string, deviceID string, channel strin
 
 	// FIXME: use register mechanism to process token
 	if channel == "WebSocketHost" && token == "" {
-		pt.Token = time.Now().Format(time.RFC3339Nano)
+		if pt.Channel != "WebSocketHost" {
+			pt.Token = time.Now().Format(time.RFC3339Nano)
+		}
 	} else {
 		pt.Token = token
 	}
