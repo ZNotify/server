@@ -67,6 +67,8 @@ func setupDoc() {
 }
 
 func setupRouter() {
+	router.Use(middleware.Duration)
+
 	router.GET("/check", types.WrapHandler(controller.Check))
 	router.GET("/alive", types.WrapHandler(controller.Alive))
 
