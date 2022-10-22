@@ -127,6 +127,16 @@ jobs:
     needs: [ build ]
     environment: production
     steps:
+      - name: Check should deploy
+        id: check
+        uses: actions/github-script@v6
+        with:
+          script:
+            const commitMessage = context.payload.head_commit.message
+            const shouldDeploy = commitMessage.includes('[deploy]')
+            core.setOutput('shouldDeploy', shouldDeploy)
+
       - name: Deploy to production
+        if: steps.check.outputs.shouldDeploy == 'true'
         run: |
           curl -X POST ${{ secrets.DEPLOY_URL }}
