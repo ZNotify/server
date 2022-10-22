@@ -9,6 +9,20 @@ env:
 permissions: write-all
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - name: Check should deploy
+        id: check
+        uses: actions/github-script@v6
+        with:
+          script:
+            const commit_message = context.payload.head_commit.message
+            const should_deploy = commitMessage.includes('[deploy]')
+            core.setOutput('should_deploy', should_deploy)
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -124,18 +138,10 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ build, check ]
     environment: production
+    if: needs.check.outputs.should_deploy == 'true'
     steps:
-      - name: Check should deploy
-        id: check
-        uses: actions/github-script@v6
-        with:
-          script:
-            const commitMessage = context.payload.head_commit.message
-            const shouldDeploy = commitMessage.includes('[deploy]')
-            core.setOutput('shouldDeploy', shouldDeploy)
-
       - name: Deploy to production
         if: steps.check.outputs.shouldDeploy == 'true'
         run: |
