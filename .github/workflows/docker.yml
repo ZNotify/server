@@ -20,7 +20,7 @@ jobs:
         with:
           script: |
             const commit_message = context.payload.head_commit.message
-            const should_deploy = commitMessage.includes('[deploy]')
+            const should_deploy = commit_message.includes('[deploy]')
             core.setOutput('should_deploy', should_deploy)
 
   build:
