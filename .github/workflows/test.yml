@@ -87,32 +87,22 @@ jobs:
 
   test-js-sdk:
     needs: [ build-artifact ]
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      repository-projects: write
     uses: ZNotify/js-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-kt-sdk:
     needs: [ build-artifact ]
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      repository-projects: write
     uses: ZNotify/kt-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-py-sdk:
     needs: [ build-artifact ]
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      repository-projects: write
     uses: ZNotify/py-sdk/.github/workflows/test.yml@master
+    secrets: inherit
+
+  test-rs-sdk:
+    needs: [ build-artifact ]
+    uses: ZNotify/rs-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   release:
