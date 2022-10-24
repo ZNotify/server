@@ -19,6 +19,11 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const event_type = context.eventName;
+            if (event_type === 'repository_dispatch') {
+                core.setOutput('should_deploy', false);
+                return;
+            }
             const commit_message = context.payload.head_commit.message
             const should_deploy = commit_message.includes('[deploy]')
             core.setOutput('should_deploy', should_deploy)
