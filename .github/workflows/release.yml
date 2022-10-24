@@ -20,13 +20,13 @@ jobs:
         with:
           name: server
 
-      - name: Bundle
-        run: zip server.zip server-linux server-windows.exe server-macos
-
       - name: Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GH_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          files: server.zip
+          files: |
+            server-linux
+            server-windows.exe
+            server-macos
