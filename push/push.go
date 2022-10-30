@@ -11,17 +11,17 @@ import (
 
 	"notify-api/push/host"
 	"notify-api/push/provider"
-	"notify-api/push/types"
+	pushTypes "notify-api/push/types"
 	serveTypes "notify-api/serve/types"
 	"notify-api/utils"
 )
 
 type senders struct {
-	senders []types.Sender
+	senders []pushTypes.Sender
 }
 
 var Senders = senders{
-	senders: []types.Sender{
+	senders: []pushTypes.Sender{
 		new(provider.FCMProvider),
 		new(provider.WebPushProvider),
 		new(host.WebSocketHost),
@@ -37,7 +37,7 @@ func (p *senders) Has(channel string) bool {
 	return false
 }
 
-func (p *senders) Send(msg *types.Message) error {
+func (p *senders) Send(msg *pushTypes.Message) error {
 	if utils.IsTestInstance() {
 		return nil
 	}
@@ -46,7 +46,7 @@ func (p *senders) Send(msg *types.Message) error {
 	var wg sync.WaitGroup
 	wg.Add(len(p.senders))
 	for _, v := range p.senders {
-		go func(sender types.Sender) {
+		go func(sender pushTypes.Sender) {
 			defer wg.Done()
 			// log.Println("Sending message to", sender.Name())
 			pe := sender.Send(msg)
@@ -71,7 +71,7 @@ func (p *senders) Send(msg *types.Message) error {
 
 func (p *senders) Init() {
 	for _, sender := range p.senders {
-		if pv, ok := sender.(types.Provider); ok {
+		if pv, ok := sender.(pushTypes.Provider); ok {
 			if utils.IsTestInstance() {
 				continue
 			}
@@ -88,7 +88,7 @@ func (p *senders) Init() {
 			}
 		}
 
-		if hv, ok := sender.(types.Host); ok {
+		if hv, ok := sender.(pushTypes.Host); ok {
 			if err := hv.Init(); err != nil {
 				log.Fatalf("Host %s init failed: %s", hv.Name(), err)
 				return
@@ -111,7 +111,7 @@ func (p *senders) RegisterRouter(e *gin.RouterGroup) error {
 		return errors.New("no sender found")
 	}
 	for _, v := range p.senders {
-		if pv, ok := v.(types.SenderWithHandler); ok {
+		if pv, ok := v.(pushTypes.SenderWithHandler); ok {
 			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), serveTypes.WrapHandler(pv.Handler))
 		}
 	}

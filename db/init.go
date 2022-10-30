@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"notify-api/log"
 	"os"
 	"sync"
 
@@ -21,16 +22,16 @@ func checkDBFile() {
 		if os.IsNotExist(err) {
 			err = os.Mkdir("data", 0777)
 			if err != nil {
-				fmt.Println(err)
+				log.Error(err)
 				os.Exit(1)
 			}
 		} else {
-			fmt.Println(err)
+			log.Error(err)
 			os.Exit(1)
 		}
 	} else {
 		if !fa.IsDir() {
-			fmt.Println("data is not a directory")
+			log.Error("data is not a directory")
 			os.Exit(1)
 		}
 	}
@@ -40,11 +41,10 @@ func checkDBFile() {
 	if err != nil {
 		if os.IsNotExist(err) {
 			// Create notify.db file
-			fmt.Println("Creating notify.db file")
+			log.Debug("notify.db is not existed, creating...")
 			file, err := os.Create("data/notify.db")
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				log.Fatal(err)
 			}
 			err = file.Close()
 			if err != nil {

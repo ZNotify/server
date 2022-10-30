@@ -63,7 +63,6 @@ func setupDoc() {
 	} else {
 		docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, "http")
 	}
-
 }
 
 func setupRouter() {
