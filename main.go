@@ -11,19 +11,16 @@
 package main
 
 import (
-	"errors"
 	_ "github.com/joho/godotenv/autoload"
-	"notify-api/log"
-	_ "notify-api/log"
+
+	"notify-api/setup"
 )
 
-//var router = setup.New()
+var router = setup.New()
 
 func main() {
-	log.Errorf("%+v", errors.New("test"))
-
-	//err := router.Run("0.0.0.0:14444")
-	//if err != nil {
-	//	panic(err)
-	//}
+	err := router.Run("0.0.0.0:14444")
+	if err != nil {
+		panic(err)
+	}
 }

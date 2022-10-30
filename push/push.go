@@ -3,11 +3,11 @@ package push
 import (
 	"errors"
 	"fmt"
-	"log"
 	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 
 	"notify-api/push/host"
 	"notify-api/push/provider"
@@ -42,13 +42,14 @@ func (p *senders) Send(msg *pushTypes.Message) error {
 		return nil
 	}
 
+	zap.S().Infof("Send message to %s", msg.UserID)
+
 	var errs []string
 	var wg sync.WaitGroup
 	wg.Add(len(p.senders))
 	for _, v := range p.senders {
 		go func(sender pushTypes.Sender) {
 			defer wg.Done()
-			// log.Println("Sending message to", sender.Name())
 			pe := sender.Send(msg)
 			if pe != nil {
 				errString := fmt.Sprintf("Send message to %s failed: %v", sender.Name(), pe)
@@ -71,36 +72,36 @@ func (p *senders) Send(msg *pushTypes.Message) error {
 
 func (p *senders) Init() {
 	for _, sender := range p.senders {
-		if pv, ok := sender.(pushTypes.Provider); ok {
+		if pv, ok := sender.(pushTypes.SenderWithAuth); ok {
 			if utils.IsTestInstance() {
 				continue
 			}
 
 			if err := pv.Check(); err != nil {
-				log.Fatalf("Provider %s check failed: %s", pv.Name(), err)
+				zap.S().Fatalf("Check provider %s failed: %v", pv.Name(), err)
 			}
 			err := pv.Init()
 			if err != nil {
-				log.Fatalf("Provider %s init failed: %s", pv.Name(), err)
+				zap.S().Fatalf("Init provider %s failed: %v", pv.Name(), err)
 				return
 			} else {
-				log.Printf("Provider %s init success", pv.Name())
+				zap.S().Infof("Init provider %s success", pv.Name())
 			}
 		}
 
 		if hv, ok := sender.(pushTypes.Host); ok {
 			if err := hv.Init(); err != nil {
-				log.Fatalf("Host %s init failed: %s", hv.Name(), err)
+				zap.S().Fatalf("Init host %s failed: %v", hv.Name(), err)
 				return
 			} else {
-				log.Printf("Host %s init success", hv.Name())
+				zap.S().Infof("Init host %s success", hv.Name())
 			}
 
 			if err := hv.Start(); err != nil {
-				log.Fatalf("Host %s start failed: %s", hv.Name(), err)
+				zap.S().Fatalf("Start host %s failed: %v", hv.Name(), err)
 				return
 			} else {
-				log.Printf("Host %s start success", hv.Name())
+				zap.S().Infof("Start host %s success", hv.Name())
 			}
 		}
 	}

@@ -1,63 +1,42 @@
 package log
 
 import (
-	"fmt"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+
+	"notify-api/utils"
 )
 
-var logger *zap.SugaredLogger
-
-//goland:noinspection GoUnusedGlobalVariable,SpellCheckingInspection
-var (
-	Desugar     = logger.Desugar
-	Named       = logger.Named
-	WithOptions = logger.WithOptions
-	With        = logger.With
-	Debug       = logger.Debug
-	Info        = logger.Info
-	Warn        = logger.Warn
-	Error       = logger.Error
-	DPanic      = logger.DPanic
-	Panic       = logger.Panic
-	Fatal       = logger.Fatal
-	Debugf      = logger.Debugf
-	Infof       = logger.Infof
-	Warnf       = logger.Warnf
-	Errorf      = logger.Errorf
-	DPanicf     = logger.DPanicf
-	Panicf      = logger.Panicf
-	Fatalf      = logger.Fatalf
-	Debugw      = logger.Debugw
-	Infow       = logger.Infow
-	Warnw       = logger.Warnw
-	Errorw      = logger.Errorw
-	DPanicw     = logger.DPanicw
-	Panicw      = logger.Panicw
-	Fatalw      = logger.Fatalw
-	Debugln     = logger.Debugln
-	Infoln      = logger.Infoln
-	Warnln      = logger.Warnln
-	Errorln     = logger.Errorln
-	DPanicln    = logger.DPanicln
-	Panicln     = logger.Panicln
-	Fatalln     = logger.Fatalln
-	Sync        = logger.Sync
-)
-
-func init() {
-	fmt.Println("log init")
-	var cfg zap.Config
+func Init() {
+	var pe zapcore.EncoderConfig
 	if gin.Mode() == gin.ReleaseMode {
-		cfg = zap.NewProductionConfig()
+		pe = zap.NewProductionEncoderConfig()
 	} else {
-		cfg = zap.NewDevelopmentConfig()
+		pe = zap.NewDevelopmentEncoderConfig()
 	}
-	cfg.Encoding = "console"
-	l, err := cfg.Build()
+
+	utils.RequireFile("data/app.log")
+	logFile, err := os.OpenFile("data/app.log", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+
+	fileEncoder := zapcore.NewJSONEncoder(pe)
+
+	pe.EncodeTime = zapcore.ISO8601TimeEncoder
+	consoleEncoder := zapcore.NewConsoleEncoder(pe)
+
+	core := zapcore.NewTee(
+		zapcore.NewCore(fileEncoder, zapcore.AddSync(logFile), zapcore.DebugLevel),
+		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), zapcore.InfoLevel),
+	)
+
+	l := zap.New(core, zap.AddStacktrace(zapcore.WarnLevel))
 	if err != err {
 		panic(err)
 	}
-	logger = l.Sugar()
-	fmt.Println("log init done")
+	zap.ReplaceGlobals(l)
 }

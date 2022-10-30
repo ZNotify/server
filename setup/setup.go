@@ -1,17 +1,19 @@
 package setup
 
 import (
-	"fmt"
-	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.uber.org/zap"
 
 	"notify-api/db"
 	"notify-api/docs"
+	"notify-api/log"
 	"notify-api/push"
 	"notify-api/serve/controller"
 	"notify-api/serve/middleware"
@@ -21,9 +23,12 @@ import (
 	"notify-api/web"
 )
 
-var router = gin.Default()
+var router = gin.New()
 
 func New() *gin.Engine {
+	log.Init()
+	// always ensure log init before any other module
+
 	checkConnection()
 
 	db.Init()
@@ -40,15 +45,14 @@ func New() *gin.Engine {
 
 func checkConnection() {
 	if utils.IsTestInstance() || gin.Mode() == gin.DebugMode {
-		log.Println("Skip connection check in non-production env.")
+		zap.S().Debug("Skip connection check in debug mode")
 		return
 	}
 
 	go func() {
 		_, err := http.Get("https://www.google.com/robots.txt")
 		if err != nil {
-			fmt.Println("No global internet connection")
-			panic(err)
+			zap.S().Panicf("Failed to connect to internet: %v", err)
 		}
 	}()
 }
@@ -66,6 +70,9 @@ func setupDoc() {
 }
 
 func setupRouter() {
+	router.Use(ginzap.Ginzap(zap.L(), time.RFC3339, false))
+	router.Use(ginzap.RecoveryWithZap(zap.L(), true))
+
 	router.Use(middleware.Duration)
 
 	router.GET("/check", types.WrapHandler(controller.Check))

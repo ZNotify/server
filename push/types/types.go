@@ -12,7 +12,7 @@ type Sender interface {
 	Name() string
 }
 
-type Provider interface {
+type SenderWithAuth interface {
 	Sender
 	Check() error
 }

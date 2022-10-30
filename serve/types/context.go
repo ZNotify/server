@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +41,6 @@ func (c *Ctx) JSONError(code int, err error) {
 			Code: code,
 			Body: errString,
 		})
-		log.Printf("Internal Server Error:\n%s", errString)
 	}
 }
 

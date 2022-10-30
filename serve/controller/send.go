@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"notify-api/db/model"
 	. "notify-api/push"
@@ -33,6 +34,7 @@ func Send(context *types.Ctx) {
 	long := context.PostForm("long")
 
 	if content == "" {
+		zap.S().Infof("content is empty")
 		context.JSONError(http.StatusBadRequest, errors.New("content can not be empty"))
 		return
 	}
@@ -48,6 +50,7 @@ func Send(context *types.Ctx) {
 
 	err := Senders.Send(pushMsg)
 	if err != nil {
+		zap.S().Errorw("send message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
@@ -64,6 +67,7 @@ func Send(context *types.Ctx) {
 	)
 
 	if err != nil {
+		zap.S().Errorw("add message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}

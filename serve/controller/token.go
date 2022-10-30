@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"notify-api/db/model"
 	"notify-api/push"
@@ -26,12 +27,14 @@ import (
 func Token(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {
+		zap.S().Infof("device id %s is not a valid UUID", deviceID)
 		context.JSONError(http.StatusBadRequest, errors.New("device_id should be a valid UUID"))
 		return
 	}
 
 	channel := context.PostForm("channel")
 	if !push.Senders.Has(channel) {
+		zap.S().Infof("channel %s is not supported", channel)
 		context.JSONError(http.StatusBadRequest, errors.New("channel is not supported"))
 		return
 	}
@@ -40,12 +43,14 @@ func Token(context *types.Ctx) {
 
 	// FIXME: use register mechanism to avoid
 	if channel == "WebSocketHost" && token != "" {
+		zap.S().Infof("token should be empty for WebSocketHost")
 		context.JSONError(http.StatusBadRequest, errors.New("token should be empty for WebSocketHost"))
 		return
 	}
 
 	err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
 	if err != nil {
+		zap.S().Errorw("create or update token error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}

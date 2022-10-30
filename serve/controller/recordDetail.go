@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"notify-api/db/model"
 	"notify-api/serve/types"
@@ -24,6 +25,7 @@ func RecordDetail(context *types.Ctx) {
 	messageID := context.Param("id")
 
 	if messageID == "" {
+		zap.S().Infof("message id is empty")
 		context.JSONError(http.StatusBadRequest, errors.New("message ID can not be empty"))
 		return
 	}
@@ -31,14 +33,17 @@ func RecordDetail(context *types.Ctx) {
 	message, err := model.MessageUtils.Get(messageID)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
+			zap.S().Infof("message %s not found", messageID)
 			context.JSONError(http.StatusNotFound, errors.New("Message not found."))
 			return
 		}
+		zap.S().Errorw("get message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
 	if message.UserID != context.UserID {
+		zap.S().Infof("message %s not belong to user %s", messageID, context.UserID)
 		context.JSONError(http.StatusUnauthorized, errors.New("You are not authorized to access this message."))
 		return
 	}

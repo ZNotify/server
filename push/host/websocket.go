@@ -1,13 +1,13 @@
 package host
 
 import (
-	"log"
 	"net/http"
 	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"notify-api/db/entity"
 	"notify-api/db/model"
@@ -81,19 +81,19 @@ func (c *Client) writeRoutine() {
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			err := c.conn.WriteJSON(wsMsg)
 			if err != nil {
-				log.Printf("write message error: %v", err)
+				zap.S().Infof("write message error: %v", err)
 				c.Close()
 				return
 			}
 
 			err = model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.Format(time.RFC3339Nano))
 			if err != nil {
-				log.Printf("create or update token error: %v", err)
+				zap.S().Errorf("create or update token error: %v", err)
 				continue
 			}
 		case <-ticker.C:
 			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
-				log.Printf("ping error: %v", err)
+				zap.S().Infof("ping error: %v", err)
 				c.Close()
 				return
 			}
@@ -111,7 +111,7 @@ func (c *Client) readRoutine() {
 		if err != nil {
 			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure, websocket.CloseInternalServerErr}
 			if websocket.IsUnexpectedCloseError(err, normalCodes...) {
-				log.Printf("client %s %s read routine exit %v", c.userID, c.deviceID[0:7], err)
+				zap.S().Infof("client %s %s read routine exit %v", c.userID, c.deviceID[0:7], err)
 			}
 			break
 		}
@@ -119,9 +119,9 @@ func (c *Client) readRoutine() {
 }
 
 func (c *Client) Close() {
-	log.Printf("client %s %s try close", c.userID, c.deviceID[0:7])
+	zap.S().Debugf("client %s %s try close", c.userID, c.deviceID[0:7])
 	c.once.Do(func() {
-		log.Printf("client %s %s real close", c.userID, c.deviceID[0:7])
+		zap.S().Debugf("client %s %s real close", c.userID, c.deviceID[0:7])
 		_ = c.conn.Close()
 		c.manager.unregister <- c
 		close(c.send.In)
@@ -129,7 +129,7 @@ func (c *Client) Close() {
 }
 
 func (h *WebSocketHost) clientManageRoutine() {
-	log.Println("client manage routine start")
+	zap.S().Debug("client manage routine start")
 	deleteClient := func(client *Client) {
 		if userMap, ok := h.manager.userClients[client.userID]; ok {
 			if _, ok := userMap[client]; ok {
@@ -191,7 +191,7 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 
 	deviceId := context.GetHeader("X-Device-ID")
 	if deviceId == "" {
-		log.Printf("user %s connect without device ID", userID)
+		zap.S().Infof("user %s connect without device ID", userID)
 		context.JSONError(http.StatusBadRequest, errors.New("no device id"))
 		return
 	}
@@ -199,24 +199,24 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 	token, err := model.TokenUtils.GetDeviceToken(userID, deviceId)
 	if err != nil {
 		if err == model.ErrNotFound {
-			log.Printf("user %s device %s token not found", userID, deviceId)
+			zap.S().Infof("user %s device %s token not found", userID, deviceId)
 			context.JSONError(http.StatusUnauthorized, errors.New("token not found"))
 			return
 		} else {
-			log.Printf("get user %s token error: %v", userID, err)
+			zap.S().Errorf("get user %s token error: %v", userID, err)
 			context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 			return
 		}
 	}
 	if token.Channel != h.Name() {
-		log.Printf("user %s channel not match", userID)
+		zap.S().Infof("user %s channel not match", userID)
 		context.JSONError(http.StatusBadRequest, errors.New("user current channel is not WebSocket"))
 		return
 	}
 
 	sinceTime, err := time.Parse(time.RFC3339Nano, token.Token)
 	if err != nil {
-		log.Printf("parse time error: %v", err)
+		zap.S().Infof("parse time error: %v", err)
 		context.JSONError(http.StatusBadRequest, errors.WithStack(err))
 		return
 	}
@@ -224,13 +224,14 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 
 	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime)
 	if err != nil {
-		log.Printf("get user message error: %v", err)
+		zap.S().Errorf("get user %s message error: %v", userID, err)
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
 	conn, err := upgrader.Upgrade(context.Writer, context.Request, nil)
 	if err != nil {
-		log.Println(err)
+		zap.S().Errorf("upgrade error: %v", err)
 		return
 	}
 	client := &Client{

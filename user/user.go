@@ -2,8 +2,9 @@ package user
 
 import (
 	"bufio"
-	"fmt"
 	"os"
+
+	"go.uber.org/zap"
 
 	"notify-api/utils"
 )
@@ -25,14 +26,12 @@ func (c *userController) Init() {
 
 	file, err := os.Open("data/users.txt")
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		zap.S().Fatalf("Failed to open users.txt: %+v", err)
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			zap.S().Fatalf("Failed to close users.txt: %+v", err)
 		}
 	}(file)
 
@@ -43,8 +42,7 @@ func (c *userController) Init() {
 	}
 
 	if err := scanner.Err(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		zap.S().Fatalf("Failed to read users.txt: %+v", err)
 	}
 }
 

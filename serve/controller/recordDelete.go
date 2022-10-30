@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"notify-api/db/model"
 	"notify-api/serve/types"
@@ -23,6 +24,7 @@ func RecordDelete(context *types.Ctx) {
 
 	err := model.MessageUtils.Delete(context.UserID, id)
 	if err != nil {
+		zap.S().Errorw("delete message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
