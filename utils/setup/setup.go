@@ -2,10 +2,11 @@ package setup
 
 import (
 	"net/http"
+	"time"
+
 	"notify-api/utils/config"
 	"notify-api/utils/log"
 	"notify-api/utils/user"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"

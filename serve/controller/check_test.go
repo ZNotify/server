@@ -3,8 +3,9 @@ package controller
 import (
 	"net/http"
 	"net/http/httptest"
-	"notify-api/utils/user"
 	"testing"
+
+	"notify-api/utils/user"
 
 	"github.com/gin-gonic/gin"
 
@@ -13,7 +14,7 @@ import (
 
 func TestCheck(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	user.Controller.Init()
+	user.Init()
 	t.Run("check success", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)

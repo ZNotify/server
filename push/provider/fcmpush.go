@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	firebase "firebase.google.com/go/v4"
@@ -74,12 +73,12 @@ func (p *FCMProvider) Send(msg *types.Message) error {
 	return nil
 }
 
-func (p *FCMProvider) Check() error {
-	FCMCredential := []byte(os.Getenv("FCMCredential"))
-	if len(FCMCredential) == 0 {
+func (p *FCMProvider) Check(auth types.SenderAuth) error {
+	FCMCredential, ok := auth["FCMCredential"]
+	if !ok {
 		return fmt.Errorf("FCMCredential is not set")
 	} else {
-		p.FCMCredential = FCMCredential
+		p.FCMCredential = []byte(FCMCredential)
 		return nil
 	}
 }

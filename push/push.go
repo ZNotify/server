@@ -3,11 +3,13 @@ package push
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	serveTypes "notify-api/serve/types"
-	"notify-api/utils/config"
 	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
+
+	serveTypes "notify-api/serve/types"
+	"notify-api/utils/config"
 
 	"go.uber.org/zap"
 
@@ -71,8 +73,12 @@ func Init() {
 				}
 
 				activeSenders = append(activeSenders, sender)
+				goto found
 			}
 		}
+		zap.S().Fatalf("Sender %s not exist.", id)
+	found:
+		continue
 	}
 }
 

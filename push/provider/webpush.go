@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/SherClockHolmes/webpush-go"
@@ -87,16 +86,20 @@ func (p *WebPushProvider) Send(msg *types.Message) error {
 	}
 }
 
-func (p *WebPushProvider) Check() error {
-	VAPIDPublicKey := os.Getenv("VAPIDPublicKey")
-	VAPIDPrivateKey := os.Getenv("VAPIDPrivateKey")
-	if VAPIDPublicKey == "" || VAPIDPrivateKey == "" {
-		return fmt.Errorf("VAPIDPublicKey or VAPIDPrivateKey is empty")
-	} else {
-		p.VAPIDPublicKey = VAPIDPublicKey
-		p.VAPIDPrivateKey = VAPIDPrivateKey
-		return nil
+func (p *WebPushProvider) Check(auth types.SenderAuth) error {
+	VAPIDPublicKey, ok := auth["VAPIDPublicKey"]
+	if !ok {
+		return fmt.Errorf("VAPIDPublicKey not found")
 	}
+
+	VAPIDPrivateKey, ok := auth["VAPIDPrivateKey"]
+	if !ok {
+		return fmt.Errorf("VAPIDPrivateKey not found")
+	}
+
+	p.VAPIDPublicKey = VAPIDPublicKey
+	p.VAPIDPrivateKey = VAPIDPrivateKey
+	return nil
 }
 
 func (p *WebPushProvider) Name() string {

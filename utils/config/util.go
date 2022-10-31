@@ -1,10 +1,12 @@
 package config
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v3"
+
 	"notify-api/utils"
-	"os"
 )
 
 func IsTest() bool {
@@ -17,10 +19,6 @@ func IsDev() bool {
 
 func IsProd() bool {
 	return Config.Server.Mode == ProdMode
-}
-
-func Set(c Configuration) {
-	Config = c
 }
 
 func Load(path string) {

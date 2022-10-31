@@ -1,8 +1,9 @@
 package db
 
 import (
-	"notify-api/utils/config"
 	"sync"
+
+	"notify-api/utils/config"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm/logger"

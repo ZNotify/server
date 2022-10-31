@@ -3,11 +3,12 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
-	"notify-api/utils/user"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
+
+	"notify-api/utils/user"
 )
 
 type AuthMiddlewareTestSuite struct {
@@ -22,8 +23,8 @@ func (suite *AuthMiddlewareTestSuite) SetupTest() {
 }
 
 func (suite *AuthMiddlewareTestSuite) SetupSuite() {
-	user.Controller.Init()
 	gin.SetMode(gin.TestMode)
+	user.Init()
 }
 
 func (suite *AuthMiddlewareTestSuite) TestAuthPassed() {

@@ -11,10 +11,12 @@
 package main
 
 import (
-	_ "github.com/joho/godotenv/autoload"
 	"log"
-	"notify-api/cmd"
 	"os"
+
+	_ "github.com/joho/godotenv/autoload"
+
+	"notify-api/cmd"
 )
 
 func main() {

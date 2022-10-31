@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"strconv"
+
 	"github.com/urfave/cli/v2"
+
 	"notify-api/utils/config"
 	"notify-api/utils/setup"
-	"strconv"
 )
 
 var App = &cli.App{

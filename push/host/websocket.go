@@ -2,10 +2,11 @@ package host
 
 import (
 	"net/http"
-	"notify-api/utils/ds"
-	"notify-api/utils/user"
 	"sync"
 	"time"
+
+	"notify-api/utils/ds"
+	"notify-api/utils/user"
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"

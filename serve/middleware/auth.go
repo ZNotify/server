@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+
 	"notify-api/utils/user"
 
 	"github.com/gin-gonic/gin"
