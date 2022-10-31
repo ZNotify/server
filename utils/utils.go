@@ -4,6 +4,7 @@ import (
 	"flag"
 	"os"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -56,6 +57,16 @@ func WaitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
 }
 
 func RequireFile(path string) {
+	// check if path contains folder
+	parts := strings.Split(path, "/")
+	if len(parts) > 1 {
+		// create folder
+		err := os.MkdirAll(strings.Join(parts[:len(parts)-1], "/"), 0755)
+		if err != nil {
+			zap.S().Fatalf("Failed to create folder: %+v", err)
+		}
+	}
+
 	va, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
