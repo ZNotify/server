@@ -111,6 +111,7 @@ notify.json
 *.exe
 data/
 !data/users.txt
+!data/config.example.yaml
 .idea/
 !.idea/codeStyles/*
 bin/

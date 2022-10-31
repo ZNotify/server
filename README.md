@@ -5,15 +5,51 @@ Notify 服务端。
 ## 启动参数
 
 ```shell
-server
+NAME:
+   Notify API - This is Znotify api server.
+
+USAGE:
+   server [global options] command [command options] [arguments...]
+
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --config FILE, -c FILE  Load configuration from FILE, or use ENV to load from environment variable CONFIG. (default: "data/config.yaml")
+   --help, -h              show help (default: false)
 ```
 
-环境变量
+## 配置文件
 
-```env
-FCMCredential # FCM Credential 文件内容
-VAPIDPublicKey # Web Push VAPID Public Key
-VAPIDPrivateKey # Web Push VAPID Private Key
+```yaml
+server:
+  port: 14444
+  host: 127.0.0.1
+database:
+  type: sqlite
+  dsn: data/notify.db
+senders:
+  WebSocketHost:
+  FCM:
+    FCMCredential: |
+      {
+        "type": "service_account",
+        "project_id": "",
+        "private_key_id": "",
+        "private_key": "",
+        "client_email": "",
+        "client_id": "",
+        "auth_uri": "",
+        "token_uri": "",
+        "auth_provider_x509_cert_url": "",
+        "client_x509_cert_url": ""
+      }
+  WebPush:
+    VAPIDPrivateKey: |
+      PRIVATE_KEY
+    VAPIDPublicKey: |
+      PUBLIC_KEY
 ```
 
 数据库文件名称为 `notify.db`, `sqlite3` 格式。
