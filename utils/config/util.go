@@ -13,6 +13,10 @@ func IsTest() bool {
 	return Config.Server.Mode == TestMode
 }
 
+func SetTest() {
+	Config.Server.Mode = TestMode
+}
+
 func IsDev() bool {
 	return Config.Server.Mode == DevMode
 }

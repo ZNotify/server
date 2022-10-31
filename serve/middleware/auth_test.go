@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
 
+	"notify-api/utils/config"
 	"notify-api/utils/user"
 )
 
@@ -24,6 +25,7 @@ func (suite *AuthMiddlewareTestSuite) SetupTest() {
 
 func (suite *AuthMiddlewareTestSuite) SetupSuite() {
 	gin.SetMode(gin.TestMode)
+	config.SetTest()
 	user.Init()
 }
 
