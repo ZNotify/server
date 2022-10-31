@@ -28,17 +28,6 @@ func IsProd() bool {
 func Load(path string) {
 	var data []byte
 	var err error
-
-	if path == "ENV" {
-		data = []byte(os.Getenv("CONFIG"))
-	} else {
-		// read config file
-		data, err = os.ReadFile(path)
-		if err != nil {
-			panic(err)
-		}
-	}
-
 	var mode string
 	if utils.IsTestInstance() {
 		mode = TestMode
@@ -61,6 +50,22 @@ func Load(path string) {
 		Senders: make(map[string]SenderConfiguration),
 		Users:   make(UserConfiguration, 0),
 	}
+
+	if mode == TestMode {
+		Config = config
+		return
+	}
+
+	if path == "ENV" {
+		data = []byte(os.Getenv("CONFIG"))
+	} else {
+		// read config file
+		data, err = os.ReadFile(path)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		panic(err)
