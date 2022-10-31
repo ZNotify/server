@@ -33,7 +33,7 @@ func Token(context *types.Ctx) {
 	}
 
 	channel := context.PostForm("channel")
-	if !push.Senders.Has(channel) {
+	if !push.IsValid(channel) {
 		zap.S().Infof("channel %s is not supported", channel)
 		context.JSONError(http.StatusBadRequest, errors.New("channel is not supported"))
 		return

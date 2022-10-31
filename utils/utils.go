@@ -14,6 +14,10 @@ import (
 
 var isTest = -1
 
+func EnableTest() {
+	isTest = 1
+}
+
 func IsTestInstance() bool {
 	if isTest != -1 {
 		return isTest == 1

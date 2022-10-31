@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"notify-api/db/model"
-	. "notify-api/push"
+	"notify-api/push"
 	pushTypes "notify-api/push/types"
 	"notify-api/serve/types"
 )
@@ -48,7 +48,7 @@ func Send(context *types.Ctx) {
 		CreatedAt: time.Now(),
 	}
 
-	err := Senders.Send(pushMsg)
+	err := push.Send(pushMsg)
 	if err != nil {
 		zap.S().Errorw("send message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

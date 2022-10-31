@@ -12,9 +12,11 @@ type Sender interface {
 	Name() string
 }
 
+type SenderAuth = map[string]string
+
 type SenderWithAuth interface {
 	Sender
-	Check() error
+	Check(SenderAuth) error
 }
 
 type Host interface {

@@ -3,12 +3,11 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
+	"notify-api/utils/user"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
-
-	"notify-api/user"
 )
 
 type AuthMiddlewareTestSuite struct {

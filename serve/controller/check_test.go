@@ -3,12 +3,12 @@ package controller
 import (
 	"net/http"
 	"net/http/httptest"
+	"notify-api/utils/user"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 
 	"notify-api/serve/types"
-	"notify-api/user"
 )
 
 func TestCheck(t *testing.T) {

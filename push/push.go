@@ -3,42 +3,20 @@ package push
 import (
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	serveTypes "notify-api/serve/types"
+	"notify-api/utils/config"
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"notify-api/push/host"
-	"notify-api/push/provider"
 	pushTypes "notify-api/push/types"
-	serveTypes "notify-api/serve/types"
 	"notify-api/utils"
 )
 
-type senders struct {
-	senders []pushTypes.Sender
-}
-
-var Senders = senders{
-	senders: []pushTypes.Sender{
-		new(provider.FCMProvider),
-		new(provider.WebPushProvider),
-		new(host.WebSocketHost),
-	},
-}
-
-func (p *senders) Has(channel string) bool {
-	for _, v := range p.senders {
-		if v.Name() == channel {
-			return true
-		}
-	}
-	return false
-}
-
-func (p *senders) Send(msg *pushTypes.Message) error {
-	if utils.IsTestInstance() {
+func Send(msg *pushTypes.Message) error {
+	if config.IsTest() {
 		return nil
 	}
 
@@ -46,8 +24,8 @@ func (p *senders) Send(msg *pushTypes.Message) error {
 
 	var errs []string
 	var wg sync.WaitGroup
-	wg.Add(len(p.senders))
-	for _, v := range p.senders {
+	wg.Add(len(activeSenders))
+	for _, v := range activeSenders {
 		go func(sender pushTypes.Sender) {
 			defer wg.Done()
 			pe := sender.Send(msg)
@@ -70,51 +48,38 @@ func (p *senders) Send(msg *pushTypes.Message) error {
 	return nil
 }
 
-func (p *senders) Init() {
-	for _, sender := range p.senders {
-		if pv, ok := sender.(pushTypes.SenderWithAuth); ok {
-			if utils.IsTestInstance() {
-				continue
-			}
+func Init() {
+	for id, senderCfg := range config.Config.Senders {
+		for _, sender := range availableSenders {
+			if sender.Name() == id {
+				if authSender, ok := sender.(pushTypes.SenderWithAuth); ok {
+					err := authSender.Check(senderCfg)
+					if err != nil {
+						zap.S().Fatalf("Sender %s check failed: %v", sender.Name(), err)
+					}
+				}
+				err := sender.Init()
+				if err != nil {
+					zap.S().Fatalf("Sender %s init failed: %v", sender.Name(), err)
+				}
 
-			if err := pv.Check(); err != nil {
-				zap.S().Fatalf("Check provider %s failed: %v", pv.Name(), err)
-			}
-			err := pv.Init()
-			if err != nil {
-				zap.S().Fatalf("Init provider %s failed: %v", pv.Name(), err)
-				return
-			} else {
-				zap.S().Infof("Init provider %s success", pv.Name())
-			}
-		}
+				if host, ok := sender.(pushTypes.Host); ok {
+					err := host.Start()
+					if err != nil {
+						zap.S().Fatalf("Sender %s start failed: %v", sender.Name(), err)
+					}
+				}
 
-		if hv, ok := sender.(pushTypes.Host); ok {
-			if err := hv.Init(); err != nil {
-				zap.S().Fatalf("Init host %s failed: %v", hv.Name(), err)
-				return
-			} else {
-				zap.S().Infof("Init host %s success", hv.Name())
-			}
-
-			if err := hv.Start(); err != nil {
-				zap.S().Fatalf("Start host %s failed: %v", hv.Name(), err)
-				return
-			} else {
-				zap.S().Infof("Start host %s success", hv.Name())
+				activeSenders = append(activeSenders, sender)
 			}
 		}
 	}
 }
 
-func (p *senders) RegisterRouter(e *gin.RouterGroup) error {
-	if len(p.senders) == 0 && !utils.IsTestInstance() {
-		return errors.New("no sender found")
-	}
-	for _, v := range p.senders {
+func RegisterRouter(e *gin.RouterGroup) {
+	for _, v := range activeSenders {
 		if pv, ok := v.(pushTypes.SenderWithHandler); ok {
 			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), serveTypes.WrapHandler(pv.Handler))
 		}
 	}
-	return nil
 }

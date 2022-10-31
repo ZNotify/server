@@ -2,6 +2,9 @@ package setup
 
 import (
 	"net/http"
+	"notify-api/utils/config"
+	"notify-api/utils/log"
+	"notify-api/utils/user"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -13,13 +16,10 @@ import (
 
 	"notify-api/db"
 	"notify-api/docs"
-	"notify-api/log"
 	"notify-api/push"
 	"notify-api/serve/controller"
 	"notify-api/serve/middleware"
 	"notify-api/serve/types"
-	"notify-api/user"
-	"notify-api/utils"
 	"notify-api/web"
 )
 
@@ -32,11 +32,10 @@ func New() *gin.Engine {
 	checkConnection()
 
 	db.Init()
-	user.Controller.Init()
-	push.Senders.Init()
+	user.Init()
+	push.Init()
 
 	setupDoc()
-
 	setupMiddleware()
 	setupRouter()
 
@@ -44,7 +43,7 @@ func New() *gin.Engine {
 }
 
 func checkConnection() {
-	if utils.IsTestInstance() || gin.Mode() == gin.DebugMode {
+	if !config.IsProd() {
 		zap.S().Debug("Skip connection check in debug mode")
 		return
 	}
@@ -91,10 +90,7 @@ func setupRouter() {
 		userGroup.PUT("/token/:device_id", types.WrapHandler(controller.Token))
 		userGroup.DELETE("/token/:device_id", types.WrapHandler(controller.TokenDelete))
 
-		err := push.Senders.RegisterRouter(userGroup)
-		if err != nil {
-			panic(err)
-		}
+		push.RegisterRouter(userGroup)
 	}
 
 	router.GET("/docs", types.WrapHandler(controller.DocIndex))

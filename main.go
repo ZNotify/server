@@ -12,15 +12,14 @@ package main
 
 import (
 	_ "github.com/joho/godotenv/autoload"
-
-	"notify-api/setup"
+	"log"
+	"notify-api/cmd"
+	"os"
 )
 
-var router = setup.New()
-
 func main() {
-	err := router.Run("0.0.0.0:14444")
+	err := cmd.App.Run(os.Args)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to run app: %v", err)
 	}
 }

@@ -2,10 +2,9 @@ package middleware
 
 import (
 	"net/http"
+	"notify-api/utils/user"
 
 	"github.com/gin-gonic/gin"
-
-	"notify-api/user"
 )
 
 const UserIdKey = "user_id"
@@ -19,7 +18,7 @@ func UserAuth(c *gin.Context) {
 		})
 		return
 	} else {
-		if user.Controller.Is(userID) {
+		if user.Is(userID) {
 			c.Set(UserIdKey, userID)
 			c.Next()
 			return

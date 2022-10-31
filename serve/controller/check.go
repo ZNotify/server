@@ -2,7 +2,7 @@ package controller
 
 import (
 	"notify-api/serve/types"
-	"notify-api/user"
+	"notify-api/utils/user"
 )
 
 // Check godoc
@@ -13,6 +13,6 @@ import (
 // @Router  /check [get]
 func Check(context *types.Ctx) {
 	userID := context.Query("user_id")
-	result := user.Controller.Is(userID)
+	result := user.Is(userID)
 	context.JSONResult(result)
 }

@@ -2,6 +2,8 @@ package host
 
 import (
 	"net/http"
+	"notify-api/utils/ds"
+	"notify-api/utils/user"
 	"sync"
 	"time"
 
@@ -13,8 +15,6 @@ import (
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
 	"notify-api/serve/types"
-	"notify-api/user"
-	"notify-api/utils"
 )
 
 const (
@@ -32,7 +32,7 @@ type Client struct {
 
 	conn *websocket.Conn
 
-	send *utils.UnboundedChan[*entity.Message]
+	send *ds.UnboundedChan[*entity.Message]
 
 	userID   string
 	deviceID string
@@ -171,7 +171,7 @@ func (h *WebSocketHost) Init() error {
 		broadcast:   make(chan *entity.Message),
 	}
 
-	for _, v := range user.Controller.Users() {
+	for _, v := range user.Users() {
 		h.manager.userClients[v] = make(map[*Client]bool)
 	}
 
@@ -237,7 +237,7 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 	client := &Client{
 		manager:  h.manager,
 		conn:     conn,
-		send:     utils.NewUnboundedChan[*entity.Message](2),
+		send:     ds.NewUnboundedChan[*entity.Message](2),
 		userID:   userID,
 		deviceID: deviceId,
 		once:     sync.Once{},
