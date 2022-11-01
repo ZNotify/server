@@ -1,4 +1,4 @@
-package provider
+package fcm
 
 import (
 	"context"
@@ -14,12 +14,12 @@ import (
 	"notify-api/push/types"
 )
 
-type FCMProvider struct {
+type Provider struct {
 	FCMClient     *messaging.Client
 	FCMCredential []byte
 }
 
-func (p *FCMProvider) Init() error {
+func (p *Provider) Init() error {
 	opt := option.WithCredentialsJSON(p.FCMCredential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
@@ -33,9 +33,9 @@ func (p *FCMProvider) Init() error {
 	return nil
 }
 
-func (p *FCMProvider) Send(msg *types.Message) error {
+func (p *Provider) Send(msg *types.Message) error {
 	var tokens []string
-	tokens, err := model.TokenUtils.GetChannelTokens(msg.UserID, p.Name())
+	tokens, err := model.TokenUtils.GetUserChannelTokens(msg.UserID, p.Name())
 
 	if err != nil {
 		return errors.WithStack(err)
@@ -73,7 +73,7 @@ func (p *FCMProvider) Send(msg *types.Message) error {
 	return nil
 }
 
-func (p *FCMProvider) Check(auth types.SenderAuth) error {
+func (p *Provider) Check(auth types.SenderAuth) error {
 	FCMCredential, ok := auth["FCMCredential"]
 	if !ok {
 		return fmt.Errorf("FCMCredential is not set")
@@ -83,6 +83,6 @@ func (p *FCMProvider) Check(auth types.SenderAuth) error {
 	}
 }
 
-func (p *FCMProvider) Name() string {
+func (p *Provider) Name() string {
 	return "FCM"
 }

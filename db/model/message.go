@@ -11,7 +11,7 @@ type messageUtils struct{}
 
 var MessageUtils = messageUtils{}
 
-func (_ messageUtils) Add(id string, userID string, title string, content string, long string) (entity.Message, error) {
+func (messageUtils) Add(id string, userID string, title string, content string, long string) (entity.Message, error) {
 	msg := entity.Message{
 		ID:        id,
 		UserID:    userID,
@@ -29,7 +29,7 @@ func (_ messageUtils) Add(id string, userID string, title string, content string
 	return msg, nil
 }
 
-func (_ messageUtils) Get(id string) (entity.Message, error) {
+func (messageUtils) Get(id string) (entity.Message, error) {
 	var msg entity.Message
 
 	RWLock.RLock()
@@ -42,7 +42,7 @@ func (_ messageUtils) Get(id string) (entity.Message, error) {
 	return msg, nil
 }
 
-func (_ messageUtils) GetUserMessageAfter(userID string, after time.Time) ([]entity.Message, error) {
+func (messageUtils) GetUserMessageAfter(userID string, after time.Time) ([]entity.Message, error) {
 	var messages []entity.Message
 	RWLock.RLock()
 	ret := DB.Where("user_id = ?", userID).
@@ -56,7 +56,7 @@ func (_ messageUtils) GetUserMessageAfter(userID string, after time.Time) ([]ent
 	return messages, nil
 }
 
-func (_ messageUtils) GetMessageInMonth(userID string) ([]entity.Message, error) {
+func (messageUtils) GetMessageInMonth(userID string) ([]entity.Message, error) {
 	var messages []entity.Message
 	RWLock.RLock()
 	ret := DB.Where("user_id = ?", userID).
@@ -70,7 +70,7 @@ func (_ messageUtils) GetMessageInMonth(userID string) ([]entity.Message, error)
 	return messages, nil
 }
 
-func (_ messageUtils) Delete(userID string, msgID string) error {
+func (messageUtils) Delete(userID string, msgID string) error {
 	RWLock.Lock()
 	ret := DB.Where("user_id = ?", userID).
 		Where("id = ?", msgID).
