@@ -54,6 +54,9 @@ senders:
       PRIVATE_KEY
     VAPIDPublicKey: |
       PUBLIC_KEY
+  TelegramHost:
+    BotToken: |
+      BOT_TOKEN from botFather
 ```
 
 数据库文件名称为 `notify.db`, `sqlite3` 格式。
