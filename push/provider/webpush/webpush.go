@@ -1,4 +1,4 @@
-package provider
+package webpush
 
 import (
 	"context"
@@ -16,14 +16,14 @@ import (
 
 var webPushClient = &http.Client{}
 
-type WebPushProvider struct {
+type Provider struct {
 	WebPushOption   *webpush.Options
 	WebPushClient   *http.Client
 	VAPIDPublicKey  string
 	VAPIDPrivateKey string
 }
 
-func (p *WebPushProvider) Init() error {
+func (p *Provider) Init() error {
 	p.WebPushOption = &webpush.Options{
 		HTTPClient:      webPushClient,
 		TTL:             60 * 60 * 24,
@@ -37,9 +37,9 @@ func (p *WebPushProvider) Init() error {
 	return nil
 }
 
-func (p *WebPushProvider) Send(msg *types.Message) error {
+func (p *Provider) Send(msg *types.Message) error {
 	var tokens []string
-	tokens, err := model.TokenUtils.GetChannelTokens(msg.UserID, p.Name())
+	tokens, err := model.TokenUtils.GetUserChannelTokens(msg.UserID, p.Name())
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -86,7 +86,7 @@ func (p *WebPushProvider) Send(msg *types.Message) error {
 	}
 }
 
-func (p *WebPushProvider) Check(auth types.SenderAuth) error {
+func (p *Provider) Check(auth types.SenderAuth) error {
 	VAPIDPublicKey, ok := auth["VAPIDPublicKey"]
 	if !ok {
 		return fmt.Errorf("VAPIDPublicKey not found")
@@ -102,6 +102,6 @@ func (p *WebPushProvider) Check(auth types.SenderAuth) error {
 	return nil
 }
 
-func (p *WebPushProvider) Name() string {
+func (p *Provider) Name() string {
 	return "WebPush"
 }

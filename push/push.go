@@ -54,25 +54,27 @@ func Init() {
 	for id, senderCfg := range config.Config.Senders {
 		for _, sender := range availableSenders {
 			if sender.Name() == id {
-				if authSender, ok := sender.(pushTypes.SenderWithAuth); ok {
+				cs := sender
+
+				if authSender, ok := cs.(pushTypes.SenderWithAuth); ok {
 					err := authSender.Check(senderCfg)
 					if err != nil {
 						zap.S().Fatalf("Sender %s check failed: %v", sender.Name(), err)
 					}
 				}
-				err := sender.Init()
+				err := cs.Init()
 				if err != nil {
 					zap.S().Fatalf("Sender %s init failed: %v", sender.Name(), err)
 				}
 
-				if host, ok := sender.(pushTypes.Host); ok {
+				if host, ok := cs.(pushTypes.Host); ok {
 					err := host.Start()
 					if err != nil {
 						zap.S().Fatalf("Sender %s start failed: %v", sender.Name(), err)
 					}
 				}
 
-				activeSenders = append(activeSenders, sender)
+				activeSenders = append(activeSenders, cs)
 				goto found
 			}
 		}
