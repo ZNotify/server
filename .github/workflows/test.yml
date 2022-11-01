@@ -61,17 +61,17 @@ jobs:
           mv build web/static
 
       - name: Build Linux
-        run: go build -o server-linux
+        run: go build -trimpath -ldflags "-s -w" -o server-linux
         env:
           GOOS: linux
 
       - name: Build Windows
-        run: go build -o server-windows.exe
+        run: go build -trimpath -ldflags "-s -w" -o server-windows.exe
         env:
           GOOS: windows
 
       - name: Build MacOS
-        run: go build -o server-macos
+        run: go build -trimpath -ldflags "-s -w" -o server-macos
         env:
           GOOS: darwin
 

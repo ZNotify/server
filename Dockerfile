@@ -13,7 +13,7 @@ RUN wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip 
           rm build.zip && \
           mv build web/static
 
-RUN go build -o /app/server -ldflags "-s -w" notify-api
+RUN go build -o /app/server -trimpath -ldflags "-s -w" notify-api
 
 FROM scratch
 
