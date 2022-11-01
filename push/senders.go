@@ -12,6 +12,7 @@ var availableSenders = senders{
 	new(provider.FCMProvider),
 	new(provider.WebPushProvider),
 	new(host.WebSocketHost),
+	new(host.TelegramHost),
 }
 
 var activeSenders = senders{}

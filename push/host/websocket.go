@@ -28,8 +28,8 @@ const (
 	maxMessageSize = 512
 )
 
-type Client struct {
-	manager *Manager
+type wsClient struct {
+	manager *wsManager
 
 	conn *websocket.Conn
 
@@ -42,15 +42,15 @@ type Client struct {
 }
 
 type WebSocketHost struct {
-	manager *Manager
+	manager *wsManager
 }
 
-type Manager struct {
-	userClients map[string]map[*Client]bool
+type wsManager struct {
+	userClients map[string]map[*wsClient]bool
 
-	register chan *Client
+	register chan *wsClient
 
-	unregister chan *Client
+	unregister chan *wsClient
 
 	broadcast chan *entity.Message
 }
@@ -62,7 +62,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func (c *Client) writeRoutine() {
+func (c *wsClient) writeRoutine() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -102,7 +102,7 @@ func (c *Client) writeRoutine() {
 	}
 }
 
-func (c *Client) readRoutine() {
+func (c *wsClient) readRoutine() {
 	defer func() {
 		c.Close()
 	}()
@@ -112,17 +112,17 @@ func (c *Client) readRoutine() {
 		if err != nil {
 			normalCodes := []int{websocket.CloseGoingAway, websocket.CloseNormalClosure, websocket.CloseInternalServerErr}
 			if websocket.IsUnexpectedCloseError(err, normalCodes...) {
-				zap.S().Infof("client %s %s read routine exit %v", c.userID, c.deviceID[0:7], err)
+				zap.S().Infof("wsClient %s %s read routine exit %v", c.userID, c.deviceID[0:7], err)
 			}
 			break
 		}
 	}
 }
 
-func (c *Client) Close() {
-	zap.S().Debugf("client %s %s try close", c.userID, c.deviceID[0:7])
+func (c *wsClient) Close() {
+	zap.S().Debugf("wsClient %s %s try close", c.userID, c.deviceID[0:7])
 	c.once.Do(func() {
-		zap.S().Debugf("client %s %s real close", c.userID, c.deviceID[0:7])
+		zap.S().Debugf("wsClient %s %s real close", c.userID, c.deviceID[0:7])
 		_ = c.conn.Close()
 		c.manager.unregister <- c
 		close(c.send.In)
@@ -130,8 +130,8 @@ func (c *Client) Close() {
 }
 
 func (h *WebSocketHost) clientManageRoutine() {
-	zap.S().Debug("client manage routine start")
-	deleteClient := func(client *Client) {
+	zap.S().Debug("wsClient manage routine start")
+	deleteClient := func(client *wsClient) {
 		if userMap, ok := h.manager.userClients[client.userID]; ok {
 			if _, ok := userMap[client]; ok {
 				delete(userMap, client)
@@ -165,15 +165,15 @@ func (h *WebSocketHost) Start() error {
 }
 
 func (h *WebSocketHost) Init() error {
-	h.manager = &Manager{
-		userClients: make(map[string]map[*Client]bool),
-		register:    make(chan *Client),
-		unregister:  make(chan *Client),
+	h.manager = &wsManager{
+		userClients: make(map[string]map[*wsClient]bool),
+		register:    make(chan *wsClient),
+		unregister:  make(chan *wsClient),
 		broadcast:   make(chan *entity.Message),
 	}
 
 	for _, v := range user.Users() {
-		h.manager.userClients[v] = make(map[*Client]bool)
+		h.manager.userClients[v] = make(map[*wsClient]bool)
 	}
 
 	return nil
@@ -235,7 +235,7 @@ func (h *WebSocketHost) Handler(context *types.Ctx) {
 		zap.S().Errorf("upgrade error: %v", err)
 		return
 	}
-	client := &Client{
+	client := &wsClient{
 		manager:  h.manager,
 		conn:     conn,
 		send:     ds.NewUnboundedChan[*entity.Message](2),
