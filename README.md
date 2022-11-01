@@ -17,6 +17,9 @@ COMMANDS:
 
 GLOBAL OPTIONS:
    --config FILE, -c FILE  Load configuration from FILE, or use ENV to load from environment variable CONFIG. (default: "data/config.yaml")
+   --host HOST             Set host to HOST. (default: "127.0.0.1")
+   --port PORT             Set port to PORT. (default: 14444)
+   --address ADDRESS       Set listen address to ADDRESS.
    --test                  Enable test mode (default: false)
    --help, -h              show help (default: false)
 ```
