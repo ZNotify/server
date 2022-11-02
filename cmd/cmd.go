@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/urfave/cli/v2"
+	"go.uber.org/zap"
 
 	"notify-api/utils"
 	"notify-api/utils/config"
@@ -23,13 +24,11 @@ var App = &cli.App{
 		},
 		&cli.StringFlag{
 			Name:  "host",
-			Usage: "Set host to `HOST`.",
-			Value: "127.0.0.1",
+			Usage: "Set listen host to `HOST`.",
 		},
 		&cli.IntFlag{
 			Name:  "port",
-			Usage: "Set port to `PORT`.",
-			Value: 14444,
+			Usage: "Set listen port to `PORT`.",
 		},
 		&cli.StringFlag{
 			Name:  "address",
@@ -67,6 +66,10 @@ var App = &cli.App{
 		}
 
 		err := setup.New().Run(address)
-		return err
+		if err != nil {
+			return err
+		}
+		zap.S().Infof("Server is running on %s", address)
+		return nil
 	},
 }

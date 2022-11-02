@@ -11,10 +11,10 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
+	"go.uber.org/zap"
 
 	"notify-api/cmd"
 )
@@ -22,6 +22,6 @@ import (
 func main() {
 	err := cmd.App.Run(os.Args)
 	if err != nil {
-		log.Fatalf("Failed to run app: %v", err)
+		zap.S().Fatalf("Failed to run app: %+v", err)
 	}
 }
