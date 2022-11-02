@@ -10,6 +10,7 @@ import (
 
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
+	"notify-api/utils"
 	"notify-api/utils/config"
 )
 
@@ -84,6 +85,6 @@ func (h *Host) Check(auth pushTypes.SenderAuth) error {
 	if !ok {
 		return errors.New("BotToken not found")
 	}
-	h.BotToken = token
+	h.BotToken = utils.TokenClean(token)
 	return nil
 }

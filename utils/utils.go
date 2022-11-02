@@ -90,3 +90,11 @@ func RequireFile(path string) {
 		}
 	}
 }
+
+func TokenClean(token string) string {
+	token = strings.Trim(token, " ")
+	token = strings.Trim(token, "\t")
+	token = strings.Trim(token, "\r")
+	token = strings.Trim(token, "\n")
+	return token
+}

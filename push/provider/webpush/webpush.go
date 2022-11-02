@@ -12,6 +12,7 @@ import (
 
 	"notify-api/db/model"
 	"notify-api/push/types"
+	"notify-api/utils"
 )
 
 var webPushClient = &http.Client{}
@@ -103,9 +104,9 @@ func (p *Provider) Check(auth types.SenderAuth) error {
 		return fmt.Errorf("Mailto not found")
 	}
 
-	p.VAPIDPublicKey = VAPIDPublicKey
-	p.VAPIDPrivateKey = VAPIDPrivateKey
-	p.Mailto = Mailto
+	p.VAPIDPublicKey = utils.TokenClean(VAPIDPublicKey)
+	p.VAPIDPrivateKey = utils.TokenClean(VAPIDPrivateKey)
+	p.Mailto = utils.TokenClean(Mailto)
 	return nil
 }
 
