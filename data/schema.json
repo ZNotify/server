@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/ZNotify/server/master/data/schema.json",
+  "type": "object",
+  "default": {},
+  "title": "ZNotify config schema",
+  "required": [
+    "senders",
+    "users"
+  ],
+  "properties": {
+    "users": {
+      "type": "array",
+      "title": "Users",
+      "description": "List of users",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "server": {
+      "type": "object",
+      "default": {},
+      "title": "The server config",
+      "required": [],
+      "properties": {
+        "port": {
+          "type": "integer",
+          "default": 14444,
+          "title": "The port the server will listen on."
+        },
+        "host": {
+          "type": "string",
+          "default": "127.0.0.1",
+          "title": "The host the server will listen on."
+        },
+        "mode": {
+          "type": "string",
+          "default": "development",
+          "title": "The mode the server will run in.",
+          "examples": [
+            "production"
+          ],
+          "enum": [
+            "production",
+            "development",
+            "test"
+          ]
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "default": {},
+      "title": "The database the server will use.",
+      "required": [
+        "type",
+        "dsn"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "sqlite",
+          "title": "The type of database the server will use.",
+          "enum": [
+            "sqlite",
+            "mysql",
+            "pgsql"
+          ]
+        },
+        "dsn": {
+          "type": "string",
+          "default": "data/notify.db",
+          "title": "The destination of the database, usually a file path or a connection string."
+        }
+      },
+      "examples": [
+        {
+          "type": "sqlite",
+          "dsn": "data/notify.db"
+        }
+      ]
+    },
+    "senders": {
+      "type": "object",
+      "default": {},
+      "title": "The senders Schema",
+      "minProperties": 1,
+      "properties": {
+        "WebSocketHost": {
+          "type": "null",
+          "default": null,
+          "title": "The WebSocket Host Sender"
+        },
+        "FCM": {
+          "type": "object",
+          "default": {},
+          "title": "The Firebase Cloud Messaging Sender",
+          "required": [
+            "FCMCredential"
+          ],
+          "properties": {
+            "FCMCredential": {
+              "type": "string",
+              "default": "",
+              "title": "The FCMCredential from Firebase."
+            }
+          }
+        },
+        "WebPush": {
+          "type": "object",
+          "default": {},
+          "title": "The WebPush config schema",
+          "required": [
+            "VAPIDPrivateKey",
+            "VAPIDPublicKey"
+          ],
+          "properties": {
+            "VAPIDPrivateKey": {
+              "type": "string",
+              "default": "",
+              "title": "The VAPID private key."
+            },
+            "VAPIDPublicKey": {
+              "type": "string",
+              "default": "",
+              "title": "The VAPID public key."
+            },
+            "Mailto": {
+              "type": "string",
+              "default": "",
+              "title": "The mailto address for the webpush sender."
+            }
+          }
+        },
+        "TelegramHost": {
+          "type": "object",
+          "default": {},
+          "title": "The TelegramHost config schema",
+          "required": [
+            "BotToken"
+          ],
+          "properties": {
+            "BotToken": {
+              "type": "string",
+              "default": "",
+              "title": "The BotToken",
+              "description": "The BotToken from @BotFather"
+            }
+          }
+        }
+      }
+    }
+  }
+}

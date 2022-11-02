@@ -21,13 +21,14 @@ type Provider struct {
 	WebPushClient   *http.Client
 	VAPIDPublicKey  string
 	VAPIDPrivateKey string
+	Mailto          string
 }
 
 func (p *Provider) Init() error {
 	p.WebPushOption = &webpush.Options{
 		HTTPClient:      webPushClient,
 		TTL:             60 * 60 * 24,
-		Subscriber:      "zxilly@outlook.com",
+		Subscriber:      p.Mailto,
 		VAPIDPublicKey:  p.VAPIDPublicKey,
 		VAPIDPrivateKey: p.VAPIDPrivateKey,
 		Urgency:         webpush.UrgencyHigh, // Always send notification, even low battery
@@ -97,8 +98,14 @@ func (p *Provider) Check(auth types.SenderAuth) error {
 		return fmt.Errorf("VAPIDPrivateKey not found")
 	}
 
+	Mailto, ok := auth["Mailto"]
+	if !ok {
+		return fmt.Errorf("Mailto not found")
+	}
+
 	p.VAPIDPublicKey = VAPIDPublicKey
 	p.VAPIDPrivateKey = VAPIDPrivateKey
+	p.Mailto = Mailto
 	return nil
 }
 

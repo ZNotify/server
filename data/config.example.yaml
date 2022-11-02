@@ -1,21 +1,19 @@
+users:
+  - test
+database:
+  type: sqlite
+  dsn: "file:./data/notify.db?cache=shared&mode=rwc&_journal_mode=WAL"
+server:
+  host: "127.0.0.1"
+  mode: development
+  port: 14444
 senders:
   WebSocketHost:
   FCM:
-    FCMCredential: |
-      {
-        "type": "service_account",
-        "project_id": "",
-        "private_key_id": "",
-        "private_key": "",
-        "client_email": "",
-        "client_id": "",
-        "auth_uri": "",
-        "token_uri": "",
-        "auth_provider_x509_cert_url": "",
-        "client_x509_cert_url": ""
-      }
+    FCMCredential: ""
   WebPush:
-    VAPIDPrivateKey: |
-      PRIVATE_KEY
-    VAPIDPublicKey: |
-      PUBLIC_KEY
+    VAPIDPrivateKey: ""
+    VAPIDPublicKey: ""
+    Mailto: ""
+  TelegramHost:
+    BotToken: ""
