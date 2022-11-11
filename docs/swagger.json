@@ -121,6 +121,104 @@
                 }
             }
         },
+        "/{user_id}/s": {
+            "put": {
+                "description": "Send notification to user_id",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Send notification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "content",
+                        "name": "string",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-entity_Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Send notification to user_id",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Send notification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "content",
+                        "name": "string",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-entity_Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/{user_id}/send": {
             "put": {
                 "description": "Send notification to user_id",
@@ -256,8 +354,14 @@
                         "required": true
                     },
                     {
+                        "enum": [
+                            "TelegramHost",
+                            "WebSocketHost",
+                            "FCM",
+                            "WebPush"
+                        ],
                         "type": "string",
-                        "description": "channel",
+                        "description": "channel can be used. Sometimes less than document.",
                         "name": "channel",
                         "in": "formData",
                         "required": true

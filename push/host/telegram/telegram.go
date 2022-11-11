@@ -2,10 +2,11 @@ package telegram
 
 import (
 	"fmt"
-	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/pkg/errors"
 	"strconv"
 	"time"
+
+	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/pkg/errors"
 
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"

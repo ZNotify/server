@@ -12,6 +12,8 @@ type messageUtils struct{}
 var MessageUtils = messageUtils{}
 
 func (messageUtils) Add(id string, userID string, title string, content string, long string) (entity.Message, error) {
+	// a trick to generate different timestamp for different message
+	// FIXME: use an increasing counter to generate different id
 	msg := entity.Message{
 		ID:        id,
 		UserID:    userID,

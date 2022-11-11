@@ -88,6 +88,9 @@ func setupRouter() {
 		userGroup.POST("/send", types.WrapHandler(controller.Send))
 		userGroup.PUT("/send", types.WrapHandler(controller.Send))
 
+		userGroup.POST("/s", types.WrapHandler(controller.SendShort))
+		userGroup.PUT("/s", types.WrapHandler(controller.SendShort))
+
 		userGroup.PUT("/token/:device_id", types.WrapHandler(controller.Token))
 		userGroup.DELETE("/token/:device_id", types.WrapHandler(controller.TokenDelete))
 

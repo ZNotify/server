@@ -18,7 +18,7 @@ import (
 // @Summary     Send notification
 // @Description Send notification to user_id
 // @Param       user_id path     string true  "user_id"
-// @Param       title   formData string false "title"
+// @Param       title   formData string false "title" default("Notification")
 // @Param       content formData string true  "content"
 // @Param       long    formData string false "long"
 // @Produce     json
@@ -56,8 +56,6 @@ func Send(context *types.Ctx) {
 	}
 
 	// Insert message record
-	// a trick to generate different timestamp for different message
-	// FIXME: use an increasing counter to generate different id
 	msg, err := model.MessageUtils.Add(
 		pushMsg.ID,
 		pushMsg.UserID,

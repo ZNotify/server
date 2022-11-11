@@ -166,6 +166,71 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Get record
+  /{user_id}/s:
+    post:
+      consumes:
+      - text/plain
+      description: Send notification to user_id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: content
+        in: body
+        name: string
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-entity_Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: Send notification
+    put:
+      consumes:
+      - text/plain
+      description: Send notification to user_id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: content
+        in: body
+        name: string
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-entity_Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: Send notification
   /{user_id}/send:
     post:
       description: Send notification to user_id
@@ -276,7 +341,12 @@ paths:
         name: device_id
         required: true
         type: string
-      - description: channel
+      - description: channel can be used. Sometimes less than document.
+        enum:
+        - TelegramHost
+        - WebSocketHost
+        - FCM
+        - WebPush
         in: formData
         name: channel
         required: true
