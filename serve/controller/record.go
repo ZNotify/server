@@ -9,13 +9,14 @@ import (
 )
 
 // Record godoc
-// @Summary     Get record
-// @Description Get recent 30days message record of user
-// @Param       user_id path string true "user_id"
-// @Produce     json
-// @Success     200 {object} types.Response[[]entity.Message]
-// @Failure     401 {object} types.UnauthorizedResponse
-// @Router      /{user_id}/record [get]
+//
+//	@Summary      Get record
+//	@Description  Get recent 30days message record of user
+//	@Param        user_id  path  string  true  "user_id"
+//	@Produce      json
+//	@Success      200  {object}  types.Response[[]entity.Message]
+//	@Failure      401  {object}  types.UnauthorizedResponse
+//	@Router       /{user_id}/record [get]
 func Record(context *types.Ctx) {
 	var messages []entity.Message
 	messages, err := model.MessageUtils.GetMessageInMonth(context.UserID)

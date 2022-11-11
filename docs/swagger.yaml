@@ -240,7 +240,8 @@ paths:
         name: user_id
         required: true
         type: string
-      - description: title
+      - default: '"Notification"'
+        description: title
         in: formData
         name: title
         type: string
@@ -277,7 +278,8 @@ paths:
         name: user_id
         required: true
         type: string
-      - description: title
+      - default: '"Notification"'
+        description: title
         in: formData
         name: title
         type: string
@@ -373,7 +375,7 @@ paths:
       summary: Create or update token
   /alive:
     get:
-      description: Check if the server is alive
+      description: If the server is alive
       produces:
       - text/plain
       responses:

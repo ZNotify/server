@@ -42,7 +42,7 @@ const docTemplate = `{
         },
         "/alive": {
             "get": {
-                "description": "Check if the server is alive",
+                "description": "If the server is alive",
                 "produces": [
                     "text/plain"
                 ],
@@ -245,6 +245,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "default": "\"Notification\"",
                         "description": "title",
                         "name": "title",
                         "in": "formData"
@@ -300,6 +301,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "default": "\"Notification\"",
                         "description": "title",
                         "name": "title",
                         "in": "formData"

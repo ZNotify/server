@@ -6,11 +6,12 @@ import (
 )
 
 // WebIndex godoc
-// @Summary     Web Index
-// @Description Provide UI
-// @Produce     html
-// @Success     200 {string} string "html"
-// @Router      / [get]
+//
+//	@Summary      Web Index
+//	@Description  Provide UI
+//	@Produce      html
+//	@Success      200  {string}  string  "html"
+//	@Router       / [get]
 func WebIndex(ctx *types.Ctx) {
 	ctx.FileFromFS("/", web.StaticHttpFS)
 	// hardcode index.html, use this as a trick to get html file

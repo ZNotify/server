@@ -15,17 +15,18 @@ import (
 )
 
 // SendShort godoc
-// @Summary     Send notification
-// @Description Send notification to user_id
-// @Param       user_id path string true "user_id"
-// @Param       string  body string true "content"
-// @Accept      plain
-// @Produce     json
-// @Success     200 {object} types.Response[entity.Message]
-// @Failure     400 {object} types.BadRequestResponse
-// @Failure     401 {object} types.UnauthorizedResponse
-// @Router      /{user_id}/s [post]
-// @Router      /{user_id}/s [put]
+//
+//	@Summary      Send notification
+//	@Description  Send notification to user_id
+//	@Param        user_id  path  string  true  "user_id"
+//	@Param        string   body  string  true  "content"
+//	@Accept       plain
+//	@Produce      json
+//	@Success      200  {object}  types.Response[entity.Message]
+//	@Failure      400  {object}  types.BadRequestResponse
+//	@Failure      401  {object}  types.UnauthorizedResponse
+//	@Router       /{user_id}/s [post]
+//	@Router       /{user_id}/s [put]
 func SendShort(context *types.Ctx) {
 	data, err := io.ReadAll(context.Request.Body)
 	if err != nil {

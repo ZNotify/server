@@ -6,10 +6,6 @@ import (
 	"notify-api/serve/types"
 )
 
-type PushChannel struct {
-	Name string // `enums:"TelegramHost, WebSocketHost, FCM, WebPush`
-}
-
 type Sender interface {
 	Send(msg *Message) error
 	Init() error
