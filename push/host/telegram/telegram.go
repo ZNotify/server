@@ -2,11 +2,10 @@ package telegram
 
 import (
 	"fmt"
-	"strconv"
-	"time"
-
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
+	"strconv"
+	"time"
 
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
@@ -39,12 +38,14 @@ func (h *Host) Send(msg *pushTypes.Message) error {
 			return errors.WithStack(err)
 		}
 
-		msgText := fmt.Sprintf("*%s*\n\n%s\n\n%s\n\n`%s`",
+		msgText := fmt.Sprintf("*%s*\n\n%s\n\n",
 			msg.Title,
 			msg.Content,
-			msg.Long,
-			msg.CreatedAt.Format(time.RFC3339),
 		)
+		if msg.Long != "" {
+			msgText += fmt.Sprintf("%s\n\n", msg.Long)
+		}
+		msgText += fmt.Sprintf("`%s`", msg.CreatedAt.Format(time.RFC3339))
 
 		tgMsg := tgBot.NewMessage(id, msgText)
 		tgMsg.ParseMode = tgBot.ModeMarkdown
