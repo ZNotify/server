@@ -25,8 +25,8 @@ import (
 //	@Success      200  {object}  types.Response[entity.Message]
 //	@Failure      400  {object}  types.BadRequestResponse
 //	@Failure      401  {object}  types.UnauthorizedResponse
-//	@Router       /{user_id}/s [post]
-//	@Router       /{user_id}/s [put]
+//	@Router       /{user_id} [post]
+//	@Router       /{user_id} [put]
 func SendShort(context *types.Ctx) {
 	data, err := io.ReadAll(context.Request.Body)
 	if err != nil {

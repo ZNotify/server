@@ -88,8 +88,8 @@ func setupRouter() {
 		userGroup.POST("/send", types.WrapHandler(controller.Send))
 		userGroup.PUT("/send", types.WrapHandler(controller.Send))
 
-		userGroup.POST("/s", types.WrapHandler(controller.SendShort))
-		userGroup.PUT("/s", types.WrapHandler(controller.SendShort))
+		userGroup.POST("", types.WrapHandler(controller.SendShort))
+		userGroup.PUT("", types.WrapHandler(controller.SendShort))
 
 		userGroup.PUT("/token/:device_id", types.WrapHandler(controller.Token))
 		userGroup.DELETE("/token/:device_id", types.WrapHandler(controller.TokenDelete))
@@ -97,7 +97,7 @@ func setupRouter() {
 		push.RegisterRouter(userGroup)
 	}
 
-	router.GET("/docs", types.WrapHandler(controller.DocIndex))
+	router.GET("/docs", types.WrapHandler(controller.DocRedirect))
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.StaticFS("/fs", web.StaticHttpFS)

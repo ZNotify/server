@@ -98,39 +98,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_id}/record": {
-            "get": {
-                "description": "Get recent 30days message record of user",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get record",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-array_entity_Message"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/{user_id}/s": {
+        "/{user_id}": {
             "put": {
                 "description": "Send notification to user_id",
                 "consumes": [
@@ -217,6 +185,38 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/{user_id}/record": {
+            "get": {
+                "description": "Get recent 30days message record of user",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-array_entity_Message"
                         }
                     },
                     "401": {
