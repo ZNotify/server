@@ -18,7 +18,7 @@ import (
 //	@Description  Create or update token of device
 //	@Param        user_id    path      string  true   "user_id"
 //	@Param        device_id  path      string  true   "device_id should be a valid UUID"
-//	@Param        channel    formData  string  true   "channel can be used. Sometimes less than document." Enums(TelegramHost, WebSocketHost, FCM, WebPush)
+//	@Param        channel    formData  string  true   "channel can be used. Sometimes less than document."  Enums(TelegramHost, WebSocketHost, FCM, WebPush)
 //	@Param        token      formData  string  false  "token"
 //	@Produce      json
 //	@Success      200  {object}  types.Response[bool]

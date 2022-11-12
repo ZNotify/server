@@ -1,7 +1,7 @@
-// @title        Notify API
-// @version      1.0
-// @description  This is Znotify api server.
-// @path         /
+// @title         Notify API
+// @version       1.0
+// @description   This is Znotify api server.
+// @path          /
 //
 // @contact.name  Issues
 // @contact.url   https://github.com/ZNotify/server/issues
