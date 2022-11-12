@@ -50,6 +50,11 @@ func (h *Host) Send(msg *pushTypes.Message) error {
 
 		tgMsg := tgBot.NewMessage(id, msgText)
 		tgMsg.ParseMode = tgBot.ModeMarkdown
+
+		if msg.Priority == pushTypes.PriorityLow {
+			tgMsg.DisableNotification = true
+		}
+
 		_, err = h.Bot.Send(tgMsg)
 		if err != nil {
 			return errors.WithStack(err)

@@ -18,10 +18,11 @@ import (
 //
 //	@Summary      Send notification
 //	@Description  Send notification to user_id
-//	@Param        user_id  path      string  true   "user_id"
-//	@Param        title    formData  string  false  "title" default("Notification")
-//	@Param        content  formData  string  true   "content"
-//	@Param        long     formData  string  false  "long"
+//	@Param        user_id   path      string  true   "user_id"
+//	@Param        title     formData  string  false  "title" default("Notification")
+//	@Param        content   formData  string  true   "content"
+//	@Param        long      formData  string  false  "long"
+//	@Param        priority  formData  string  false  "priority" Enums(low, normal, high) default("normal")
 //	@Produce      json
 //	@Success      200  {object}  types.Response[entity.Message]
 //	@Failure      400  {object}  types.BadRequestResponse
@@ -33,10 +34,25 @@ func Send(context *types.Ctx) {
 	title := context.DefaultPostForm("title", "Notification")
 	content := context.PostForm("content")
 	long := context.PostForm("long")
+	priority := context.DefaultPostForm("priority", "normal")
 
 	if content == "" {
 		zap.S().Infof("content is empty")
 		context.JSONError(http.StatusBadRequest, errors.New("content can not be empty"))
+		return
+	}
+
+	var priorityConst int
+	switch priority {
+	case "low":
+		priorityConst = pushTypes.PriorityLow
+	case "normal":
+		priorityConst = pushTypes.PriorityNormal
+	case "high":
+		priorityConst = pushTypes.PriorityHigh
+	default:
+		zap.S().Infof("priority is invalid")
+		context.JSONError(http.StatusBadRequest, errors.New("priority is invalid"))
 		return
 	}
 
@@ -46,6 +62,7 @@ func Send(context *types.Ctx) {
 		Title:     title,
 		Content:   content,
 		Long:      long,
+		Priority:  priorityConst,
 		CreatedAt: time.Now(),
 	}
 

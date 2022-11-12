@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/entity"
 	"notify-api/db/model"
+	pushTypes "notify-api/push/types"
 	"notify-api/serve/types"
 	"notify-api/utils/ds"
 )
@@ -73,7 +73,7 @@ func (h *Host) Handler(context *types.Ctx) {
 	client := &wsClient{
 		manager:  h.manager,
 		conn:     conn,
-		send:     ds.NewUnboundedChan[*entity.Message](2),
+		send:     ds.NewUnboundedChan[*pushTypes.Message](2),
 		userID:   userID,
 		deviceID: deviceId,
 		once:     sync.Once{},
@@ -84,7 +84,15 @@ func (h *Host) Handler(context *types.Ctx) {
 	go client.readRoutine()
 
 	for _, msg := range pendingMessages {
-		msg := msg
+		msg := pushTypes.Message{
+			ID:        msg.ID,
+			UserID:    msg.UserID,
+			Title:     msg.Title,
+			Content:   msg.Content,
+			Long:      msg.Long,
+			CreatedAt: msg.CreatedAt,
+			Priority:  pushTypes.PriorityHigh,
+		}
 		client.send.In <- &msg
 	}
 }

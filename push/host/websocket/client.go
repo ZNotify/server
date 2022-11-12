@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 
-	"notify-api/db/entity"
 	"notify-api/db/model"
+	pushTypes "notify-api/push/types"
 	"notify-api/utils/ds"
 )
 
@@ -27,7 +27,7 @@ type wsClient struct {
 
 	conn *websocket.Conn
 
-	send *ds.UnboundedChan[*entity.Message]
+	send *ds.UnboundedChan[*pushTypes.Message]
 
 	userID   string
 	deviceID string
@@ -42,10 +42,10 @@ type wsManager struct {
 
 	unregister chan *wsClient
 
-	broadcast chan *entity.Message
+	broadcast chan *pushTypes.Message
 }
 
-type wsMessage entity.Message
+type wsMessage pushTypes.Message
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,

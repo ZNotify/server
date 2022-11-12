@@ -11,35 +11,33 @@ import (
 	"github.com/pkg/errors"
 
 	"notify-api/db/model"
-	"notify-api/push/types"
+	pushTypes "notify-api/push/types"
 	"notify-api/utils"
 )
 
 var webPushClient = &http.Client{}
 
 type Provider struct {
-	WebPushOption   *webpush.Options
-	WebPushClient   *http.Client
 	VAPIDPublicKey  string
 	VAPIDPrivateKey string
 	Mailto          string
 }
 
 func (p *Provider) Init() error {
-	p.WebPushOption = &webpush.Options{
+	return nil
+}
+
+func (p *Provider) getOption() *webpush.Options {
+	return &webpush.Options{
 		HTTPClient:      webPushClient,
 		TTL:             60 * 60 * 24,
 		Subscriber:      p.Mailto,
 		VAPIDPublicKey:  p.VAPIDPublicKey,
 		VAPIDPrivateKey: p.VAPIDPrivateKey,
-		Urgency:         webpush.UrgencyHigh, // Always send notification, even low battery
 	}
-	p.WebPushClient = &http.Client{}
-
-	return nil
 }
 
-func (p *Provider) Send(msg *types.Message) error {
+func (p *Provider) Send(msg *pushTypes.Message) error {
 	var tokens []string
 	tokens, err := model.TokenUtils.GetUserChannelTokens(msg.UserID, p.Name())
 	if err != nil {
@@ -52,6 +50,16 @@ func (p *Provider) Send(msg *types.Message) error {
 	data, err := json.Marshal(msg)
 	if err != nil {
 		return err
+	}
+
+	option := p.getOption()
+	switch msg.Priority {
+	case pushTypes.PriorityHigh:
+		option.Urgency = webpush.UrgencyHigh
+	case pushTypes.PriorityNormal:
+		option.Urgency = webpush.UrgencyNormal
+	case pushTypes.PriorityLow:
+		option.Urgency = webpush.UrgencyLow
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -67,7 +75,7 @@ func (p *Provider) Send(msg *types.Message) error {
 		}
 
 		go func() {
-			_, err := webpush.SendNotificationWithContext(ctx, data, s, p.WebPushOption)
+			_, err := webpush.SendNotificationWithContext(ctx, data, s, option)
 			c <- err
 		}()
 	}
@@ -88,7 +96,7 @@ func (p *Provider) Send(msg *types.Message) error {
 	}
 }
 
-func (p *Provider) Check(auth types.SenderAuth) error {
+func (p *Provider) Check(auth pushTypes.SenderAuth) error {
 	VAPIDPublicKey, ok := auth["VAPIDPublicKey"]
 	if !ok {
 		return fmt.Errorf("VAPIDPublicKey not found")

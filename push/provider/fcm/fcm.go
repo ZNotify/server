@@ -45,6 +45,13 @@ func (p *Provider) Send(msg *types.Message) error {
 		return nil
 	}
 
+	var fcmPriority string
+	if msg.Priority == types.PriorityHigh {
+		fcmPriority = "high"
+	} else {
+		fcmPriority = "normal"
+	}
+
 	// https://firebase.google.com/docs/cloud-messaging/send-message#example-notification-click-action
 	fcmMsg := messaging.MulticastMessage{
 		Notification: &messaging.Notification{
@@ -63,6 +70,7 @@ func (p *Provider) Send(msg *types.Message) error {
 			Notification: &messaging.AndroidNotification{
 				ClickAction: "TranslucentActivity",
 			},
+			Priority: fcmPriority,
 		},
 		Tokens: tokens,
 	}

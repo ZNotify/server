@@ -36,11 +36,19 @@ type SenderWithInitialTokenMeta interface {
 	GetInitialTokenMeta() string
 }
 
+// Message priority enum
+const (
+	PriorityLow = iota
+	PriorityNormal
+	PriorityHigh
+)
+
 type Message struct {
 	ID        string    `json:"id"`
 	UserID    string    `json:"user_id"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
 	Long      string    `json:"long"`
+	Priority  int       `json:"priority"`
 	CreatedAt time.Time `json:"created_at"`
 }

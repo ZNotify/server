@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"notify-api/db/model"
 	"notify-api/push"
 	pushTypes "notify-api/push/types"
 	"notify-api/serve/types"
@@ -47,6 +48,7 @@ func SendShort(context *types.Ctx) {
 		Title:     "Notification",
 		Content:   string(data),
 		Long:      "",
+		Priority:  pushTypes.PriorityNormal,
 		CreatedAt: time.Now(),
 	}
 
@@ -57,6 +59,20 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	context.JSONResult(pushMsg)
+	msg, err := model.MessageUtils.Add(
+		pushMsg.ID,
+		pushMsg.UserID,
+		pushMsg.Title,
+		pushMsg.Content,
+		pushMsg.Long,
+	)
+
+	if err != nil {
+		zap.S().Errorw("add message error", "error", err)
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
+		return
+	}
+
+	context.JSONResult(msg)
 	return
 }

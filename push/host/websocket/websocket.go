@@ -5,7 +5,6 @@ import (
 
 	"notify-api/utils/user"
 
-	"notify-api/db/entity"
 	pushTypes "notify-api/push/types"
 )
 
@@ -27,7 +26,7 @@ func (h *Host) Init() error {
 		userClients: make(map[string]map[*wsClient]bool),
 		register:    make(chan *wsClient),
 		unregister:  make(chan *wsClient),
-		broadcast:   make(chan *entity.Message),
+		broadcast:   make(chan *pushTypes.Message),
 	}
 
 	for _, v := range user.Users() {
@@ -38,15 +37,7 @@ func (h *Host) Init() error {
 }
 
 func (h *Host) Send(msg *pushTypes.Message) error {
-	eMsg := &entity.Message{
-		ID:        msg.ID,
-		UserID:    msg.UserID,
-		Title:     msg.Title,
-		Content:   msg.Content,
-		Long:      msg.Long,
-		CreatedAt: msg.CreatedAt,
-	}
-	h.manager.broadcast <- eMsg
+	h.manager.broadcast <- msg
 	return nil
 }
 
