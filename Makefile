@@ -13,6 +13,6 @@ dev:
 	air
 
 fmt:
-	go fmt ./...
 	swag fmt
+	go fmt ./...
 

@@ -20,10 +20,21 @@ var availableSenders = senders{
 var activeSenders = senders{}
 
 func IsValid(id string) bool {
-	for _, v := range availableSenders {
+	for _, v := range activeSenders {
 		if v.Name() == id {
 			return true
 		}
 	}
 	return false
+}
+
+func TryGetInitialTokenMeta(channel string) (string, bool) {
+	for _, v := range activeSenders {
+		if v.Name() == channel {
+			if host, ok := v.(pushTypes.SenderWithInitialTokenMeta); ok {
+				return host.GetInitialTokenMeta(), true
+			}
+		}
+	}
+	return "", false
 }

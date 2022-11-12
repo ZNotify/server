@@ -31,6 +31,11 @@ type SenderWithHandler interface {
 	HandlerMethod() string
 }
 
+type SenderWithInitialTokenMeta interface {
+	Sender
+	GetInitialTokenMeta() string
+}
+
 type Message struct {
 	ID        string    `json:"id"`
 	UserID    string    `json:"user_id"`

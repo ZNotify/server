@@ -42,18 +42,22 @@ func Token(context *types.Ctx) {
 
 	token := context.PostForm("token")
 
-	// FIXME: use register mechanism to avoid
-	if channel == "WebSocketHost" && token != "" {
-		zap.S().Infof("token should be empty for WebSocketHost")
-		context.JSONError(http.StatusBadRequest, errors.New("token should be empty for WebSocketHost"))
-		return
-	}
-
 	err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
 	if err != nil {
 		zap.S().Errorw("create or update token error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
+
+	tokenMeta, ok := push.TryGetInitialTokenMeta(channel)
+	if ok {
+		err = model.TokenUtils.UpdateTokenMeta(deviceID, tokenMeta)
+		if err != nil {
+			zap.S().Errorw("update token meta error", "error", err)
+			context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
+			return
+		}
+	}
+
 	context.JSONResult(true)
 }

@@ -46,11 +46,11 @@ func (h *Host) Handler(context *types.Ctx) {
 	}
 	if token.Channel != h.Name() {
 		zap.S().Infof("user %s channel not match", userID)
-		context.JSONError(http.StatusBadRequest, errors.New("device current channel is not WebSocket"))
+		context.JSONError(http.StatusUnauthorized, errors.New("device current channel is not WebSocket"))
 		return
 	}
 
-	sinceTime, err := time.Parse(time.RFC3339Nano, token.Token)
+	sinceTime, err := time.Parse(time.RFC3339Nano, token.TokenMeta)
 	if err != nil {
 		zap.S().Infof("parse time error: %v", err)
 		context.JSONError(http.StatusBadRequest, errors.WithStack(err))

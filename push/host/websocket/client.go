@@ -77,7 +77,7 @@ func (c *wsClient) writeRoutine() {
 				return
 			}
 
-			err = model.TokenUtils.CreateOrUpdate(c.userID, c.deviceID, "WebSocketHost", msg.CreatedAt.Format(time.RFC3339Nano))
+			err = model.TokenUtils.UpdateTokenMeta(c.deviceID, time.Now().Format(time.RFC3339Nano))
 			if err != nil {
 				zap.S().Errorf("create or update token error: %v", err)
 				continue

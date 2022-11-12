@@ -57,6 +57,6 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	context.JSONResult(true)
+	context.JSONResult(pushMsg)
 	return
 }

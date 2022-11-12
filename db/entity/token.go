@@ -11,4 +11,5 @@ type PushToken struct {
 	DeviceID  string `gorm:"unique_index:idx_device_id"`
 	Channel   string
 	Token     string
+	TokenMeta string
 }

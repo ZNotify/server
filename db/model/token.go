@@ -1,8 +1,6 @@
 package model
 
 import (
-	"time"
-
 	. "notify-api/db"
 	"notify-api/db/entity"
 )
@@ -23,16 +21,43 @@ func (tokenModel) CreateOrUpdate(userID string, deviceID string, channel string,
 		return ret.Error
 	}
 
-	// FIXME: use register mechanism to process token
-	if channel == "WebSocketHost" && token == "" {
-		if pt.Channel != "WebSocketHost" {
-			pt.Token = time.Now().Format(time.RFC3339Nano)
-		}
-	} else {
-		pt.Token = token
-	}
+	pt.Token = token
 	pt.Channel = channel
 	pt.UserID = userID
+	pt.TokenMeta = ""
+
+	RWLock.Lock()
+	ret = DB.Save(&pt)
+	RWLock.Unlock()
+
+	return ret.Error
+}
+
+func (tokenModel) GetTokenMeta(deviceID string) error {
+	var pt entity.PushToken
+	RWLock.RLock()
+	ret := DB.
+		Where(entity.PushToken{DeviceID: deviceID}).
+		First(&pt)
+	RWLock.RUnlock()
+	if ret.Error != nil {
+		return ret.Error
+	}
+	return nil
+}
+
+func (tokenModel) UpdateTokenMeta(deviceID string, tokenMeta string) error {
+	var pt entity.PushToken
+	RWLock.RLock()
+	ret := DB.
+		Where(entity.PushToken{DeviceID: deviceID}).
+		First(&pt)
+	RWLock.RUnlock()
+	if ret.Error != nil {
+		return ret.Error
+	}
+
+	pt.TokenMeta = tokenMeta
 
 	RWLock.Lock()
 	ret = DB.Save(&pt)

@@ -1,6 +1,8 @@
 package websocket
 
 import (
+	"time"
+
 	"notify-api/utils/user"
 
 	"notify-api/db/entity"
@@ -9,6 +11,10 @@ import (
 
 type Host struct {
 	manager *wsManager
+}
+
+func (h *Host) GetInitialTokenMeta() string {
+	return time.Now().Format(time.RFC3339Nano)
 }
 
 func (h *Host) Start() error {
