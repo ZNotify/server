@@ -51,6 +51,11 @@ func Send(msg *pushTypes.Message) error {
 }
 
 func Init() {
+	if utils.IsTestInstance() {
+		activeSenders = availableSenders
+		return
+	}
+
 	for id, senderCfg := range config.Config.Senders {
 		for _, sender := range availableSenders {
 			if sender.Name() == id {
