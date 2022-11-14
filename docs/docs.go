@@ -393,7 +393,8 @@ const docTemplate = `{
                             "TelegramHost",
                             "WebSocketHost",
                             "FCM",
-                            "WebPush"
+                            "WebPush",
+                            "WNS"
                         ],
                         "type": "string",
                         "description": "channel can be used. Sometimes less than document.",

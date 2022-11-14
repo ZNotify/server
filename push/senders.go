@@ -5,6 +5,7 @@ import (
 	"notify-api/push/host/websocket"
 	"notify-api/push/provider/fcm"
 	"notify-api/push/provider/webpush"
+	"notify-api/push/provider/wns"
 	pushTypes "notify-api/push/types"
 )
 
@@ -13,6 +14,7 @@ type senders = []pushTypes.Sender
 var availableSenders = senders{
 	new(fcm.Provider),
 	new(webpush.Provider),
+	new(wns.Provider),
 	new(websocket.Host),
 	new(telegram.Host),
 }

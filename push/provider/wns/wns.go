@@ -7,17 +7,17 @@ import (
 type Provider struct {
 }
 
-func (p Provider) Send(msg *pushTypes.Message) error {
+func (p *Provider) Send(msg *pushTypes.Message) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p Provider) Init() error {
+func (p *Provider) Init() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p Provider) Name() string {
+func (p *Provider) Name() string {
 	// Windows Push Notification Services
 	return "WNS"
 }

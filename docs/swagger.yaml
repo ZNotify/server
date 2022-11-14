@@ -367,6 +367,7 @@ paths:
         - WebSocketHost
         - FCM
         - WebPush
+        - WNS
         in: formData
         name: channel
         required: true
