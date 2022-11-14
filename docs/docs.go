@@ -262,6 +262,18 @@ const docTemplate = `{
                         "description": "long",
                         "name": "long",
                         "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "low",
+                            "normal",
+                            "high"
+                        ],
+                        "type": "string",
+                        "default": "\"normal\"",
+                        "description": "priority",
+                        "name": "priority",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -317,6 +329,18 @@ const docTemplate = `{
                         "type": "string",
                         "description": "long",
                         "name": "long",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "low",
+                            "normal",
+                            "high"
+                        ],
+                        "type": "string",
+                        "default": "\"normal\"",
+                        "description": "priority",
+                        "name": "priority",
                         "in": "formData"
                     }
                 ],

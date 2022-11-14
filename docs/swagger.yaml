@@ -254,6 +254,15 @@ paths:
         in: formData
         name: long
         type: string
+      - default: '"normal"'
+        description: priority
+        enum:
+        - low
+        - normal
+        - high
+        in: formData
+        name: priority
+        type: string
       produces:
       - application/json
       responses:
@@ -291,6 +300,15 @@ paths:
       - description: long
         in: formData
         name: long
+        type: string
+      - default: '"normal"'
+        description: priority
+        enum:
+        - low
+        - normal
+        - high
+        in: formData
+        name: priority
         type: string
       produces:
       - application/json

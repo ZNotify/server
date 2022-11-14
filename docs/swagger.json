@@ -253,6 +253,18 @@
                         "description": "long",
                         "name": "long",
                         "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "low",
+                            "normal",
+                            "high"
+                        ],
+                        "type": "string",
+                        "default": "\"normal\"",
+                        "description": "priority",
+                        "name": "priority",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -308,6 +320,18 @@
                         "type": "string",
                         "description": "long",
                         "name": "long",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "low",
+                            "normal",
+                            "high"
+                        ],
+                        "type": "string",
+                        "default": "\"normal\"",
+                        "description": "priority",
+                        "name": "priority",
                         "in": "formData"
                     }
                 ],
