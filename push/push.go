@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mitchellh/mapstructure"
 
 	serveTypes "notify-api/serve/types"
 	"notify-api/utils/config"
@@ -57,35 +58,47 @@ func Init() {
 	}
 
 	for id, senderCfg := range config.Config.Senders {
-		for _, sender := range availableSenders {
-			if sender.Name() == id {
-				cs := sender
+		sender, err := get(id)
+		if err != nil {
+			panic(err)
+		}
 
-				if authSender, ok := cs.(pushTypes.SenderWithAuth); ok {
-					err := authSender.Check(senderCfg)
-					if err != nil {
-						zap.S().Fatalf("Sender %s check failed: %v", sender.Name(), err)
-					}
-				}
-				err := cs.Init()
-				if err != nil {
-					zap.S().Fatalf("Sender %s init failed: %v", sender.Name(), err)
-				}
+		if authSender, ok := sender.(pushTypes.SenderWithConfig); ok {
+			cfgType := authSender.Config()
 
-				if host, ok := cs.(pushTypes.Host); ok {
-					err := host.Start()
-					if err != nil {
-						zap.S().Fatalf("Sender %s start failed: %v", sender.Name(), err)
-					}
-				}
+			decodeCfg := &mapstructure.DecoderConfig{
+				Metadata:         nil,
+				Result:           &cfgType,
+				WeaklyTypedInput: true,
+				ErrorUnset:       true,
+			}
+			decoder, err := mapstructure.NewDecoder(decodeCfg)
+			if err != nil {
+				zap.S().Errorf("Init sender %s failed: %v", id, err)
+			}
 
-				activeSenders = append(activeSenders, cs)
-				goto found
+			err = decoder.Decode(senderCfg)
+			if err != nil {
+				msg := string(err.Error())
+				zap.S().Fatalf("Sender %s config check failed: %s", id, msg)
+			}
+
+			config.Config.Senders[id] = cfgType
+		}
+		err = sender.Init()
+		if err != nil {
+			zap.S().Fatalf("Sender %s init failed: %v", sender.Name(), err)
+		}
+
+		if host, ok := sender.(pushTypes.Host); ok {
+			err := host.Start()
+			if err != nil {
+				zap.S().Fatalf("Sender %s start failed: %v", sender.Name(), err)
 			}
 		}
-		zap.S().Fatalf("Sender %s not exist.", id)
-	found:
-		continue
+
+		activeSenders = append(activeSenders, sender)
+
 	}
 }
 

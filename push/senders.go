@@ -1,6 +1,8 @@
 package push
 
 import (
+	"github.com/pkg/errors"
+
 	"notify-api/push/host/telegram"
 	"notify-api/push/host/websocket"
 	"notify-api/push/provider/fcm"
@@ -28,6 +30,15 @@ func IsValid(id string) bool {
 		}
 	}
 	return false
+}
+
+func get(id string) (pushTypes.Sender, error) {
+	for _, v := range availableSenders {
+		if v.Name() == id {
+			return v, nil
+		}
+	}
+	return nil, errors.Errorf("sender %s not found", id)
 }
 
 func TryGetInitialTokenMeta(channel string) (string, bool) {

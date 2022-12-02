@@ -2,7 +2,6 @@ package fcm
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	firebase "firebase.google.com/go/v4"
@@ -12,6 +11,8 @@ import (
 
 	"notify-api/db/model"
 	"notify-api/push/types"
+	"notify-api/utils"
+	"notify-api/utils/config"
 )
 
 type Provider struct {
@@ -20,6 +21,9 @@ type Provider struct {
 }
 
 func (p *Provider) Init() error {
+	cfg := config.Config.Senders[p.Name()].(Config)
+	p.FCMCredential = []byte(utils.TokenClean(cfg.FCMCredential))
+
 	opt := option.WithCredentialsJSON(p.FCMCredential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
@@ -81,14 +85,12 @@ func (p *Provider) Send(msg *types.Message) error {
 	return nil
 }
 
-func (p *Provider) Check(auth types.SenderAuth) error {
-	FCMCredential, ok := auth["FCMCredential"]
-	if !ok {
-		return fmt.Errorf("FCMCredential is not set")
-	} else {
-		p.FCMCredential = []byte(FCMCredential)
-		return nil
-	}
+type Config struct {
+	FCMCredential string
+}
+
+func (p *Provider) Config() any {
+	return Config{}
 }
 
 func (p *Provider) Name() string {

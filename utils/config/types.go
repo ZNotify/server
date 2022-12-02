@@ -39,6 +39,6 @@ type DatabaseConfiguration struct {
 	DSN string `yaml:"dsn"`
 }
 
-type SenderConfiguration = map[string]string
+type SenderConfiguration = any
 
 type UserConfiguration = []string

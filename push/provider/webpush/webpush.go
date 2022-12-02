@@ -3,7 +3,6 @@ package webpush
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -13,6 +12,7 @@ import (
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
 	"notify-api/utils"
+	"notify-api/utils/config"
 )
 
 var webPushClient = &http.Client{}
@@ -24,6 +24,10 @@ type Provider struct {
 }
 
 func (p *Provider) Init() error {
+	cfg := config.Config.Senders[p.Name()].(Config)
+	p.VAPIDPublicKey = utils.TokenClean(cfg.VAPIDPublicKey)
+	p.VAPIDPrivateKey = utils.TokenClean(cfg.VAPIDPrivateKey)
+	p.Mailto = utils.TokenClean(cfg.Mailto)
 	return nil
 }
 
@@ -96,26 +100,14 @@ func (p *Provider) Send(msg *pushTypes.Message) error {
 	}
 }
 
-func (p *Provider) Check(auth pushTypes.SenderAuth) error {
-	VAPIDPublicKey, ok := auth["VAPIDPublicKey"]
-	if !ok {
-		return fmt.Errorf("VAPIDPublicKey not found")
-	}
+type Config struct {
+	VAPIDPublicKey  string
+	VAPIDPrivateKey string
+	Mailto          string
+}
 
-	VAPIDPrivateKey, ok := auth["VAPIDPrivateKey"]
-	if !ok {
-		return fmt.Errorf("VAPIDPrivateKey not found")
-	}
-
-	Mailto, ok := auth["Mailto"]
-	if !ok {
-		return fmt.Errorf("Mailto not found")
-	}
-
-	p.VAPIDPublicKey = utils.TokenClean(VAPIDPublicKey)
-	p.VAPIDPrivateKey = utils.TokenClean(VAPIDPrivateKey)
-	p.Mailto = utils.TokenClean(Mailto)
-	return nil
+func (p *Provider) Config() any {
+	return Config{}
 }
 
 func (p *Provider) Name() string {

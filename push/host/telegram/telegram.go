@@ -64,6 +64,9 @@ func (h *Host) Send(msg *pushTypes.Message) error {
 }
 
 func (h *Host) Init() error {
+	cfg := config.Config.Senders[h.Name()].(Config)
+	h.BotToken = utils.TokenClean(cfg.BotToken)
+
 	err := tgBot.SetLogger(loggerAdapter)
 	if err != nil {
 		return errors.WithStack(err)
@@ -87,11 +90,10 @@ func (h *Host) Name() string {
 	return "TelegramHost"
 }
 
-func (h *Host) Check(auth pushTypes.SenderAuth) error {
-	token, ok := auth["BotToken"]
-	if !ok {
-		return errors.New("BotToken not found")
-	}
-	h.BotToken = utils.TokenClean(token)
-	return nil
+type Config struct {
+	BotToken string
+}
+
+func (h *Host) Config() any {
+	return Config{}
 }
