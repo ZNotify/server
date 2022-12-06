@@ -128,9 +128,9 @@ jobs:
         with:
           name: test-server
           path: |
-            server-linux
-            server-windows.exe
-            server-macos
+            test-server-linux
+            test-server-windows.exe
+            test-server-macos
           if-no-files-found: error
 
   test-js-sdk:
