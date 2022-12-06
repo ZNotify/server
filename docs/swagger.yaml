@@ -9,6 +9,8 @@ definitions:
         type: string
       long:
         type: string
+      priority:
+        $ref: '#/definitions/types.Priority'
       title:
         type: string
       user_id:
@@ -30,6 +32,20 @@ definitions:
         default: 404
         type: integer
     type: object
+  types.Priority:
+    enum:
+    - low
+    - normal
+    - high
+    type: string
+    x-enum-comments:
+      PriorityHigh: high
+      PriorityLow: low
+      PriorityNormal: normal
+    x-enum-varnames:
+    - PriorityLow
+    - PriorityNormal
+    - PriorityHigh
   types.Response-array_entity_Message:
     properties:
       body:

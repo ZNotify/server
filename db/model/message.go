@@ -5,13 +5,14 @@ import (
 
 	. "notify-api/db"
 	"notify-api/db/entity"
+	"notify-api/push/types"
 )
 
 type messageUtils struct{}
 
 var MessageUtils = messageUtils{}
 
-func (messageUtils) Add(id string, userID string, title string, content string, long string) (entity.Message, error) {
+func (messageUtils) Add(id string, userID string, title string, content string, long string, priority types.Priority) (entity.Message, error) {
 	// a trick to generate different timestamp for different message
 	// FIXME: use an increasing counter to generate different id
 	msg := entity.Message{
@@ -20,6 +21,7 @@ func (messageUtils) Add(id string, userID string, title string, content string, 
 		Title:     title,
 		Content:   content,
 		Long:      long,
+		Priority:  priority,
 		CreatedAt: time.Now().Add(time.Nanosecond * 10),
 	}
 	RWLock.Lock()

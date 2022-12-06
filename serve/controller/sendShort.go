@@ -65,6 +65,7 @@ func SendShort(context *types.Ctx) {
 		pushMsg.Title,
 		pushMsg.Content,
 		pushMsg.Long,
+		pushMsg.Priority,
 	)
 
 	if err != nil {

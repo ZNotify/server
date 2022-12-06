@@ -10,8 +10,8 @@ import (
 
 	"notify-api/db/model"
 	"notify-api/push"
-	pushTypes "notify-api/push/types"
-	"notify-api/serve/types"
+	"notify-api/push/types"
+	serveTypes "notify-api/serve/types"
 )
 
 // Send godoc
@@ -19,17 +19,17 @@ import (
 //	@Summary		Send notification
 //	@Description	Send notification to user_id
 //	@Param			user_id		path		string	true	"user_id"
-//	@Param			title		formData	string	false	"title" default("Notification")
+//	@Param			title		formData	string	false	"title"	default("Notification")
 //	@Param			content		formData	string	true	"content"
 //	@Param			long		formData	string	false	"long"
-//	@Param			priority	formData	string	false	"priority" Enums(low, normal, high) default("normal")
+//	@Param			priority	formData	string	false	"priority"	Enums(low, normal, high),default("normal")
 //	@Produce		json
-//	@Success		200	{object}	types.Response[entity.Message]
-//	@Failure		400	{object}	types.BadRequestResponse
-//	@Failure		401	{object}	types.UnauthorizedResponse
-//	@Router			/{user_id}/send [post]
-//	@Router			/{user_id}/send [put]
-func Send(context *types.Ctx) {
+//	@Success		200	{object}	serveTypes.Response[entity.Message]
+//	@Failure		400	{object}	serveTypes.BadRequestResponse
+//	@Failure		401	{object}	serveTypes.UnauthorizedResponse
+//	@Router			/{user_id}/send  [post]
+//	@Router			/{user_id}/send  [put]
+func Send(context *serveTypes.Ctx) {
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")
 	content := context.PostForm("content")
@@ -42,21 +42,21 @@ func Send(context *types.Ctx) {
 		return
 	}
 
-	var priorityConst int
+	var priorityConst types.Priority
 	switch priority {
 	case "low":
-		priorityConst = pushTypes.PriorityLow
+		priorityConst = types.PriorityLow
 	case "normal":
-		priorityConst = pushTypes.PriorityNormal
+		priorityConst = types.PriorityNormal
 	case "high":
-		priorityConst = pushTypes.PriorityHigh
+		priorityConst = types.PriorityHigh
 	default:
 		zap.S().Infof("priority is invalid")
 		context.JSONError(http.StatusBadRequest, errors.New("priority is invalid"))
 		return
 	}
 
-	pushMsg := &pushTypes.Message{
+	pushMsg := &types.Message{
 		ID:        uuid.New().String(),
 		UserID:    context.UserID,
 		Title:     title,
@@ -80,6 +80,7 @@ func Send(context *types.Ctx) {
 		pushMsg.Title,
 		pushMsg.Content,
 		pushMsg.Long,
+		pushMsg.Priority,
 	)
 
 	if err != nil {

@@ -567,6 +567,9 @@ const docTemplate = `{
                 "long": {
                     "type": "string"
                 },
+                "priority": {
+                    "$ref": "#/definitions/types.Priority"
+                },
                 "title": {
                     "type": "string"
                 },
@@ -598,6 +601,24 @@ const docTemplate = `{
                     "default": 404
                 }
             }
+        },
+        "types.Priority": {
+            "type": "string",
+            "enum": [
+                "low",
+                "normal",
+                "high"
+            ],
+            "x-enum-comments": {
+                "PriorityHigh": "high",
+                "PriorityLow": "low",
+                "PriorityNormal": "normal"
+            },
+            "x-enum-varnames": [
+                "PriorityLow",
+                "PriorityNormal",
+                "PriorityHigh"
+            ]
         },
         "types.Response-array_entity_Message": {
             "type": "object",
