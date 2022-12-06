@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"notify-api/utils/config"
-	"notify-api/utils/log"
 	"notify-api/utils/user"
 
 	"github.com/gin-contrib/cors"
@@ -27,8 +26,6 @@ import (
 var router = gin.New()
 
 func New() *gin.Engine {
-	log.Init()
-	// always ensure log init before any other module
 
 	checkConnection()
 

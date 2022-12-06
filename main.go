@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"notify-api/cmd"
+	"notify-api/utils/log"
 )
 
 // @title			Notify API
@@ -20,6 +21,7 @@ import (
 // @license.name	Apache 2.0
 // @license.url	https://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
+	log.Init()
 	err := cmd.App.Run(os.Args)
 	if err != nil {
 		zap.S().Fatalf("Failed to run app: %+v", err)

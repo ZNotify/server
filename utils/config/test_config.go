@@ -2,7 +2,12 @@
 
 package config
 
+import (
+	"go.uber.org/zap"
+)
+
 func Load(path string) {
+	zap.S().Infof("Running a test instance, using default configuration.")
 	Config = Configuration{
 		Server: ServerConfiguration{
 			Port: 14444,
