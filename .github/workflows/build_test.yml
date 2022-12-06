@@ -35,7 +35,7 @@ jobs:
           mv build web/static
 
       - name: Run tests
-        run: go test ./...
+        run: go test -tags test ./...
 
   build-release-artifact:
     name: Upload Artifact for release

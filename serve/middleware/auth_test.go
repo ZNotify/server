@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
+	"notify-api/utils/config"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,7 @@ func (suite *AuthMiddlewareTestSuite) SetupTest() {
 
 func (suite *AuthMiddlewareTestSuite) SetupSuite() {
 	gin.SetMode(gin.TestMode)
+	config.Load("test_config")
 	user.Init()
 }
 

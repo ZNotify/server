@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"net/http/httptest"
+	"notify-api/utils/config"
 	"testing"
 
 	"notify-api/utils/user"
@@ -14,6 +15,7 @@ import (
 
 func TestCheck(t *testing.T) {
 	gin.SetMode(gin.TestMode)
+	config.Load("test_config")
 	user.Init()
 	t.Run("check success", func(t *testing.T) {
 		w := httptest.NewRecorder()
