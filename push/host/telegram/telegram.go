@@ -10,7 +10,6 @@ import (
 
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
-	"notify-api/utils"
 	"notify-api/utils/config"
 )
 
@@ -63,9 +62,8 @@ func (h *Host) Send(msg *pushTypes.Message) error {
 	return nil
 }
 
-func (h *Host) Init() error {
-	cfg := config.Config.Senders[h.Name()].(Config)
-	h.BotToken = utils.TokenClean(cfg.BotToken)
+func (h *Host) Init(cfg pushTypes.Config) error {
+	h.BotToken = cfg[BotToken]
 
 	err := tgBot.SetLogger(loggerAdapter)
 	if err != nil {
@@ -90,10 +88,8 @@ func (h *Host) Name() string {
 	return "TelegramHost"
 }
 
-type Config struct {
-	BotToken string
-}
+const BotToken = "BotToken"
 
-func (h *Host) Config() any {
-	return Config{}
+func (h *Host) Config() []string {
+	return []string{BotToken}
 }

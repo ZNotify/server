@@ -11,25 +11,22 @@ import (
 
 	"notify-api/db/model"
 	"notify-api/push/types"
-	"notify-api/utils"
-	"notify-api/utils/config"
 )
 
 type Provider struct {
-	FCMClient     *messaging.Client
-	FCMCredential []byte
+	Client     *messaging.Client
+	Credential []byte
 }
 
-func (p *Provider) Init() error {
-	cfg := config.Config.Senders[p.Name()].(Config)
-	p.FCMCredential = []byte(utils.TokenClean(cfg.FCMCredential))
+func (p *Provider) Init(cfg types.Config) error {
+	p.Credential = []byte(cfg[Credential])
 
-	opt := option.WithCredentialsJSON(p.FCMCredential)
+	opt := option.WithCredentialsJSON(p.Credential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		return err
 	}
-	p.FCMClient, err = app.Messaging(context.Background())
+	p.Client, err = app.Messaging(context.Background())
 	if err != nil {
 		return err
 	}
@@ -78,19 +75,17 @@ func (p *Provider) Send(msg *types.Message) error {
 		},
 		Tokens: tokens,
 	}
-	_, err = p.FCMClient.SendMulticast(context.Background(), &fcmMsg)
+	_, err = p.Client.SendMulticast(context.Background(), &fcmMsg)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-type Config struct {
-	FCMCredential string
-}
+const Credential = "Credential"
 
-func (p *Provider) Config() any {
-	return Config{}
+func (p *Provider) Config() []string {
+	return []string{Credential}
 }
 
 func (p *Provider) Name() string {

@@ -6,7 +6,6 @@ import (
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 
-	"notify-api/utils"
 	"notify-api/utils/config"
 	"notify-api/utils/setup"
 )
@@ -34,17 +33,8 @@ var App = &cli.App{
 			Name:  "address",
 			Usage: "Set listen address to `ADDRESS`.",
 		},
-		&cli.BoolFlag{
-			Name:  "test",
-			Usage: "Enable test mode",
-		},
 	},
 	Action: func(ctx *cli.Context) error {
-		isTest := ctx.Bool("test")
-		if isTest {
-			utils.EnableTest()
-		}
-
 		host := ctx.String("host")
 		port := ctx.Int("port")
 

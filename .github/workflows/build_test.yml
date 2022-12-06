@@ -37,8 +37,8 @@ jobs:
       - name: Run tests
         run: go test ./...
 
-  build-artifact:
-    name: Upload Artifact for sdk testing
+  build-release-artifact:
+    name: Upload Artifact for release
     runs-on: ubuntu-latest
     if: github.event_name != 'repository_dispatch'
     needs: [ test ]
@@ -85,34 +85,82 @@ jobs:
             server-macos
           if-no-files-found: error
 
+  build-test-artifact:
+    name: Upload Artifact for SDK testing
+    runs-on: ubuntu-latest
+    if: github.event_name != 'repository_dispatch'
+    needs: [ test ]
+    env:
+      GOARCH: amd64
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+          cache: true
+
+      - name: Fetch frontend asset
+        run: |
+          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
+          unzip build.zip
+          rm build.zip
+          mv build web/static
+
+      - name: Build Linux
+        run: go build -tags test -o test-server-linux
+        env:
+          GOOS: linux
+
+      - name: Build Windows
+        run: go build -tags test -o test-server-windows.exe
+        env:
+          GOOS: windows
+
+      - name: Build MacOS
+        run: go build -tags test -o test-server-macos
+        env:
+          GOOS: darwin
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-server
+          path: |
+            server-linux
+            server-windows.exe
+            server-macos
+          if-no-files-found: error
+
   test-js-sdk:
-    needs: [ build-artifact ]
+    needs: [ build-test-artifact ]
     uses: ZNotify/js-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-kt-sdk:
-    needs: [ build-artifact ]
+    needs: [ build-test-artifact ]
     uses: ZNotify/kt-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-py-sdk:
-    needs: [ build-artifact ]
+    needs: [ build-test-artifact ]
     uses: ZNotify/py-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-rs-sdk:
-    needs: [ build-artifact ]
+    needs: [ build-test-artifact ]
     uses: ZNotify/rs-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   test-cs-sdk:
-    needs: [ build-artifact ]
+    needs: [ build-test-artifact ]
     uses: ZNotify/cs-sdk/.github/workflows/test.yml@master
     secrets: inherit
 
   release:
     uses: ./.github/workflows/release.yml
-    needs: [ build-artifact ]
+    needs: [ build-test-artifact, build-release-artifact ]
     if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
     secrets: inherit
 

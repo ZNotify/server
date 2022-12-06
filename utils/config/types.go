@@ -1,5 +1,7 @@
 package config
 
+var Config Configuration
+
 type Configuration struct {
 	// Users config
 	Users UserConfiguration `yaml:"users"`
@@ -39,6 +41,6 @@ type DatabaseConfiguration struct {
 	DSN string `yaml:"dsn"`
 }
 
-type SenderConfiguration = any
+type SenderConfiguration = map[string]string
 
 type UserConfiguration = []string

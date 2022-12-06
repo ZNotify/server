@@ -1,3 +1,5 @@
+//go:build !test
+
 package push
 
 import (
@@ -6,10 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/mitchellh/mapstructure"
-
-	serveTypes "notify-api/serve/types"
 	"notify-api/utils/config"
 
 	"go.uber.org/zap"
@@ -19,10 +17,6 @@ import (
 )
 
 func Send(msg *pushTypes.Message) error {
-	if config.IsTest() {
-		return nil
-	}
-
 	zap.S().Infof("Send message to %s", msg.UserID)
 
 	var errs []string
@@ -52,11 +46,6 @@ func Send(msg *pushTypes.Message) error {
 }
 
 func Init() {
-	if utils.IsTestInstance() {
-		activeSenders = availableSenders
-		return
-	}
-
 	for id, senderCfg := range config.Config.Senders {
 		sender, err := get(id)
 		if err != nil {
@@ -64,30 +53,25 @@ func Init() {
 		}
 
 		if authSender, ok := sender.(pushTypes.SenderWithConfig); ok {
-			cfgType := authSender.Config()
+			cfgKeys := authSender.Config()
 
-			decodeCfg := &mapstructure.DecoderConfig{
-				Metadata:         nil,
-				Result:           &cfgType,
-				WeaklyTypedInput: true,
-				ErrorUnset:       true,
+			cfg := make(map[string]string)
+			for _, v := range cfgKeys {
+				value, ok := senderCfg[v]
+				if !ok {
+					zap.S().Fatalf("Sender %s config %s not found", id, v)
+				}
+				cfg[v] = utils.TokenClean(value)
 			}
-			decoder, err := mapstructure.NewDecoder(decodeCfg)
+			err = authSender.Init(cfg)
 			if err != nil {
-				zap.S().Errorf("Init sender %s failed: %v", id, err)
+				zap.S().Fatalf("Sender %s init failed: %v", id, err)
 			}
-
-			err = decoder.Decode(senderCfg)
+		} else {
+			err := sender.(pushTypes.SenderWithoutConfig).Init()
 			if err != nil {
-				msg := string(err.Error())
-				zap.S().Fatalf("Sender %s config check failed: %s", id, msg)
+				zap.S().Fatalf("Sender %s init failed: %v", id, err)
 			}
-
-			config.Config.Senders[id] = cfgType
-		}
-		err = sender.Init()
-		if err != nil {
-			zap.S().Fatalf("Sender %s init failed: %v", sender.Name(), err)
 		}
 
 		if host, ok := sender.(pushTypes.Host); ok {
@@ -99,13 +83,5 @@ func Init() {
 
 		activeSenders = append(activeSenders, sender)
 
-	}
-}
-
-func RegisterRouter(e *gin.RouterGroup) {
-	for _, v := range activeSenders {
-		if pv, ok := v.(pushTypes.SenderWithHandler); ok {
-			e.Handle(pv.HandlerMethod(), pv.HandlerPath(), serveTypes.WrapHandler(pv.Handler))
-		}
 	}
 }

@@ -19,6 +19,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: server
+      - uses: actions/download-artifact@v3
+        with:
+          name: test-server
 
       - name: Release
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -28,5 +31,8 @@ jobs:
           prerelease: true
           files: |
             server-linux
+            test-server-linux
             server-windows.exe
+            test-server-windows.exe
             server-macos
+            test-server-macos

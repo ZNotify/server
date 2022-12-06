@@ -1,44 +1,14 @@
 package utils
 
 import (
-	"flag"
 	"os"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
-
-var isTest = -1
-
-func EnableTest() {
-	isTest = 1
-}
-
-func IsTestInstance() bool {
-	if isTest != -1 {
-		return isTest == 1
-	}
-	_, ok := os.LookupEnv("TEST")
-	if ok {
-		isTest = 1
-		return true
-	}
-	f := flag.Lookup("test.v")
-	if f != nil {
-		isTest = 1
-		return true
-	}
-	if gin.Mode() == gin.TestMode {
-		isTest = 1
-		return true
-	}
-	isTest = 0
-	return false
-}
 
 var uuidRe = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
 

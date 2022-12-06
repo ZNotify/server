@@ -6,15 +6,22 @@ import (
 	"notify-api/serve/types"
 )
 
+type Config = map[string]string
+
 type Sender interface {
 	Send(msg *Message) error
-	Init() error
 	Name() string
+}
+
+type SenderWithoutConfig interface {
+	Sender
+	Init() error
 }
 
 type SenderWithConfig interface {
 	Sender
-	Config() any
+	Init(config Config) error
+	Config() []string
 }
 
 type Host interface {

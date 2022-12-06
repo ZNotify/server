@@ -11,11 +11,9 @@ import (
 
 	"notify-api/db/model"
 	pushTypes "notify-api/push/types"
-	"notify-api/utils"
-	"notify-api/utils/config"
 )
 
-var webPushClient = &http.Client{}
+var client = &http.Client{}
 
 type Provider struct {
 	VAPIDPublicKey  string
@@ -23,17 +21,16 @@ type Provider struct {
 	Mailto          string
 }
 
-func (p *Provider) Init() error {
-	cfg := config.Config.Senders[p.Name()].(Config)
-	p.VAPIDPublicKey = utils.TokenClean(cfg.VAPIDPublicKey)
-	p.VAPIDPrivateKey = utils.TokenClean(cfg.VAPIDPrivateKey)
-	p.Mailto = utils.TokenClean(cfg.Mailto)
+func (p *Provider) Init(cfg pushTypes.Config) error {
+	p.VAPIDPublicKey = cfg[VAPIDPublicKey]
+	p.VAPIDPrivateKey = cfg[VAPIDPrivateKey]
+	p.Mailto = cfg[Mailto]
 	return nil
 }
 
 func (p *Provider) getOption() *webpush.Options {
 	return &webpush.Options{
-		HTTPClient:      webPushClient,
+		HTTPClient:      client,
 		TTL:             60 * 60 * 24,
 		Subscriber:      p.Mailto,
 		VAPIDPublicKey:  p.VAPIDPublicKey,
@@ -106,8 +103,12 @@ type Config struct {
 	Mailto          string
 }
 
-func (p *Provider) Config() any {
-	return Config{}
+const VAPIDPublicKey = "VAPIDPublicKey"
+const VAPIDPrivateKey = "VAPIDPrivateKey"
+const Mailto = "Mailto"
+
+func (p *Provider) Config() []string {
+	return []string{VAPIDPublicKey, VAPIDPrivateKey, Mailto}
 }
 
 func (p *Provider) Name() string {

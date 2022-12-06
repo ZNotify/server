@@ -100,10 +100,10 @@
             "FCMCredential"
           ],
           "properties": {
-            "FCMCredential": {
+            "Credential": {
               "type": "string",
               "default": "",
-              "title": "The FCMCredential from Firebase."
+              "title": "The credential from Firebase."
             }
           }
         },

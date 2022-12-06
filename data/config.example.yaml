@@ -10,7 +10,7 @@ server:
 senders:
   WebSocketHost:
   FCM:
-    FCMCredential: ""
+    Credential: ""
   WebPush:
     VAPIDPrivateKey: ""
     VAPIDPublicKey: ""
