@@ -16,19 +16,19 @@ import (
 
 // Send godoc
 //
-//	@Summary      Send notification
-//	@Description  Send notification to user_id
-//	@Param        user_id   path      string  true   "user_id"
-//	@Param        title     formData  string  false  "title" default("Notification")
-//	@Param        content   formData  string  true   "content"
-//	@Param        long      formData  string  false  "long"
-//	@Param        priority  formData  string  false  "priority" Enums(low, normal, high) default("normal")
-//	@Produce      json
-//	@Success      200  {object}  types.Response[entity.Message]
-//	@Failure      400  {object}  types.BadRequestResponse
-//	@Failure      401  {object}  types.UnauthorizedResponse
-//	@Router       /{user_id}/send [post]
-//	@Router       /{user_id}/send [put]
+//	@Summary		Send notification
+//	@Description	Send notification to user_id
+//	@Param			user_id		path		string	true	"user_id"
+//	@Param			title		formData	string	false	"title" default("Notification")
+//	@Param			content		formData	string	true	"content"
+//	@Param			long		formData	string	false	"long"
+//	@Param			priority	formData	string	false	"priority" Enums(low, normal, high) default("normal")
+//	@Produce		json
+//	@Success		200	{object}	types.Response[entity.Message]
+//	@Failure		400	{object}	types.BadRequestResponse
+//	@Failure		401	{object}	types.UnauthorizedResponse
+//	@Router			/{user_id}/send [post]
+//	@Router			/{user_id}/send [put]
 func Send(context *types.Ctx) {
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")

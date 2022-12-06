@@ -14,17 +14,17 @@ import (
 
 // Token godoc
 //
-//	@Summary      Create or update token
-//	@Description  Create or update token of device
-//	@Param        user_id    path      string  true   "user_id"
-//	@Param        device_id  path      string  true   "device_id should be a valid UUID"
-//	@Param        channel    formData  string  true   "channel can be used. Sometimes less than document."  Enums(TelegramHost, WebSocketHost, FCM, WebPush, WNS)
-//	@Param        token      formData  string  false  "token"
-//	@Produce      json
-//	@Success      200  {object}  types.Response[bool]
-//	@Failure      400  {object}  types.BadRequestResponse
-//	@Failure      401  {object}  types.UnauthorizedResponse
-//	@Router       /{user_id}/token/{device_id} [put]
+//	@Summary		Create or update token
+//	@Description	Create or update token of device
+//	@Param			user_id		path		string	true	"user_id"
+//	@Param			device_id	path		string	true	"device_id should be a valid UUID"
+//	@Param			channel		formData	string	true	"channel can be used. Sometimes less than document."	Enums(TelegramHost, WebSocketHost, FCM, WebPush, WNS)
+//	@Param			token		formData	string	false	"token"
+//	@Produce		json
+//	@Success		200	{object}	types.Response[bool]
+//	@Failure		400	{object}	types.BadRequestResponse
+//	@Failure		401	{object}	types.UnauthorizedResponse
+//	@Router			/{user_id}/token/{device_id} [put]
 func Token(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {
