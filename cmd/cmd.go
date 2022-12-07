@@ -55,11 +55,12 @@ var App = &cli.App{
 			address = config.Config.Server.Host + ":" + strconv.Itoa(config.Config.Server.Port)
 		}
 
+		zap.S().Infof("Server is running on %s", address)
+
 		err := setup.New().Run(address)
 		if err != nil {
 			return err
 		}
-		zap.S().Infof("Server is running on %s", address)
 		return nil
 	},
 }

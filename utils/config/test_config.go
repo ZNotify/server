@@ -3,6 +3,7 @@
 package config
 
 import (
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
@@ -22,4 +23,5 @@ func Load(path string) {
 		Users:   make(UserConfiguration, 0),
 	}
 	Config.Users = append(Config.Users, "test")
+	gin.SetMode(gin.TestMode)
 }

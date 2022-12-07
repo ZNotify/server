@@ -23,9 +23,8 @@ import (
 	"notify-api/web"
 )
 
-var router = gin.New()
-
 func New() *gin.Engine {
+	router := gin.New()
 
 	checkConnection()
 
@@ -34,15 +33,15 @@ func New() *gin.Engine {
 	push.Init()
 
 	setupDoc()
-	setupMiddleware()
-	setupRouter()
+	setupMiddleware(router)
+	setupRouter(router)
 
 	return router
 }
 
 func checkConnection() {
 	if !config.IsProd() {
-		zap.S().Debug("Skip connection check in debug mode")
+		zap.S().Info("Skip connection check in non-production mode")
 		return
 	}
 
@@ -54,19 +53,19 @@ func checkConnection() {
 	}()
 }
 
-func setupMiddleware() {
+func setupMiddleware(router *gin.Engine) {
 	router.Use(cors.Default())
 }
 
 func setupDoc() {
-	if gin.Mode() == gin.ReleaseMode {
+	if config.IsProd() {
 		docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, "https")
 	} else {
 		docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, "http")
 	}
 }
 
-func setupRouter() {
+func setupRouter(router *gin.Engine) {
 	router.Use(ginzap.Ginzap(zap.L(), time.RFC3339, false))
 	router.Use(ginzap.RecoveryWithZap(zap.L(), true))
 
@@ -99,5 +98,4 @@ func setupRouter() {
 
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", types.WrapHandler(controller.WebIndex))
-
 }

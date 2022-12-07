@@ -3,9 +3,10 @@
 package config
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v3"
-	"os"
 )
 
 func Load(path string) {
@@ -30,11 +31,6 @@ func Load(path string) {
 		},
 		Senders: make(map[string]SenderConfiguration),
 		Users:   make(UserConfiguration, 0),
-	}
-
-	if mode == TestMode {
-		Config = config
-		return
 	}
 
 	if path == "ENV" {
