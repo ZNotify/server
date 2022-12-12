@@ -8,23 +8,23 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
+	"notify-api/db/util"
 	"notify-api/push"
-	"notify-api/push/types"
-	serveTypes "notify-api/serve/types"
+	pushEntity "notify-api/push/entity"
+	serveTypes "notify-api/server/types"
 )
 
 // Send godoc
 //
 //	@Summary		Send notification
 //	@Description	Send notification to user_id
-//	@Param			user_id		path		string	true	"user_id"
-//	@Param			title		formData	string	false	"title"	default("Notification")
-//	@Param			content		formData	string	true	"content"
-//	@Param			long		formData	string	false	"long"
-//	@Param			priority	formData	string	false	"priority"	Enums(low, normal, high),default("normal")
+//	@Param			user_id		path		string				true	"user_id"
+//	@Param			title		formData	string				false	"title"	default(Notification)
+//	@Param			content		formData	string				true	"content"
+//	@Param			long		formData	string				false	"long"
+//	@Param			priority	formData	pushEntity.Priority	false	"priority"	default("normal")
 //	@Produce		json
-//	@Success		200	{object}	serveTypes.Response[entity.Message]
+//	@Success		200	{object}	serveTypes.Response[serveTypes.Message]
 //	@Failure		400	{object}	serveTypes.BadRequestResponse
 //	@Failure		401	{object}	serveTypes.UnauthorizedResponse
 //	@Router			/{user_id}/send  [post]
@@ -42,22 +42,22 @@ func Send(context *serveTypes.Ctx) {
 		return
 	}
 
-	var priorityConst types.Priority
+	var priorityConst pushEntity.Priority
 	switch priority {
 	case "low":
-		priorityConst = types.PriorityLow
+		priorityConst = pushEntity.PriorityLow
 	case "normal":
-		priorityConst = types.PriorityNormal
+		priorityConst = pushEntity.PriorityNormal
 	case "high":
-		priorityConst = types.PriorityHigh
+		priorityConst = pushEntity.PriorityHigh
 	default:
 		zap.S().Infof("priority is invalid")
 		context.JSONError(http.StatusBadRequest, errors.New("priority is invalid"))
 		return
 	}
 
-	pushMsg := &types.Message{
-		ID:        uuid.New().String(),
+	pushMsg := &pushEntity.PushMessage{
+		MessageID: uuid.New().String(),
 		UserID:    context.UserID,
 		Title:     title,
 		Content:   content,
@@ -74,8 +74,8 @@ func Send(context *serveTypes.Ctx) {
 	}
 
 	// Insert message record
-	msg, err := model.MessageUtils.Add(
-		pushMsg.ID,
+	msg, err := util.MessageUtil.Add(
+		pushMsg.MessageID,
 		pushMsg.UserID,
 		pushMsg.Title,
 		pushMsg.Content,
@@ -84,11 +84,11 @@ func Send(context *serveTypes.Ctx) {
 	)
 
 	if err != nil {
-		zap.S().Errorw("add message error", "error", err)
+		zap.S().Errorw("save message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
-	context.JSONResult(msg)
+	context.JSONResult(serveTypes.FromModelMessage(msg))
 	return
 }

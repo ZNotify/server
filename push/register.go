@@ -2,8 +2,9 @@ package push
 
 import (
 	"github.com/gin-gonic/gin"
+
 	pushTypes "notify-api/push/types"
-	serveTypes "notify-api/serve/types"
+	serveTypes "notify-api/server/types"
 )
 
 func RegisterRouter(e *gin.RouterGroup) {

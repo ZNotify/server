@@ -130,7 +130,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/types.Response-types_Message"
                         }
                     },
                     "400": {
@@ -178,7 +178,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/types.Response-types_Message"
                         }
                     },
                     "400": {
@@ -216,7 +216,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-array_entity_Message"
+                            "$ref": "#/definitions/types.Response-array_types_Message"
                         }
                     },
                     "401": {
@@ -245,7 +245,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "default": "\"Notification\"",
+                        "default": "Notification",
                         "description": "title",
                         "name": "title",
                         "in": "formData"
@@ -280,7 +280,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/types.Response-types_Message"
                         }
                     },
                     "400": {
@@ -313,7 +313,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "default": "\"Notification\"",
+                        "default": "Notification",
                         "description": "title",
                         "name": "title",
                         "in": "formData"
@@ -348,7 +348,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/types.Response-types_Message"
                         }
                     },
                     "400": {
@@ -406,6 +406,12 @@ const docTemplate = `{
                         "type": "string",
                         "description": "token",
                         "name": "token",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Additional info about device",
+                        "name": "info",
                         "in": "formData"
                     }
                 ],
@@ -489,7 +495,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/types.Response-types_Message"
                         }
                     },
                     "400": {
@@ -552,57 +558,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entity.Message": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "long": {
-                    "type": "string"
-                },
-                "priority": {
-                    "$ref": "#/definitions/types.Priority"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.BadRequestResponse": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 400
-                }
-            }
-        },
-        "types.NotFoundResponse": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 404
-                }
-            }
-        },
-        "types.Priority": {
+        "entity.Priority": {
             "type": "string",
             "enum": [
                 "low",
@@ -620,13 +576,63 @@ const docTemplate = `{
                 "PriorityHigh"
             ]
         },
-        "types.Response-array_entity_Message": {
+        "types.BadRequestResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 400
+                }
+            }
+        },
+        "types.Message": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "long": {
+                    "type": "string"
+                },
+                "priority": {
+                    "$ref": "#/definitions/entity.Priority"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.NotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 404
+                }
+            }
+        },
+        "types.Response-array_types_Message": {
             "type": "object",
             "properties": {
                 "body": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/entity.Message"
+                        "$ref": "#/definitions/types.Message"
                     }
                 },
                 "code": {
@@ -647,11 +653,11 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Response-entity_Message": {
+        "types.Response-types_Message": {
             "type": "object",
             "properties": {
                 "body": {
-                    "$ref": "#/definitions/entity.Message"
+                    "$ref": "#/definitions/types.Message"
                 },
                 "code": {
                     "type": "integer",

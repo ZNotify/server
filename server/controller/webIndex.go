@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"notify-api/serve/types"
+	"notify-api/server/types"
 	"notify-api/web"
 )
 

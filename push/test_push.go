@@ -5,10 +5,10 @@ package push
 import (
 	"go.uber.org/zap"
 
-	pushTypes "notify-api/push/types"
+	pushTypes "notify-api/push/entity"
 )
 
-func Send(msg *pushTypes.Message) error {
+func Send(msg *pushTypes.PushMessage) error {
 	fields := []zap.Field{
 		zap.String("user_id", msg.UserID),
 		zap.String("title", msg.Title),

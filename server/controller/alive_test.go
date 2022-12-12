@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"notify-api/serve/types"
+	"notify-api/server/types"
 )
 
 func TestAlive(t *testing.T) {

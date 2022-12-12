@@ -13,7 +13,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"notify-api/db/entity"
+	"notify-api/db/model"
 	"notify-api/utils"
 )
 
@@ -59,8 +59,8 @@ func Init() {
 	}
 
 	err = DB.AutoMigrate(
-		&entity.Message{},
-		&entity.PushToken{},
+		&model.Message{},
+		&model.Device{},
 	)
 	if err != nil {
 		zap.S().Fatalf("Failed to migrate database: %+v", err)

@@ -3,16 +3,15 @@ package websocket
 import (
 	"time"
 
+	pushTypes "notify-api/push/entity"
 	"notify-api/utils/user"
-
-	pushTypes "notify-api/push/types"
 )
 
 type Host struct {
 	manager *wsManager
 }
 
-func (h *Host) GetInitialTokenMeta() string {
+func (h *Host) GetDeviceInitialMeta() string {
 	return time.Now().Format(time.RFC3339Nano)
 }
 
@@ -26,7 +25,7 @@ func (h *Host) Init() error {
 		userClients: make(map[string]map[*wsClient]bool),
 		register:    make(chan *wsClient),
 		unregister:  make(chan *wsClient),
-		broadcast:   make(chan *pushTypes.Message),
+		broadcast:   make(chan *pushTypes.PushMessage),
 	}
 
 	for _, v := range user.Users() {
@@ -36,7 +35,7 @@ func (h *Host) Init() error {
 	return nil
 }
 
-func (h *Host) Send(msg *pushTypes.Message) error {
+func (h *Host) Send(msg *pushTypes.PushMessage) error {
 	h.manager.broadcast <- msg
 	return nil
 }

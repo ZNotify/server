@@ -1,38 +1,5 @@
 definitions:
-  entity.Message:
-    properties:
-      content:
-        type: string
-      created_at:
-        type: string
-      id:
-        type: string
-      long:
-        type: string
-      priority:
-        $ref: '#/definitions/types.Priority'
-      title:
-        type: string
-      user_id:
-        type: string
-    type: object
-  types.BadRequestResponse:
-    properties:
-      body:
-        type: string
-      code:
-        default: 400
-        type: integer
-    type: object
-  types.NotFoundResponse:
-    properties:
-      body:
-        type: string
-      code:
-        default: 404
-        type: integer
-    type: object
-  types.Priority:
+  entity.Priority:
     enum:
     - low
     - normal
@@ -46,11 +13,44 @@ definitions:
     - PriorityLow
     - PriorityNormal
     - PriorityHigh
-  types.Response-array_entity_Message:
+  types.BadRequestResponse:
+    properties:
+      body:
+        type: string
+      code:
+        default: 400
+        type: integer
+    type: object
+  types.Message:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      long:
+        type: string
+      priority:
+        $ref: '#/definitions/entity.Priority'
+      title:
+        type: string
+      user_id:
+        type: string
+    type: object
+  types.NotFoundResponse:
+    properties:
+      body:
+        type: string
+      code:
+        default: 404
+        type: integer
+    type: object
+  types.Response-array_types_Message:
     properties:
       body:
         items:
-          $ref: '#/definitions/entity.Message'
+          $ref: '#/definitions/types.Message'
         type: array
       code:
         default: 200
@@ -64,10 +64,10 @@ definitions:
         default: 200
         type: integer
     type: object
-  types.Response-entity_Message:
+  types.Response-types_Message:
     properties:
       body:
-        $ref: '#/definitions/entity.Message'
+        $ref: '#/definitions/types.Message'
       code:
         default: 200
         type: integer
@@ -125,7 +125,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/types.Response-types_Message'
         "400":
           description: Bad Request
           schema:
@@ -157,7 +157,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/types.Response-types_Message'
         "400":
           description: Bad Request
           schema:
@@ -212,7 +212,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/types.Response-types_Message'
         "400":
           description: Bad Request
           schema:
@@ -241,7 +241,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-array_entity_Message'
+            $ref: '#/definitions/types.Response-array_types_Message'
         "401":
           description: Unauthorized
           schema:
@@ -256,7 +256,7 @@ paths:
         name: user_id
         required: true
         type: string
-      - default: '"Notification"'
+      - default: Notification
         description: title
         in: formData
         name: title
@@ -285,7 +285,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/types.Response-types_Message'
         "400":
           description: Bad Request
           schema:
@@ -303,7 +303,7 @@ paths:
         name: user_id
         required: true
         type: string
-      - default: '"Notification"'
+      - default: Notification
         description: title
         in: formData
         name: title
@@ -332,7 +332,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/types.Response-types_Message'
         "400":
           description: Bad Request
           schema:
@@ -391,6 +391,10 @@ paths:
       - description: token
         in: formData
         name: token
+        type: string
+      - description: Additional info about device
+        in: formData
+        name: info
         type: string
       produces:
       - application/json

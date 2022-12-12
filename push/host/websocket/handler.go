@@ -8,9 +8,9 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
-	pushTypes "notify-api/push/types"
-	"notify-api/serve/types"
+	"notify-api/db/util"
+	"notify-api/push/entity"
+	"notify-api/server/types"
 	"notify-api/utils/ds"
 )
 
@@ -32,10 +32,10 @@ func (h *Host) Handler(context *types.Ctx) {
 		return
 	}
 
-	token, err := model.TokenUtils.GetUserDeviceToken(userID, deviceId)
+	device, err := util.DeviceUtil.GetDevice(deviceId)
 	if err != nil {
-		if err == model.ErrNotFound {
-			zap.S().Infof("user %s device %s token not found", userID, deviceId)
+		if err == util.ErrNotFound {
+			zap.S().Infof("user %s device %s not found", userID, deviceId)
 			context.JSONError(http.StatusUnauthorized, errors.New("token not found"))
 			return
 		} else {
@@ -44,13 +44,13 @@ func (h *Host) Handler(context *types.Ctx) {
 			return
 		}
 	}
-	if token.Channel != h.Name() {
-		zap.S().Infof("user %s channel not match", userID)
+	if device.Channel != h.Name() {
+		zap.S().Infof("device %s channel not match", deviceId)
 		context.JSONError(http.StatusUnauthorized, errors.New("device current channel is not WebSocket"))
 		return
 	}
 
-	sinceTime, err := time.Parse(time.RFC3339Nano, token.TokenMeta)
+	sinceTime, err := time.Parse(time.RFC3339Nano, device.Meta)
 	if err != nil {
 		zap.S().Infof("parse time error: %v", err)
 		context.JSONError(http.StatusBadRequest, errors.WithStack(err))
@@ -58,7 +58,7 @@ func (h *Host) Handler(context *types.Ctx) {
 	}
 	// 2022-09-18T11:14:00+08:00 as zero point
 
-	pendingMessages, err := model.MessageUtils.GetUserMessageAfter(userID, sinceTime)
+	pendingMessages, err := util.MessageUtil.GetUserMessageAfter(userID, sinceTime)
 	if err != nil {
 		zap.S().Errorf("get user %s message error: %v", userID, err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
@@ -73,7 +73,7 @@ func (h *Host) Handler(context *types.Ctx) {
 	client := &wsClient{
 		manager:  h.manager,
 		conn:     conn,
-		send:     ds.NewUnboundedChan[*pushTypes.Message](2),
+		send:     ds.NewUnboundedChan[*entity.PushMessage](2),
 		userID:   userID,
 		deviceID: deviceId,
 		once:     sync.Once{},
@@ -84,14 +84,14 @@ func (h *Host) Handler(context *types.Ctx) {
 	go client.readRoutine()
 
 	for _, msg := range pendingMessages {
-		msg := pushTypes.Message{
-			ID:        msg.ID,
+		msg := entity.PushMessage{
+			MessageID: msg.MessageID,
 			UserID:    msg.UserID,
 			Title:     msg.Title,
 			Content:   msg.Content,
 			Long:      msg.Long,
 			CreatedAt: msg.CreatedAt,
-			Priority:  pushTypes.PriorityHigh,
+			Priority:  entity.PriorityHigh,
 		}
 		client.send.In <- &msg
 	}

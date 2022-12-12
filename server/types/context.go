@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"notify-api/serve/middleware"
+	"notify-api/server/middleware"
 )
 
 type Ctx struct {

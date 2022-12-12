@@ -1,9 +1,15 @@
 package model
 
-type deviceUtil struct{}
+import "time"
 
-var DeviceUtil = deviceUtil{}
-
-func (deviceUtil) CreateOrUpdate(userID string, deviceID string, meta string, channel string, token string) error {
-	return nil
+type Device struct {
+	ID         uint   `gorm:"primary_key"`
+	DeviceID   string `gorm:"unique"`
+	Meta       string
+	Channel    string
+	Token      string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	UserID     string
+	DeviceInfo string
 }
