@@ -9,7 +9,8 @@ import (
 	"github.com/SherClockHolmes/webpush-go"
 	"github.com/pkg/errors"
 
-	"notify-api/db/model"
+	"notify-api/db/util"
+	"notify-api/push/entity"
 	pushTypes "notify-api/push/types"
 )
 
@@ -38,9 +39,8 @@ func (p *Provider) getOption() *webpush.Options {
 	}
 }
 
-func (p *Provider) Send(msg *pushTypes.Message) error {
-	var tokens []string
-	tokens, err := model.TokenUtils.GetUserChannelTokens(msg.UserID, p.Name())
+func (p *Provider) Send(msg *entity.PushMessage) error {
+	tokens, err := util.DeviceUtil.GetUserChannelTokens(msg.UserID, p.Name())
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -55,11 +55,11 @@ func (p *Provider) Send(msg *pushTypes.Message) error {
 
 	option := p.getOption()
 	switch msg.Priority {
-	case pushTypes.PriorityHigh:
+	case entity.PriorityHigh:
 		option.Urgency = webpush.UrgencyHigh
-	case pushTypes.PriorityNormal:
+	case entity.PriorityNormal:
 		option.Urgency = webpush.UrgencyNormal
-	case pushTypes.PriorityLow:
+	case entity.PriorityLow:
 		option.Urgency = webpush.UrgencyLow
 	}
 

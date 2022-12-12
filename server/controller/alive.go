@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"notify-api/serve/types"
+	"notify-api/server/types"
 )
 
 // Alive godoc

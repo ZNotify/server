@@ -9,7 +9,8 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
 
-	"notify-api/db/model"
+	"notify-api/db/util"
+	"notify-api/push/entity"
 	"notify-api/push/types"
 )
 
@@ -34,9 +35,9 @@ func (p *Provider) Init(cfg types.Config) error {
 	return nil
 }
 
-func (p *Provider) Send(msg *types.Message) error {
+func (p *Provider) Send(msg *entity.PushMessage) error {
 	var tokens []string
-	tokens, err := model.TokenUtils.GetUserChannelTokens(msg.UserID, p.Name())
+	tokens, err := util.DeviceUtil.GetUserChannelTokens(msg.UserID, p.Name())
 
 	if err != nil {
 		return errors.WithStack(err)
@@ -47,7 +48,7 @@ func (p *Provider) Send(msg *types.Message) error {
 	}
 
 	var fcmPriority string
-	if msg.Priority == types.PriorityHigh {
+	if msg.Priority == entity.PriorityHigh {
 		fcmPriority = "high"
 	} else {
 		fcmPriority = "normal"
@@ -62,7 +63,7 @@ func (p *Provider) Send(msg *types.Message) error {
 		Data: map[string]string{
 			"user_id":    msg.UserID,
 			"long":       msg.Long,
-			"msg_id":     msg.ID,
+			"msg_id":     msg.MessageID,
 			"title":      msg.Title,
 			"content":    msg.Content,
 			"created_at": msg.CreatedAt.Format(time.RFC3339),

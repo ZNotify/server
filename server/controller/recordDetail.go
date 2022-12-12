@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
-	"notify-api/serve/types"
+	"notify-api/db/util"
+	"notify-api/server/types"
 )
 
 // RecordDetail godoc
@@ -17,7 +17,7 @@ import (
 //	@Param			user_id	path	string	true	"user_id"
 //	@Param			id		path	string	true	"id"
 //	@Produce		json
-//	@Success		200	{object}	types.Response[entity.Message]
+//	@Success		200	{object}	types.Response[types.Message]
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Failure		404	{object}	types.NotFoundResponse
@@ -31,9 +31,9 @@ func RecordDetail(context *types.Ctx) {
 		return
 	}
 
-	message, err := model.MessageUtils.Get(messageID)
+	message, err := util.MessageUtil.Get(messageID)
 	if err != nil {
-		if errors.Is(err, model.ErrNotFound) {
+		if errors.Is(err, util.ErrNotFound) {
 			zap.S().Infof("message %s not found", messageID)
 			context.JSONError(http.StatusNotFound, errors.New("Message not found."))
 			return
@@ -49,5 +49,5 @@ func RecordDetail(context *types.Ctx) {
 		return
 	}
 
-	context.JSONResult(message)
+	context.JSONResult(types.FromModelMessage(message))
 }

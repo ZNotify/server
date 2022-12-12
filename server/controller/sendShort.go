@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"notify-api/db/model"
+	"notify-api/db/util"
 	"notify-api/push"
-	pushTypes "notify-api/push/types"
-	"notify-api/serve/types"
+	"notify-api/push/entity"
+	"notify-api/server/types"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -23,7 +23,7 @@ import (
 //	@Param			string	body	string	true	"content"
 //	@Accept			plain
 //	@Produce		json
-//	@Success		200	{object}	types.Response[entity.Message]
+//	@Success		200	{object}	types.Response[types.Message]
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_id} [post]
@@ -42,13 +42,13 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	pushMsg := &pushTypes.Message{
-		ID:        uuid.New().String(),
+	pushMsg := &entity.PushMessage{
+		MessageID: uuid.New().String(),
 		UserID:    context.UserID,
 		Title:     "Notification",
 		Content:   string(data),
 		Long:      "",
-		Priority:  pushTypes.PriorityNormal,
+		Priority:  entity.PriorityNormal,
 		CreatedAt: time.Now(),
 	}
 
@@ -59,8 +59,8 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	msg, err := model.MessageUtils.Add(
-		pushMsg.ID,
+	msg, err := util.MessageUtil.Add(
+		pushMsg.MessageID,
 		pushMsg.UserID,
 		pushMsg.Title,
 		pushMsg.Content,
@@ -69,11 +69,11 @@ func SendShort(context *types.Ctx) {
 	)
 
 	if err != nil {
-		zap.S().Errorw("add message error", "error", err)
+		zap.S().Errorw("save message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
-	context.JSONResult(msg)
+	context.JSONResult(types.FromModelMessage(msg))
 	return
 }

@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
+	"notify-api/db/util"
 	"notify-api/push"
-	"notify-api/serve/types"
+	"notify-api/server/types"
 	"notify-api/utils"
 )
 
@@ -20,6 +20,7 @@ import (
 //	@Param			device_id	path		string	true	"device_id should be a valid UUID"
 //	@Param			channel		formData	string	true	"channel can be used. Sometimes less than document."	Enums(TelegramHost, WebSocketHost, FCM, WebPush, WNS)
 //	@Param			token		formData	string	false	"token"
+//	@Param			info		formData	string	false	"Additional info about device"
 //	@Produce		json
 //	@Success		200	{object}	types.Response[bool]
 //	@Failure		400	{object}	types.BadRequestResponse
@@ -42,16 +43,21 @@ func Token(context *types.Ctx) {
 
 	token := context.PostForm("token")
 
-	err := model.TokenUtils.CreateOrUpdate(context.UserID, deviceID, channel, token)
+	info := context.PostForm("info")
+	if info == "" {
+		info = context.Request.UserAgent()
+	}
+
+	err := util.DeviceUtil.CreateOrUpdate(context.UserID, deviceID, channel, token, info)
 	if err != nil {
 		zap.S().Errorw("create or update token error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
-	tokenMeta, ok := push.TryGetInitialTokenMeta(channel)
+	tokenMeta, ok := push.TryGetInitialDeviceMeta(channel)
 	if ok {
-		err = model.TokenUtils.UpdateTokenMeta(deviceID, tokenMeta)
+		err = util.DeviceUtil.UpdateDeviceMeta(deviceID, tokenMeta)
 		if err != nil {
 			zap.S().Errorw("update token meta error", "error", err)
 			context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

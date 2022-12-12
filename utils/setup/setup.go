@@ -17,9 +17,9 @@ import (
 	"notify-api/db"
 	"notify-api/docs"
 	"notify-api/push"
-	"notify-api/serve/controller"
-	"notify-api/serve/middleware"
-	"notify-api/serve/types"
+	"notify-api/server/controller"
+	"notify-api/server/middleware"
+	"notify-api/server/types"
 	"notify-api/web"
 )
 

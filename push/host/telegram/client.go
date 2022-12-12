@@ -8,7 +8,7 @@ import (
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
+	"notify-api/db/util"
 	"notify-api/utils/user"
 )
 
@@ -106,9 +106,9 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 	deviceID := int64toUUID(msg.From.ID)
 
 	// check if user already registered
-	pt, err := model.TokenUtils.GetDeviceToken(deviceID)
+	pt, err := util.DeviceUtil.GetDevice(deviceID)
 	if err != nil {
-		if !errors.Is(err, model.ErrNotFound) {
+		if !errors.Is(err, util.ErrNotFound) {
 			zap.S().Errorf("failed to get device token: %v", err)
 			return
 		}
@@ -129,7 +129,7 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 		return
 	}
 
-	err = model.TokenUtils.CreateOrUpdate(userID, deviceID, h.Name(), chatID)
+	err = util.DeviceUtil.CreateOrUpdate(userID, deviceID, h.Name(), chatID, "Telegram")
 	if err != nil {
 		zap.S().Errorf("failed to create or update token: %v", err)
 		errText := fmt.Sprintf("Internal Error %+v", err)
@@ -151,9 +151,9 @@ func (h *Host) handleUnregisterCommand(msg *tgBot.Message) {
 	deviceID := int64toUUID(msg.From.ID)
 
 	// check if user already registered
-	_, err := model.TokenUtils.GetDeviceToken(deviceID)
+	_, err := util.DeviceUtil.GetDevice(deviceID)
 	if err != nil {
-		if errors.Is(err, model.ErrNotFound) {
+		if errors.Is(err, util.ErrNotFound) {
 			_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "You are not registered yet."))
 			if err != nil {
 				zap.S().Errorf("failed to send message: %v", err)
@@ -164,7 +164,7 @@ func (h *Host) handleUnregisterCommand(msg *tgBot.Message) {
 			return
 		}
 	}
-	err = model.TokenUtils.Delete(deviceID)
+	err = util.DeviceUtil.DeleteDevice(deviceID)
 	if err != nil {
 		zap.S().Errorf("failed to delete device token: %v", err)
 		return

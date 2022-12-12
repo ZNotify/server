@@ -7,8 +7,9 @@ import (
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
-	pushTypes "notify-api/push/types"
+	"notify-api/db/util"
+	pushTypes "notify-api/push/entity"
+	serveTypes "notify-api/server/types"
 	"notify-api/utils/ds"
 )
 
@@ -27,7 +28,7 @@ type wsClient struct {
 
 	conn *websocket.Conn
 
-	send *ds.UnboundedChan[*pushTypes.Message]
+	send *ds.UnboundedChan[*pushTypes.PushMessage]
 
 	userID   string
 	deviceID string
@@ -42,10 +43,10 @@ type wsManager struct {
 
 	unregister chan *wsClient
 
-	broadcast chan *pushTypes.Message
+	broadcast chan *pushTypes.PushMessage
 }
 
-type wsMessage pushTypes.Message
+type wsMessage serveTypes.Message
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -67,7 +68,7 @@ func (c *wsClient) writeRoutine() {
 				return
 			}
 
-			wsMsg := wsMessage(*msg)
+			wsMsg := wsMessage(serveTypes.FromPushMessage(*msg))
 
 			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			err := c.conn.WriteJSON(wsMsg)
@@ -77,7 +78,7 @@ func (c *wsClient) writeRoutine() {
 				return
 			}
 
-			err = model.TokenUtils.UpdateTokenMeta(c.deviceID, time.Now().Format(time.RFC3339Nano))
+			err = util.DeviceUtil.UpdateDeviceMeta(c.deviceID, time.Now().Format(time.RFC3339Nano))
 			if err != nil {
 				zap.S().Errorf("create or update token error: %v", err)
 				continue

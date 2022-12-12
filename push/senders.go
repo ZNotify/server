@@ -41,11 +41,11 @@ func get(id string) (pushTypes.Sender, error) {
 	return nil, errors.Errorf("sender %s not found", id)
 }
 
-func TryGetInitialTokenMeta(channel string) (string, bool) {
+func TryGetInitialDeviceMeta(channel string) (string, bool) {
 	for _, v := range activeSenders {
 		if v.Name() == channel {
-			if host, ok := v.(pushTypes.SenderWithInitialTokenMeta); ok {
-				return host.GetInitialTokenMeta(), true
+			if host, ok := v.(pushTypes.SenderWithDeviceInitialMeta); ok {
+				return host.GetDeviceInitialMeta(), true
 			}
 		}
 	}

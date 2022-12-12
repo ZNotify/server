@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/model"
-	"notify-api/serve/types"
+	"notify-api/db/util"
+	"notify-api/server/types"
 )
 
 // TokenDelete godoc
@@ -22,7 +22,7 @@ import (
 func TokenDelete(context *types.Ctx) {
 	deviceId := context.Param("device_id")
 
-	err := model.TokenUtils.Delete(deviceId)
+	err := util.DeviceUtil.SafeDeleteDevice(context.UserID, deviceId)
 	if err != nil {
 		zap.S().Errorw("delete token error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

@@ -3,8 +3,9 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
-	"notify-api/utils/config"
 	"testing"
+
+	"notify-api/utils/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
