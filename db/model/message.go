@@ -12,17 +12,15 @@ type messageUtils struct{}
 
 var MessageUtils = messageUtils{}
 
-func (messageUtils) Add(id string, userID string, title string, content string, long string, priority types.Priority) (entity.Message, error) {
-	// a trick to generate different timestamp for different message
-	// FIXME: use an increasing counter to generate different id
+func (messageUtils) Add(msgID string, userID string, title string, content string, long string, priority types.Priority) (entity.Message, error) {
 	msg := entity.Message{
-		ID:        id,
+		MessageID: msgID,
 		UserID:    userID,
 		Title:     title,
 		Content:   content,
 		Long:      long,
 		Priority:  priority,
-		CreatedAt: time.Now().Add(time.Nanosecond * 10),
+		CreatedAt: time.Now(),
 	}
 	RWLock.Lock()
 	ret := DB.Create(&msg)
