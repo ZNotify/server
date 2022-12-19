@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/zap v0.1.0
 	github.com/gin-gonic/gin v1.8.1
-	github.com/glebarez/sqlite v1.5.0
+	github.com/glebarez/sqlite v1.6.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
@@ -24,7 +24,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.4.4
 	gorm.io/driver/postgres v1.4.5
-	gorm.io/gorm v1.24.1-0.20221019064659-5dd2bb482755
+	gorm.io/gorm v1.24.2
 )
 
 require (
@@ -42,7 +42,7 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/glebarez/go-sqlite v1.19.1 // indirect
+	github.com/glebarez/go-sqlite v1.20.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
@@ -102,8 +102,8 @@ require (
 	google.golang.org/grpc v1.51.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	modernc.org/libc v1.19.0 // indirect
+	modernc.org/libc v1.21.5 // indirect
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.4.0 // indirect
-	modernc.org/sqlite v1.19.1 // indirect
+	modernc.org/sqlite v1.20.0 // indirect
 )
