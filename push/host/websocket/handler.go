@@ -32,7 +32,7 @@ func (h *Host) Handler(context *types.Ctx) {
 		return
 	}
 
-	device, err := dao2.DeviceDao.GetDevice(deviceId)
+	device, err := dao2.Device.GetDevice(deviceId)
 	if err != nil {
 		if err == dao2.ErrNotFound {
 			zap.S().Infof("user %s device %s not found", userID, deviceId)
@@ -58,7 +58,7 @@ func (h *Host) Handler(context *types.Ctx) {
 		return
 	}
 
-	pendingMessages, err := dao2.MessageDao.GetUserMessageAfter(userID, msgID)
+	pendingMessages, err := dao2.Message.GetUserMessageAfter(userID, msgID)
 	if err != nil {
 		zap.S().Errorf("get user %s message error: %v", userID, err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

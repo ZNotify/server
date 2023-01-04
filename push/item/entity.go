@@ -2,11 +2,13 @@ package item
 
 import (
 	"time"
+
+	"notify-api/ent/generate"
 )
 
 type PushMessage struct {
-	MessageID string
-	UserID    string
+	ID        string
+	User      *generate.User
 	Title     string
 	Content   string
 	Long      string

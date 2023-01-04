@@ -87,7 +87,7 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 		return
 	}
 
-	u, exist := dao.UserDao.GetUserBySecret(ctx, userSecret)
+	u, exist := dao.User.GetUserBySecret(ctx, userSecret)
 
 	if !exist {
 		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "Invalid user secret."))
@@ -101,7 +101,7 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 	deviceIdentifier := strconv.FormatInt(msg.From.ID, 10)
 
 	// check if user already registered
-	du, exist := dao.UserDao.GetDeviceUser(ctx, deviceIdentifier)
+	du, exist := dao.User.GetDeviceUser(ctx, deviceIdentifier)
 	if exist {
 		var errText string
 		if du.ID == u.ID {
@@ -117,7 +117,7 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 		}
 		return
 	}
-	_, ok := dao.DeviceDao.EnsureDevice(ctx,
+	_, ok := dao.Device.EnsureDevice(ctx,
 		deviceIdentifier,
 		h.Name(),
 		"",
@@ -142,7 +142,7 @@ func (h *Host) handleUnregisterCommand(msg *tgBot.Message) {
 	deviceIdentifier := strconv.FormatInt(msg.From.ID, 10)
 
 	// check if user already registered
-	_, exist := dao.UserDao.GetDeviceUser(ctx, deviceIdentifier)
+	_, exist := dao.User.GetDeviceUser(ctx, deviceIdentifier)
 
 	if !exist {
 		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "You are not registered yet."))
@@ -152,7 +152,7 @@ func (h *Host) handleUnregisterCommand(msg *tgBot.Message) {
 		return
 	}
 
-	ok := dao.DeviceDao.DeleteDeviceByIdentifier(ctx, deviceIdentifier)
+	ok := dao.Device.DeleteDeviceByIdentifier(ctx, deviceIdentifier)
 	if !ok {
 		h.send(tgBot.NewMessage(msg.Chat.ID, "Internal Error"))
 		return

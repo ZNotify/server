@@ -59,7 +59,7 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	msg, err := dao.MessageDao.Add(
+	msg, err := dao.Message.Add(
 		pushMsg.MessageID,
 		pushMsg.UserID,
 		pushMsg.Title,

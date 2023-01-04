@@ -1,6 +1,8 @@
 package types
 
 import (
+	"context"
+
 	"notify-api/push/item"
 	"notify-api/server/types"
 )
@@ -8,7 +10,7 @@ import (
 type Config = map[string]string
 
 type Sender interface {
-	Send(msg *item.PushMessage) error
+	Send(ctx context.Context, msg *item.PushMessage) error
 	Name() string
 }
 

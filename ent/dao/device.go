@@ -14,7 +14,7 @@ import (
 
 type deviceDao struct{}
 
-var DeviceDao = deviceDao{}
+var Device = deviceDao{}
 
 func (deviceDao) EnsureDevice(
 	ctx context.Context,
@@ -39,7 +39,7 @@ func (deviceDao) EnsureDevice(
 		UpdateNewValues().
 		Update(func(upsert *generate.DeviceUpsert) {
 			uc := upsert.UpdateSet.UpdateColumns()
-			if slices.Contains(uc, "channel") {
+			if slices.Contains(uc, device.FieldChannel) {
 				upsert.SetChannelMeta("")
 			}
 		}).
@@ -68,7 +68,7 @@ func (deviceDao) GetDeviceByIdentifier(ctx context.Context, identifier string) (
 	return d, true
 }
 
-func (userDao) GetUserDeviceByIdentifier(ctx context.Context, u *generate.User, identifier string) (*generate.Device, bool) {
+func (deviceDao) GetUserDeviceByIdentifier(ctx context.Context, u *generate.User, identifier string) (*generate.Device, bool) {
 	d, err := u.QueryDevices().Where(device.Identifier(identifier)).Only(ctx)
 	if err != nil {
 		if !generate.IsNotFound(err) {
@@ -77,6 +77,20 @@ func (userDao) GetUserDeviceByIdentifier(ctx context.Context, u *generate.User, 
 		return nil, false
 	}
 	return d, true
+}
+
+func (deviceDao) GetUserDeviceChannelTokens(ctx context.Context, u *generate.User, channel string) ([]string, bool) {
+	devices := make([]string, 0)
+	err := u.
+		QueryDevices().
+		Where(device.Channel(channel)).
+		Select(device.FieldChannelToken).
+		Scan(ctx, &devices)
+	if err != nil {
+		zap.S().Errorw("failed to get user device channel tokens", "err", err)
+		return nil, false
+	}
+	return devices, true
 }
 
 func (deviceDao) DeleteDeviceByIdentifier(ctx context.Context, identifier string) bool {

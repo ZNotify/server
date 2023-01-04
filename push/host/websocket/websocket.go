@@ -14,7 +14,7 @@ type Host struct {
 }
 
 func (h *Host) GetDeviceInitialMeta() string {
-	return strconv.FormatUint(uint64(dao.MessageDao.GetLatestMessage().ID), 10)
+	return strconv.FormatUint(uint64(dao.Message.GetLatestMessage().ID), 10)
 }
 
 func (h *Host) Start() error {

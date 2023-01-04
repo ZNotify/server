@@ -3,11 +3,11 @@ package webpush
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"time"
 
 	"github.com/SherClockHolmes/webpush-go"
-	"github.com/pkg/errors"
 
 	"notify-api/ent/dao"
 	"notify-api/push/item"
@@ -39,10 +39,10 @@ func (p *Provider) getOption() *webpush.Options {
 	}
 }
 
-func (p *Provider) Send(msg *item.PushMessage) error {
-	tokens, err := dao.DeviceDao.GetUserChannelTokens(msg.UserID, p.Name())
-	if err != nil {
-		return errors.WithStack(err)
+func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
+	tokens, ok := dao.Device.GetUserDeviceChannelTokens(ctx, msg.User, p.Name())
+	if !ok {
+		return errors.New("webpush get user device channel tokens failed")
 	}
 	if len(tokens) == 0 {
 		return nil

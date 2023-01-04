@@ -36,8 +36,6 @@ func Send(context *serveTypes.Ctx) {
 	long := context.PostForm("long")
 	priority := context.DefaultPostForm("priority", "normal")
 
-	context.ShouldBindWith()
-
 	if content == "" {
 		zap.S().Infof("content is empty")
 		context.JSONError(http.StatusBadRequest, errors.New("content can not be empty"))
@@ -76,7 +74,7 @@ func Send(context *serveTypes.Ctx) {
 	}
 
 	// Insert message record
-	msg, err := dao.MessageDao.Add(
+	msg, err := dao.Message.Add(
 		pushMsg.MessageID,
 		pushMsg.UserID,
 		pushMsg.Title,

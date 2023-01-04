@@ -78,7 +78,7 @@ func (c *wsClient) writeRoutine() {
 				return
 			}
 
-			err = dao.DeviceDao.UpdateDeviceMeta(c.deviceID, msg.MessageID)
+			err = dao.Device.UpdateDeviceMeta(c.deviceID, msg.MessageID)
 			if err != nil {
 				zap.S().Errorf("create or update token error: %v", err)
 				continue

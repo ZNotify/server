@@ -13,7 +13,7 @@ import (
 
 type userDao struct{}
 
-var UserDao = userDao{}
+var User = userDao{}
 
 func (userDao) GetDeviceUser(ctx context.Context, identifier string) (*generate.User, bool) {
 	d, err := db.Client.Device.

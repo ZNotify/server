@@ -3,11 +3,13 @@
 package push
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"sync"
 	"time"
 
+	"notify-api/ent/helper"
 	"notify-api/push/item"
 	"notify-api/utils/config"
 
@@ -17,8 +19,8 @@ import (
 	"notify-api/utils"
 )
 
-func Send(msg *item.PushMessage) error {
-	zap.S().Infof("Send message to %s", msg.UserID)
+func Send(ctx context.Context, msg *item.PushMessage) error {
+	zap.S().Infof("Send message to %s", helper.GetReadableName(msg.User))
 
 	var errs []string
 	var wg sync.WaitGroup
@@ -26,7 +28,7 @@ func Send(msg *item.PushMessage) error {
 	for _, v := range activeSenders {
 		go func(sender pushTypes.Sender) {
 			defer wg.Done()
-			pe := sender.Send(msg)
+			pe := sender.Send(ctx, msg)
 			if pe != nil {
 				errString := fmt.Sprintf("Send message to %s failed: %v", sender.Name(), pe)
 				errs = append(errs, errString)

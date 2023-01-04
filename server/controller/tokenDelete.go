@@ -22,7 +22,7 @@ import (
 func TokenDelete(context *types.Ctx) {
 	deviceId := context.Param("device_id")
 
-	err := dao.DeviceDao.SafeDeleteDevice(context.UserID, deviceId)
+	err := dao.Device.SafeDeleteDevice(context.UserID, deviceId)
 	if err != nil {
 		zap.S().Errorw("delete token error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

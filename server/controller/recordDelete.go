@@ -23,7 +23,7 @@ import (
 func RecordDelete(context *types.Ctx) {
 	id := context.Param("id")
 
-	err := dao.MessageDao.Delete(context.UserID, id)
+	err := dao.Message.Delete(context.UserID, id)
 	if err != nil {
 		zap.S().Errorw("delete message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

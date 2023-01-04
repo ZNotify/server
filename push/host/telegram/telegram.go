@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"time"
@@ -24,10 +25,10 @@ func (h *Host) Start() error {
 	return nil
 }
 
-func (h *Host) Send(msg *item.PushMessage) error {
-	tokens, err := dao.DeviceDao.GetUserChannelTokens(msg.UserID, h.Name())
-	if err != nil {
-		return errors.WithStack(err)
+func (h *Host) Send(ctx context.Context, msg *item.PushMessage) error {
+	tokens, ok := dao.Device.GetUserDeviceChannelTokens(ctx, msg.User, h.Name())
+	if !ok {
+		return errors.New("telegram get user device channel tokens failed")
 	}
 	if len(tokens) == 0 {
 		return nil
