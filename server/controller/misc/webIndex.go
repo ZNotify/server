@@ -1,4 +1,4 @@
-package controller
+package misc
 
 import (
 	"notify-api/server/types"

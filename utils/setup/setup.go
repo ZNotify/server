@@ -2,11 +2,14 @@ package setup
 
 import (
 	"net/http"
+	"net/http/pprof"
 	"time"
 
-	"notify-api/utils/user"
-
 	"notify-api/ent/db"
+	"notify-api/server/controller/misc"
+	"notify-api/server/controller/record"
+	"notify-api/server/controller/send"
+	"notify-api/server/controller/user"
 	"notify-api/utils/config"
 
 	"github.com/gin-contrib/cors"
@@ -30,7 +33,6 @@ func New() *gin.Engine {
 	checkConnection()
 
 	db.Init()
-	user.Init()
 	push.Init()
 
 	setupDoc()
@@ -72,31 +74,34 @@ func setupRouter(router *gin.Engine) {
 
 	router.Use(middleware.Duration)
 
-	router.GET("/check", types.WrapHandler(controller.Check))
-	router.GET("/alive", types.WrapHandler(controller.Alive))
+	router.GET("/check", types.WrapHandler(user.Check))
+	router.GET("/alive", types.WrapHandler(misc.Alive))
 
-	userGroup := router.Group("/:user_id")
+	userGroup := router.Group("/:user_secret")
 	userGroup.Use(middleware.UserAuth)
 	{
-		userGroup.GET("/record", types.WrapHandler(controller.Record))
-		userGroup.GET("/:id", types.WrapHandler(controller.RecordDetail))
-		userGroup.DELETE("/:id", types.WrapHandler(controller.RecordDelete))
+		userGroup.GET("/record", types.WrapHandler(record.Record))
+		userGroup.GET("/:id", types.WrapHandler(record.Detail))
+		userGroup.DELETE("/:id", types.WrapHandler(record.Delete))
 
-		userGroup.POST("/send", types.WrapHandler(controller.Send))
-		userGroup.PUT("/send", types.WrapHandler(controller.Send))
+		userGroup.POST("/send", types.WrapHandler(send.Send))
+		userGroup.PUT("/send", types.WrapHandler(send.Send))
 
-		userGroup.POST("", types.WrapHandler(controller.SendShort))
-		userGroup.PUT("", types.WrapHandler(controller.SendShort))
+		userGroup.POST("", types.WrapHandler(send.SendShort))
+		userGroup.PUT("", types.WrapHandler(send.SendShort))
 
-		userGroup.PUT("/token/:device_id", types.WrapHandler(controller.Token))
-		userGroup.DELETE("/token/:device_id", types.WrapHandler(controller.TokenDelete))
+		userGroup.PUT("/device/:device_id", types.WrapHandler(controller.Token))
+		userGroup.DELETE("/device/:device_id", types.WrapHandler(controller.TokenDelete))
 
 		push.RegisterRouter(userGroup)
 	}
 
-	router.GET("/docs", types.WrapHandler(controller.DocRedirect))
+	debugGroup := router.Group("/debug")
+	debugGroup.GET("/pprof/*pprof", gin.WrapH(http.HandlerFunc(pprof.Index)))
+
+	router.GET("/docs", types.WrapHandler(misc.DocRedirect))
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.StaticFS("/fs", web.StaticHttpFS)
-	router.GET("/", types.WrapHandler(controller.WebIndex))
+	router.GET("/", types.WrapHandler(misc.WebIndex))
 }

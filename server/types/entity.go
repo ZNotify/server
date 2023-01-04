@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"time"
 
-	"notify-api/db/model"
-
+	"notify-api/ent/generate"
 	"notify-api/push/item"
 )
 
 type Message struct {
 	ID        string        `json:"id"`
-	UserID    string        `json:"user_id"`
 	Title     string        `json:"title"`
 	Content   string        `json:"content"`
 	Long      string        `json:"long"`
@@ -32,8 +30,7 @@ func (m *Message) MarshalJSON() ([]byte, error) {
 
 func FromPushMessage(msg item.PushMessage) Message {
 	return Message{
-		ID:        msg.MessageID,
-		UserID:    msg.UserID,
+		ID:        msg.ID,
 		Title:     msg.Title,
 		Content:   msg.Content,
 		Long:      msg.Long,
@@ -42,10 +39,9 @@ func FromPushMessage(msg item.PushMessage) Message {
 	}
 }
 
-func FromModelMessage(msg model.Message) Message {
+func FromModelMessage(msg generate.Message) Message {
 	return Message{
-		ID:        msg.MessageID,
-		UserID:    msg.UserID,
+		ID:        msg.ID.String(),
 		Title:     msg.Title,
 		Content:   msg.Content,
 		Long:      msg.Long,

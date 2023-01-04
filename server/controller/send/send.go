@@ -1,4 +1,4 @@
-package controller
+package send
 
 import (
 	"net/http"

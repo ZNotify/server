@@ -3,31 +3,32 @@ package middleware
 import (
 	"net/http"
 
-	"notify-api/utils/user"
-
 	"github.com/gin-gonic/gin"
+
+	"notify-api/ent/dao"
 )
 
-const UserIdKey = "user_id"
+const UserSecretKey = "user_secret"
 const UserKey = "user"
 
 func UserAuth(c *gin.Context) {
-	userID, ok := c.Params.Get(UserIdKey)
+	userSecret, ok := c.Params.Get(UserSecretKey)
 	if !ok {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"code": http.StatusUnauthorized,
-			"body": "User ID not exist",
+			"body": "User secret not exist",
 		})
 		return
 	} else {
-		if user.Is(userID) {
-			c.Set(UserIdKey, userID)
+		u, ok := dao.User.GetUserBySecret(c, userSecret)
+		if ok {
+			c.Set(UserKey, u)
 			c.Next()
 			return
 		} else {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"code": http.StatusUnauthorized,
-				"body": "User " + userID + " is not valid",
+				"body": "User secret " + userSecret + " is not valid",
 			})
 			return
 		}
