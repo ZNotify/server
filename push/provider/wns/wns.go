@@ -1,7 +1,7 @@
 package wns
 
 import (
-	pushTypes "notify-api/push/entity"
+	pushTypes "notify-api/push/item"
 )
 
 type Provider struct {

@@ -4,8 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"notify-api/utils/config"
 	"notify-api/utils/user"
+
+	"notify-api/ent/db"
+	"notify-api/utils/config"
 
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"
@@ -14,7 +16,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 
-	"notify-api/db"
 	"notify-api/docs"
 	"notify-api/push"
 	"notify-api/server/controller"

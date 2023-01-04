@@ -9,6 +9,7 @@ import (
 )
 
 const UserIdKey = "user_id"
+const UserKey = "user"
 
 func UserAuth(c *gin.Context) {
 	userID, ok := c.Params.Get(UserIdKey)

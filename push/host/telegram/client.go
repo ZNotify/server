@@ -1,15 +1,15 @@
 package telegram
 
 import (
-	"errors"
+	"context"
 	"fmt"
 	"strconv"
 
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
 
-	"notify-api/db/util"
-	"notify-api/utils/user"
+	"notify-api/ent/dao"
+	"notify-api/ent/helper"
 )
 
 func (h *Host) setCommand() {
@@ -67,35 +67,30 @@ func (h *Host) commandRoutine() {
 }
 
 func (h *Host) handleStartCommand(msg *tgBot.Message) {
-	_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, startMessage))
-	if err != nil {
-		zap.S().Errorf("failed to send start message: %v", err)
-	}
+	h.send(tgBot.NewMessage(msg.Chat.ID, startMessage))
 }
 
 func (h *Host) handleHelpCommand(msg *tgBot.Message) {
-	_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, helpMessage))
-	if err != nil {
-		zap.S().Errorf("failed to send help message: %v", err)
-	}
+	h.send(tgBot.NewMessage(msg.Chat.ID, helpMessage))
 }
 
 func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
-	userID := msg.CommandArguments()
-	if userID == "" {
-		sendMsg := tgBot.NewMessage(msg.Chat.ID, "Please provide user id.\nexample: `/register test`")
+	ctx := context.TODO()
+
+	userSecret := msg.CommandArguments()
+	if userSecret == "" {
+		sendMsg := tgBot.NewMessage(msg.Chat.ID, "Please provide user secret.\nexample: `/register secret`")
 		sendMsg.ReplyToMessageID = msg.MessageID
 		sendMsg.ParseMode = tgBot.ModeMarkdown
 
-		_, err := h.Bot.Send(sendMsg)
-		if err != nil {
-			zap.S().Errorf("failed to send message: %v", err)
-		}
+		h.send(sendMsg)
 		return
 	}
 
-	if !user.Is(userID) {
-		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "Invalid user id "+userID))
+	u, exist := dao.UserDao.GetUserBySecret(ctx, userSecret)
+
+	if !exist {
+		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "Invalid user secret."))
 		if err != nil {
 			zap.S().Errorf("failed to send message: %v", err)
 		}
@@ -103,86 +98,81 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 	}
 
 	chatID := strconv.FormatInt(msg.Chat.ID, 10)
-	deviceID := int64toUUID(msg.From.ID)
+	deviceIdentifier := strconv.FormatInt(msg.From.ID, 10)
 
 	// check if user already registered
-	pt, err := util.DeviceUtil.GetDevice(deviceID)
-	if err != nil {
-		if !errors.Is(err, util.ErrNotFound) {
-			zap.S().Errorf("failed to get device token: %v", err)
-			return
-		}
-	} else {
+	du, exist := dao.UserDao.GetDeviceUser(ctx, deviceIdentifier)
+	if exist {
 		var errText string
-		if pt.UserID == userID {
-			errText = fmt.Sprintf("You already registered with user id `%s`.", userID)
+		if du.ID == u.ID {
+			errText = fmt.Sprintf("You already registered with user id `%s`.", userSecret)
 		} else {
-			errText = fmt.Sprintf("You are already registered with user id `%s`.\nYou should first call `/unregister`", pt.UserID)
+			errText = fmt.Sprintf("You are already registered with user `%s`.\nYou should first call `/unregister`", helper.GetReadableName(du))
 		}
 		errMsg := tgBot.NewMessage(msg.Chat.ID, errText)
 		errMsg.ParseMode = tgBot.ModeMarkdown
 		_, err := h.Bot.Send(errMsg)
 		if err != nil {
 			zap.S().Errorf("failed to send message: %v", err)
-			return
 		}
 		return
 	}
-
-	err = util.DeviceUtil.CreateOrUpdate(userID, deviceID, h.Name(), chatID, "Telegram")
-	if err != nil {
-		zap.S().Errorf("failed to create or update token: %v", err)
-		errText := fmt.Sprintf("Internal Error %+v", err)
-		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, errText))
+	_, ok := dao.DeviceDao.EnsureDevice(ctx,
+		deviceIdentifier,
+		h.Name(),
+		"",
+		chatID,
+		"Telegram",
+		msg.From.String(),
+		u)
+	if !ok {
+		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "Internal Error"))
 		if err != nil {
 			zap.S().Errorf("failed to send message: %v", err)
 		}
 		return
 	}
-	successText := fmt.Sprintf("Successfully registered user %s with %s", userID, msg.From.UserName)
+	successText := fmt.Sprintf("Successfully registered user %s with %s", userSecret, msg.From.UserName)
 
-	_, err = h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, successText))
-	if err != nil {
-		zap.S().Errorf("failed to send message: %v", err)
-	}
+	h.send(tgBot.NewMessage(msg.Chat.ID, successText))
 }
 
 func (h *Host) handleUnregisterCommand(msg *tgBot.Message) {
-	deviceID := int64toUUID(msg.From.ID)
+	ctx := context.TODO()
+	deviceIdentifier := strconv.FormatInt(msg.From.ID, 10)
 
 	// check if user already registered
-	_, err := util.DeviceUtil.GetDevice(deviceID)
-	if err != nil {
-		if errors.Is(err, util.ErrNotFound) {
-			_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "You are not registered yet."))
-			if err != nil {
-				zap.S().Errorf("failed to send message: %v", err)
-			}
-			return
-		} else {
-			zap.S().Errorf("failed to get device token: %v", err)
-			return
+	_, exist := dao.UserDao.GetDeviceUser(ctx, deviceIdentifier)
+
+	if !exist {
+		_, err := h.Bot.Send(tgBot.NewMessage(msg.Chat.ID, "You are not registered yet."))
+		if err != nil {
+			zap.S().Errorf("failed to send message: %v", err)
 		}
+		return
 	}
-	err = util.DeviceUtil.DeleteDevice(deviceID)
-	if err != nil {
-		zap.S().Errorf("failed to delete device token: %v", err)
+
+	ok := dao.DeviceDao.DeleteDeviceByIdentifier(ctx, deviceIdentifier)
+	if !ok {
+		h.send(tgBot.NewMessage(msg.Chat.ID, "Internal Error"))
 		return
 	}
 	msgText := fmt.Sprintf("Successfully unregistered `%s`", msg.From.UserName)
+
 	tipMsg := tgBot.NewMessage(msg.Chat.ID, msgText)
 	tipMsg.ReplyToMessageID = msg.MessageID
 	tipMsg.ParseMode = tgBot.ModeMarkdown
-	_, err = h.Bot.Send(tipMsg)
-	if err != nil {
-		zap.S().Errorf("failed to send message: %v", err)
-	}
+	h.send(tipMsg)
 }
 
 func (h *Host) handleUnknownCommand(msg *tgBot.Message) {
 	sendMsg := tgBot.NewMessage(msg.Chat.ID, "Unknown command "+msg.Command())
 	sendMsg.ReplyToMessageID = msg.MessageID
-	_, err := h.Bot.Send(sendMsg)
+	h.send(sendMsg)
+}
+
+func (h *Host) send(msg tgBot.MessageConfig) {
+	_, err := h.Bot.Send(msg)
 	if err != nil {
 		zap.S().Errorf("failed to send message: %v", err)
 	}

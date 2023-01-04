@@ -1,7 +1,5 @@
 FROM golang:1.19-alpine as builder
 
-ENV CGO_ENABLED=0
-
 WORKDIR /app
 
 COPY . .

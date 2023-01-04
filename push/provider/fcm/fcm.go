@@ -9,8 +9,8 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
 
-	"notify-api/db/util"
-	"notify-api/push/entity"
+	"notify-api/ent/dao"
+	"notify-api/push/item"
 	"notify-api/push/types"
 )
 
@@ -35,9 +35,9 @@ func (p *Provider) Init(cfg types.Config) error {
 	return nil
 }
 
-func (p *Provider) Send(msg *entity.PushMessage) error {
+func (p *Provider) Send(msg *item.PushMessage) error {
 	var tokens []string
-	tokens, err := util.DeviceUtil.GetUserChannelTokens(msg.UserID, p.Name())
+	tokens, err := dao.DeviceDao.GetUserChannelTokens(msg.UserID, p.Name())
 
 	if err != nil {
 		return errors.WithStack(err)
@@ -48,7 +48,7 @@ func (p *Provider) Send(msg *entity.PushMessage) error {
 	}
 
 	var fcmPriority string
-	if msg.Priority == entity.PriorityHigh {
+	if msg.Priority == item.PriorityHigh {
 		fcmPriority = "high"
 	} else {
 		fcmPriority = "normal"

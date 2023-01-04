@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 
-	"notify-api/db/util"
-	pushTypes "notify-api/push/entity"
+	"notify-api/ent/dao"
+	pushTypes "notify-api/push/item"
 	serveTypes "notify-api/server/types"
 	"notify-api/utils/ds"
 )
@@ -78,7 +78,7 @@ func (c *wsClient) writeRoutine() {
 				return
 			}
 
-			err = util.DeviceUtil.UpdateDeviceMeta(c.deviceID, time.Now().Format(time.RFC3339Nano))
+			err = dao.DeviceDao.UpdateDeviceMeta(c.deviceID, msg.MessageID)
 			if err != nil {
 				zap.S().Errorf("create or update token error: %v", err)
 				continue

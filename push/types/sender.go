@@ -1,14 +1,14 @@
 package types
 
 import (
-	"notify-api/push/entity"
+	"notify-api/push/item"
 	"notify-api/server/types"
 )
 
 type Config = map[string]string
 
 type Sender interface {
-	Send(msg *entity.PushMessage) error
+	Send(msg *item.PushMessage) error
 	Name() string
 }
 
