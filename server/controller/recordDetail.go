@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/util"
+	dao2 "notify-api/ent/dao"
 	"notify-api/server/types"
 )
 
@@ -31,9 +31,9 @@ func RecordDetail(context *types.Ctx) {
 		return
 	}
 
-	message, err := util.MessageUtil.Get(messageID)
+	message, err := dao2.MessageDao.Get(messageID)
 	if err != nil {
-		if errors.Is(err, util.ErrNotFound) {
+		if errors.Is(err, dao2.ErrNotFound) {
 			zap.S().Infof("message %s not found", messageID)
 			context.JSONError(http.StatusNotFound, errors.New("Message not found."))
 			return

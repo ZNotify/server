@@ -70,11 +70,3 @@ POST https://host/{user_id}/send
 ```shell
 go build -v
 ```
-
-## Dev
-
-### import analysis
-
-```bash
-godepgraph -maxlevel 16 -s -novendor -p github.com,gorm.io,modernc.com,google.golang.org,golang.org,gopkg.in,go.uber.org,go.opencensus.io,firebase.google.com,cloud.google.com notify-api
-```

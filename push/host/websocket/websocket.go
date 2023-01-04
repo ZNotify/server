@@ -1,10 +1,12 @@
 package websocket
 
 import (
-	"time"
+	"strconv"
 
-	pushTypes "notify-api/push/entity"
 	"notify-api/utils/user"
+
+	"notify-api/ent/dao"
+	pushTypes "notify-api/push/item"
 )
 
 type Host struct {
@@ -12,7 +14,7 @@ type Host struct {
 }
 
 func (h *Host) GetDeviceInitialMeta() string {
-	return time.Now().Format(time.RFC3339Nano)
+	return strconv.FormatUint(uint64(dao.MessageDao.GetLatestMessage().ID), 10)
 }
 
 func (h *Host) Start() error {

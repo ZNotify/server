@@ -8,8 +8,8 @@ import (
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
 
-	"notify-api/db/util"
-	"notify-api/push/entity"
+	"notify-api/ent/dao"
+	"notify-api/push/item"
 	pushTypes "notify-api/push/types"
 	"notify-api/utils/config"
 )
@@ -24,8 +24,8 @@ func (h *Host) Start() error {
 	return nil
 }
 
-func (h *Host) Send(msg *entity.PushMessage) error {
-	tokens, err := util.DeviceUtil.GetUserChannelTokens(msg.UserID, h.Name())
+func (h *Host) Send(msg *item.PushMessage) error {
+	tokens, err := dao.DeviceDao.GetUserChannelTokens(msg.UserID, h.Name())
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -51,7 +51,7 @@ func (h *Host) Send(msg *entity.PushMessage) error {
 		tgMsg := tgBot.NewMessage(id, msgText)
 		tgMsg.ParseMode = tgBot.ModeMarkdown
 
-		if msg.Priority == entity.PriorityLow {
+		if msg.Priority == item.PriorityLow {
 			tgMsg.DisableNotification = true
 		}
 

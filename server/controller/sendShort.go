@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"notify-api/db/util"
+	"notify-api/ent/dao"
 	"notify-api/push"
-	"notify-api/push/entity"
+	"notify-api/push/item"
 	"notify-api/server/types"
 
 	"github.com/google/uuid"
@@ -42,13 +42,13 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	pushMsg := &entity.PushMessage{
+	pushMsg := &item.PushMessage{
 		MessageID: uuid.New().String(),
 		UserID:    context.UserID,
 		Title:     "Notification",
 		Content:   string(data),
 		Long:      "",
-		Priority:  entity.PriorityNormal,
+		Priority:  item.PriorityNormal,
 		CreatedAt: time.Now(),
 	}
 
@@ -59,7 +59,7 @@ func SendShort(context *types.Ctx) {
 		return
 	}
 
-	msg, err := util.MessageUtil.Add(
+	msg, err := dao.MessageDao.Add(
 		pushMsg.MessageID,
 		pushMsg.UserID,
 		pushMsg.Title,

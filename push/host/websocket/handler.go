@@ -2,14 +2,14 @@ package websocket
 
 import (
 	"net/http"
+	"strconv"
 	"sync"
-	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/util"
-	"notify-api/push/entity"
+	dao2 "notify-api/ent/dao"
+	"notify-api/push/item"
 	"notify-api/server/types"
 	"notify-api/utils/ds"
 )
@@ -32,9 +32,9 @@ func (h *Host) Handler(context *types.Ctx) {
 		return
 	}
 
-	device, err := util.DeviceUtil.GetDevice(deviceId)
+	device, err := dao2.DeviceDao.GetDevice(deviceId)
 	if err != nil {
-		if err == util.ErrNotFound {
+		if err == dao2.ErrNotFound {
 			zap.S().Infof("user %s device %s not found", userID, deviceId)
 			context.JSONError(http.StatusUnauthorized, errors.New("token not found"))
 			return
@@ -50,15 +50,15 @@ func (h *Host) Handler(context *types.Ctx) {
 		return
 	}
 
-	sinceTime, err := time.Parse(time.RFC3339Nano, device.Meta)
+	// string to uint device.Meta
+	msgID, err := strconv.ParseUint(device.Meta, 10, 64)
 	if err != nil {
-		zap.S().Infof("parse time error: %v", err)
-		context.JSONError(http.StatusBadRequest, errors.WithStack(err))
+		zap.S().Errorf("device %s meta error: %v", deviceId, err)
+		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
-	// 2022-09-18T11:14:00+08:00 as zero point
 
-	pendingMessages, err := util.MessageUtil.GetUserMessageAfter(userID, sinceTime)
+	pendingMessages, err := dao2.MessageDao.GetUserMessageAfter(userID, msgID)
 	if err != nil {
 		zap.S().Errorf("get user %s message error: %v", userID, err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
@@ -73,7 +73,7 @@ func (h *Host) Handler(context *types.Ctx) {
 	client := &wsClient{
 		manager:  h.manager,
 		conn:     conn,
-		send:     ds.NewUnboundedChan[*entity.PushMessage](2),
+		send:     ds.NewUnboundedChan[*item.PushMessage](2),
 		userID:   userID,
 		deviceID: deviceId,
 		once:     sync.Once{},
@@ -84,14 +84,14 @@ func (h *Host) Handler(context *types.Ctx) {
 	go client.readRoutine()
 
 	for _, msg := range pendingMessages {
-		msg := entity.PushMessage{
+		msg := item.PushMessage{
 			MessageID: msg.MessageID,
 			UserID:    msg.UserID,
 			Title:     msg.Title,
 			Content:   msg.Content,
 			Long:      msg.Long,
 			CreatedAt: msg.CreatedAt,
-			Priority:  entity.PriorityHigh,
+			Priority:  item.PriorityHigh,
 		}
 		client.send.In <- &msg
 	}

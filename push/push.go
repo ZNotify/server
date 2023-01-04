@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"notify-api/push/entity"
+	"notify-api/push/item"
 	"notify-api/utils/config"
 
 	"go.uber.org/zap"
@@ -17,7 +17,7 @@ import (
 	"notify-api/utils"
 )
 
-func Send(msg *entity.PushMessage) error {
+func Send(msg *item.PushMessage) error {
 	zap.S().Infof("Send message to %s", msg.UserID)
 
 	var errs []string

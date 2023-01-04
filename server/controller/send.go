@@ -8,9 +8,9 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/db/util"
+	"notify-api/ent/dao"
 	"notify-api/push"
-	pushEntity "notify-api/push/entity"
+	pushEntity "notify-api/push/item"
 	serveTypes "notify-api/server/types"
 )
 
@@ -35,6 +35,8 @@ func Send(context *serveTypes.Ctx) {
 	content := context.PostForm("content")
 	long := context.PostForm("long")
 	priority := context.DefaultPostForm("priority", "normal")
+
+	context.ShouldBindWith()
 
 	if content == "" {
 		zap.S().Infof("content is empty")
@@ -74,7 +76,7 @@ func Send(context *serveTypes.Ctx) {
 	}
 
 	// Insert message record
-	msg, err := util.MessageUtil.Add(
+	msg, err := dao.MessageDao.Add(
 		pushMsg.MessageID,
 		pushMsg.UserID,
 		pushMsg.Title,

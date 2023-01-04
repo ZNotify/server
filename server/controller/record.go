@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"notify-api/db/model"
-	"notify-api/db/util"
+
+	"notify-api/ent/dao"
 	"notify-api/server/types"
 )
 
@@ -19,7 +20,7 @@ import (
 //	@Router			/{user_id}/record [get]
 func Record(context *types.Ctx) {
 	var messages []model.Message
-	messages, err := util.MessageUtil.GetMessageInMonth(context.UserID)
+	messages, err := dao.MessageDao.GetMessageInMonth(context.UserID)
 	if err != nil {
 		context.String(http.StatusInternalServerError, err.Error())
 		return

@@ -5,7 +5,7 @@ package push
 import (
 	"go.uber.org/zap"
 
-	pushTypes "notify-api/push/entity"
+	pushTypes "notify-api/push/item"
 )
 
 func Send(msg *pushTypes.PushMessage) error {

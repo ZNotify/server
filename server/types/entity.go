@@ -5,17 +5,18 @@ import (
 	"time"
 
 	"notify-api/db/model"
-	"notify-api/push/entity"
+
+	"notify-api/push/item"
 )
 
 type Message struct {
-	ID        string          `json:"id"`
-	UserID    string          `json:"user_id"`
-	Title     string          `json:"title"`
-	Content   string          `json:"content"`
-	Long      string          `json:"long"`
-	Priority  entity.Priority `json:"priority"`
-	CreatedAt time.Time       `json:"created_at"`
+	ID        string        `json:"id"`
+	UserID    string        `json:"user_id"`
+	Title     string        `json:"title"`
+	Content   string        `json:"content"`
+	Long      string        `json:"long"`
+	Priority  item.Priority `json:"priority"`
+	CreatedAt time.Time     `json:"created_at"`
 }
 
 func (m *Message) MarshalJSON() ([]byte, error) {
@@ -29,7 +30,7 @@ func (m *Message) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func FromPushMessage(msg entity.PushMessage) Message {
+func FromPushMessage(msg item.PushMessage) Message {
 	return Message{
 		ID:        msg.MessageID,
 		UserID:    msg.UserID,
