@@ -1,5 +1,5 @@
 definitions:
-  entity.Priority:
+  item.Priority:
     enum:
     - low
     - normal
@@ -32,10 +32,8 @@ definitions:
       long:
         type: string
       priority:
-        $ref: '#/definitions/entity.Priority'
+        $ref: '#/definitions/item.Priority'
       title:
-        type: string
-      user_id:
         type: string
     type: object
   types.NotFoundResponse:
@@ -171,12 +169,12 @@ paths:
     delete:
       description: Delete message record with id
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
-      - description: id
+      - description: ID of message
         in: path
         name: id
         required: true
@@ -196,12 +194,12 @@ paths:
     get:
       description: Get message record detail of a message
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
-      - description: id
+      - description: ID of message
         in: path
         name: id
         required: true
@@ -228,13 +226,21 @@ paths:
       summary: Get message record detail
   /{user_id}/record:
     get:
-      description: Get recent 30days message record of user
+      description: Get records
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
+      - description: The number of records to skip
+        in: query
+        name: skip
+        type: integer
+      - description: The number of records to return
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -342,6 +348,55 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
+  /{user_id}/token/{client_id}:
+    put:
+      description: Create or update token of device
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: client_id should be a valid UUID
+        in: path
+        name: client_id
+        required: true
+        type: string
+      - description: channel can be used. Sometimes less than document.
+        enum:
+        - TelegramHost
+        - WebSocketHost
+        - FCM
+        - WebPush
+        - WNS
+        in: formData
+        name: channel
+        required: true
+        type: string
+      - description: token
+        in: formData
+        name: token
+        type: string
+      - description: Additional info about client
+        in: formData
+        name: info
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: Create or update token
   /{user_id}/token/{device_id}:
     delete:
       description: Delete token of device
@@ -364,54 +419,6 @@ paths:
           schema:
             $ref: '#/definitions/types.Response-bool'
       summary: Delete token
-    put:
-      description: Create or update token of device
-      parameters:
-      - description: user_id
-        in: path
-        name: user_id
-        required: true
-        type: string
-      - description: device_id should be a valid UUID
-        in: path
-        name: device_id
-        required: true
-        type: string
-      - description: channel can be used. Sometimes less than document.
-        enum:
-        - TelegramHost
-        - WebSocketHost
-        - FCM
-        - WebPush
-        - WNS
-        in: formData
-        name: channel
-        required: true
-        type: string
-      - description: token
-        in: formData
-        name: token
-        type: string
-      - description: Additional info about device
-        in: formData
-        name: info
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-bool'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/types.BadRequestResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
-      summary: Create or update token
   /alive:
     get:
       description: If the server is alive

@@ -1,8 +1,9 @@
-package controller
+package user
 
 import (
-	"notify-api/server/types"
 	"notify-api/utils/user"
+
+	"notify-api/server/types"
 )
 
 // Check godoc

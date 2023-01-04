@@ -6,12 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"notify-api/ent/generate"
 	"notify-api/server/middleware"
 )
 
 type Ctx struct {
 	*gin.Context
-	UserID   string
+	User     *generate.User
 	IsAuthed bool
 }
 
@@ -46,16 +47,17 @@ func (c *Ctx) JSONError(code int, err error) {
 
 func WrapHandler(handler func(*Ctx)) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		userID := ""
-		value, isAuthed := context.Get(middleware.UserIdKey)
+		var user *generate.User
+		value, isAuthed := context.Get(middleware.UserKey)
 		if isAuthed {
-			userID, _ = value.(string)
+			user = value.(*generate.User)
 		}
 
-		ctx := new(Ctx)
-		ctx.Context = context
-		ctx.UserID = userID
-		ctx.IsAuthed = isAuthed
+		ctx := &Ctx{
+			Context:  context,
+			User:     user,
+			IsAuthed: isAuthed,
+		}
 
 		handler(ctx)
 	}

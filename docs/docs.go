@@ -198,7 +198,7 @@ const docTemplate = `{
         },
         "/{user_id}/record": {
             "get": {
-                "description": "Get recent 30days message record of user",
+                "description": "Get records",
                 "produces": [
                     "application/json"
                 ],
@@ -206,10 +206,22 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The number of records to skip",
+                        "name": "skip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The number of records to return",
+                        "name": "limit",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -366,7 +378,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_id}/token/{device_id}": {
+        "/{user_id}/token/{client_id}": {
             "put": {
                 "description": "Create or update token of device",
                 "produces": [
@@ -383,8 +395,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "device_id should be a valid UUID",
-                        "name": "device_id",
+                        "description": "client_id should be a valid UUID",
+                        "name": "client_id",
                         "in": "path",
                         "required": true
                     },
@@ -410,7 +422,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Additional info about device",
+                        "description": "Additional info about client",
                         "name": "info",
                         "in": "formData"
                     }
@@ -435,7 +447,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/{user_id}/token/{device_id}": {
             "delete": {
                 "description": "Delete token of device",
                 "produces": [
@@ -478,14 +492,14 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "id",
+                        "description": "ID of message",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -527,14 +541,14 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "id",
+                        "description": "ID of message",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -558,7 +572,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entity.Priority": {
+        "item.Priority": {
             "type": "string",
             "enum": [
                 "low",
@@ -604,12 +618,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "priority": {
-                    "$ref": "#/definitions/entity.Priority"
+                    "$ref": "#/definitions/item.Priority"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "user_id": {
                     "type": "string"
                 }
             }
