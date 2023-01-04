@@ -48,7 +48,7 @@ func Token(context *types.Ctx) {
 		info = context.Request.UserAgent()
 	}
 
-	err := dao.DeviceDao.CreateOrUpdate(context.UserID, deviceID, channel, token, info)
+	err := dao.Device.CreateOrUpdate(context.UserID, deviceID, channel, token, info)
 	if err != nil {
 		zap.S().Errorw("create or update token error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
@@ -57,7 +57,7 @@ func Token(context *types.Ctx) {
 
 	tokenMeta, ok := push.TryGetInitialDeviceMeta(channel)
 	if ok {
-		err = dao.DeviceDao.UpdateDeviceMeta(deviceID, tokenMeta)
+		err = dao.Device.UpdateDeviceMeta(deviceID, tokenMeta)
 		if err != nil {
 			zap.S().Errorw("update token meta error", "error", err)
 			context.JSONError(http.StatusInternalServerError, errors.WithStack(err))

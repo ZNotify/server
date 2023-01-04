@@ -35,12 +35,11 @@ func (p *Provider) Init(cfg types.Config) error {
 	return nil
 }
 
-func (p *Provider) Send(msg *item.PushMessage) error {
-	var tokens []string
-	tokens, err := dao.DeviceDao.GetUserChannelTokens(msg.UserID, p.Name())
+func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
+	tokens, ok := dao.Device.GetUserDeviceChannelTokens(ctx, msg.User, p.Name())
 
-	if err != nil {
-		return errors.WithStack(err)
+	if !ok {
+		return errors.New("fcm get user device channel tokens failed")
 	}
 
 	if len(tokens) == 0 {
@@ -61,9 +60,8 @@ func (p *Provider) Send(msg *item.PushMessage) error {
 			Body:  msg.Content,
 		},
 		Data: map[string]string{
-			"user_id":    msg.UserID,
 			"long":       msg.Long,
-			"msg_id":     msg.MessageID,
+			"msg_id":     msg.ID,
 			"title":      msg.Title,
 			"content":    msg.Content,
 			"created_at": msg.CreatedAt.Format(time.RFC3339),
@@ -76,11 +74,8 @@ func (p *Provider) Send(msg *item.PushMessage) error {
 		},
 		Tokens: tokens,
 	}
-	_, err = p.Client.SendMulticast(context.Background(), &fcmMsg)
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := p.Client.SendMulticast(ctx, &fcmMsg)
+	return err
 }
 
 const Credential = "Credential"

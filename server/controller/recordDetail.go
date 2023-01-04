@@ -31,7 +31,7 @@ func RecordDetail(context *types.Ctx) {
 		return
 	}
 
-	message, err := dao2.MessageDao.Get(messageID)
+	message, err := dao2.Message.Get(messageID)
 	if err != nil {
 		if errors.Is(err, dao2.ErrNotFound) {
 			zap.S().Infof("message %s not found", messageID)
