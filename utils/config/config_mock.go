@@ -17,11 +17,10 @@ func Load(path string) {
 		},
 		Database: DatabaseConfiguration{
 			Type: Sqlite,
-			DSN:  "data/notify.db",
+			DSN:  "file:memory:main?mode=memory&cache=shared&_fk=1",
 		},
 		Senders: make(map[string]SenderConfiguration),
 		Users:   make(UserConfiguration, 0),
 	}
-	Config.Users = append(Config.Users, "test")
 	gin.SetMode(gin.TestMode)
 }

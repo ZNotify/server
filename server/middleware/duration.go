@@ -13,7 +13,7 @@ type DurationWriter struct {
 }
 
 func (w DurationWriter) WriteHeader(code int) {
-	w.Header().Set("X-Response-Time", strconv.FormatInt(time.Since(w.startTime).Microseconds(), 10))
+	w.Header().Set("X-Handle-Time", strconv.FormatInt(time.Since(w.startTime).Microseconds(), 10))
 	w.ResponseWriter.WriteHeader(code)
 }
 

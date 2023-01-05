@@ -5,19 +5,9 @@
   "default": {},
   "title": "ZNotify config schema",
   "required": [
-    "senders",
-    "users"
+    "senders"
   ],
   "properties": {
-    "users": {
-      "type": "array",
-      "title": "Users",
-      "description": "List of users",
-      "minItems": 1,
-      "items": {
-        "type": "string"
-      }
-    },
     "server": {
       "type": "object",
       "default": {},
@@ -97,7 +87,7 @@
           "default": {},
           "title": "The Firebase Cloud Messaging Sender",
           "required": [
-            "FCMCredential"
+            "Credential"
           ],
           "properties": {
             "Credential": {
