@@ -209,7 +209,9 @@
                         "in": "query"
                     },
                     {
+                        "maximum": 100,
                         "type": "integer",
+                        "default": 20,
                         "description": "The number of records to return",
                         "name": "limit",
                         "in": "query"
@@ -241,28 +243,28 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "default": "Notification",
-                        "description": "title",
+                        "description": "Message Title",
                         "name": "title",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "description": "content",
+                        "description": "Message Content",
                         "name": "content",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "long",
+                        "description": "Long Message Content (optional)",
                         "name": "long",
                         "in": "formData"
                     },
@@ -273,8 +275,8 @@
                             "high"
                         ],
                         "type": "string",
-                        "default": "\"normal\"",
-                        "description": "priority",
+                        "default": "Normal",
+                        "description": "The priority of message",
                         "name": "priority",
                         "in": "formData"
                     }
@@ -309,28 +311,28 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "default": "Notification",
-                        "description": "title",
+                        "description": "Message Title",
                         "name": "title",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "description": "content",
+                        "description": "Message Content",
                         "name": "content",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "long",
+                        "description": "Long Message Content (optional)",
                         "name": "long",
                         "in": "formData"
                     },
@@ -341,8 +343,8 @@
                             "high"
                         ],
                         "type": "string",
-                        "default": "\"normal\"",
-                        "description": "priority",
+                        "default": "Normal",
+                        "description": "The priority of message",
                         "name": "priority",
                         "in": "formData"
                     }

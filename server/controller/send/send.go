@@ -10,7 +10,7 @@ import (
 
 	"notify-api/ent/dao"
 	"notify-api/push"
-	pushEntity "notify-api/push/item"
+	"notify-api/push/item"
 	serveTypes "notify-api/server/types"
 )
 
@@ -18,17 +18,17 @@ import (
 //
 //	@Summary		Send notification
 //	@Description	Send notification to user_id
-//	@Param			user_id		path		string				true	"user_id"
-//	@Param			title		formData	string				false	"title"	default(Notification)
-//	@Param			content		formData	string				true	"content"
-//	@Param			long		formData	string				false	"long"
-//	@Param			priority	formData	pushEntity.Priority	false	"priority"	default("normal")
+//	@Param			user_secret	path		string			true	"Secret of user"
+//	@Param			title		formData	string			false	"Message Title"	default(Notification)
+//	@Param			content		formData	string			true	"Message Content"
+//	@Param			long		formData	string			false	"Long Message Content (optional)"
+//	@Param			priority	formData	item.Priority	false	"The priority of message"	default(Normal)
 //	@Produce		json
 //	@Success		200	{object}	serveTypes.Response[serveTypes.Message]
 //	@Failure		400	{object}	serveTypes.BadRequestResponse
 //	@Failure		401	{object}	serveTypes.UnauthorizedResponse
-//	@Router			/{user_id}/send  [post]
-//	@Router			/{user_id}/send  [put]
+//	@Router			/{user_secret}/send  [post]
+//	@Router			/{user_secret}/send  [put]
 func Send(context *serveTypes.Ctx) {
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")
@@ -42,23 +42,23 @@ func Send(context *serveTypes.Ctx) {
 		return
 	}
 
-	var priorityConst pushEntity.Priority
+	var priorityConst item.Priority
 	switch priority {
 	case "low":
-		priorityConst = pushEntity.PriorityLow
+		priorityConst = item.PriorityLow
 	case "normal":
-		priorityConst = pushEntity.PriorityNormal
+		priorityConst = item.PriorityNormal
 	case "high":
-		priorityConst = pushEntity.PriorityHigh
+		priorityConst = item.PriorityHigh
 	default:
 		zap.S().Infof("priority is invalid")
 		context.JSONError(http.StatusBadRequest, errors.New("priority is invalid"))
 		return
 	}
 
-	pushMsg := &pushEntity.PushMessage{
-		MessageID: uuid.New().String(),
-		UserID:    context.UserID,
+	pushMsg := &item.PushMessage{
+		ID:        uuid.New(),
+		User:      context.User,
 		Title:     title,
 		Content:   content,
 		Long:      long,
@@ -66,7 +66,7 @@ func Send(context *serveTypes.Ctx) {
 		CreatedAt: time.Now(),
 	}
 
-	err := push.Send(pushMsg)
+	err := push.Send(context, pushMsg)
 	if err != nil {
 		zap.S().Errorw("send message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
@@ -74,21 +74,21 @@ func Send(context *serveTypes.Ctx) {
 	}
 
 	// Insert message record
-	msg, err := dao.Message.Add(
-		pushMsg.MessageID,
-		pushMsg.UserID,
+	msg, ok := dao.Message.CreateMessage(
+		context,
+		pushMsg.User,
+		pushMsg.ID,
 		pushMsg.Title,
 		pushMsg.Content,
 		pushMsg.Long,
 		pushMsg.Priority,
-	)
+		pushMsg.CreatedAt)
 
-	if err != nil {
-		zap.S().Errorw("save message error", "error", err)
-		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
+	if !ok {
+		context.JSONError(http.StatusInternalServerError, errors.New("can not create message"))
 		return
 	}
 
-	context.JSONResult(serveTypes.FromModelMessage(msg))
+	context.JSONResult(serveTypes.FromModelMessage(*msg))
 	return
 }

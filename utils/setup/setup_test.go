@@ -13,6 +13,6 @@ func Test_checkInternetConnection(t *testing.T) {
 				t.Errorf("You should keep global network access.")
 			}
 		}()
-		checkConnection()
+		requireNetwork()
 	})
 }

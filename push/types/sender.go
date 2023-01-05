@@ -36,8 +36,3 @@ type SenderWithHandler interface {
 	HandlerPath() string
 	HandlerMethod() string
 }
-
-type SenderWithDeviceInitialMeta interface {
-	Sender
-	GetDeviceInitialMeta() string
-}

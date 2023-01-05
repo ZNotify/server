@@ -3,11 +3,13 @@ package item
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	"notify-api/ent/generate"
 )
 
 type PushMessage struct {
-	ID        string
+	ID        uuid.UUID
 	User      *generate.User
 	Title     string
 	Content   string

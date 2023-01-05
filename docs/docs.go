@@ -218,7 +218,9 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "maximum": 100,
                         "type": "integer",
+                        "default": 20,
                         "description": "The number of records to return",
                         "name": "limit",
                         "in": "query"
@@ -250,28 +252,28 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "default": "Notification",
-                        "description": "title",
+                        "description": "Message Title",
                         "name": "title",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "description": "content",
+                        "description": "Message Content",
                         "name": "content",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "long",
+                        "description": "Long Message Content (optional)",
                         "name": "long",
                         "in": "formData"
                     },
@@ -282,8 +284,8 @@ const docTemplate = `{
                             "high"
                         ],
                         "type": "string",
-                        "default": "\"normal\"",
-                        "description": "priority",
+                        "default": "Normal",
+                        "description": "The priority of message",
                         "name": "priority",
                         "in": "formData"
                     }
@@ -318,28 +320,28 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "default": "Notification",
-                        "description": "title",
+                        "description": "Message Title",
                         "name": "title",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "description": "content",
+                        "description": "Message Content",
                         "name": "content",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "long",
+                        "description": "Long Message Content (optional)",
                         "name": "long",
                         "in": "formData"
                     },
@@ -350,8 +352,8 @@ const docTemplate = `{
                             "high"
                         ],
                         "type": "string",
-                        "default": "\"normal\"",
-                        "description": "priority",
+                        "default": "Normal",
+                        "description": "The priority of message",
                         "name": "priority",
                         "in": "formData"
                     }

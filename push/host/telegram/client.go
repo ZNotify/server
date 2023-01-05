@@ -98,7 +98,7 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 	}
 
 	chatID := strconv.FormatInt(msg.Chat.ID, 10)
-	deviceIdentifier := strconv.FormatInt(msg.From.ID, 10)
+	deviceIdentifier := fmt.Sprintf("tg-%s", strconv.FormatInt(msg.From.ID, 10))
 
 	// check if user already registered
 	du, exist := dao.User.GetDeviceUser(ctx, deviceIdentifier)
@@ -120,7 +120,6 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 	_, ok := dao.Device.EnsureDevice(ctx,
 		deviceIdentifier,
 		h.Name(),
-		"",
 		chatID,
 		"Telegram",
 		msg.From.String(),

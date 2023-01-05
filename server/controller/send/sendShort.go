@@ -15,20 +15,20 @@ import (
 	"go.uber.org/zap"
 )
 
-// SendShort godoc
+// Short godoc
 //
 //	@Summary		Send notification
 //	@Description	Send notification to user_id
-//	@Param			user_id	path	string	true	"user_id"
-//	@Param			string	body	string	true	"content"
+//	@Param			user_secret	path	string	true	"Secret of user"
+//	@Param			string		body	string	true	"Message Content"
 //	@Accept			plain
 //	@Produce		json
 //	@Success		200	{object}	types.Response[types.Message]
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
-//	@Router			/{user_id} [post]
-//	@Router			/{user_id} [put]
-func SendShort(context *types.Ctx) {
+//	@Router			/{user_secret} [post]
+//	@Router			/{user_secret} [put]
+func Short(context *types.Ctx) {
 	data, err := io.ReadAll(context.Request.Body)
 	if err != nil {
 		zap.S().Errorf("read body error: %v", err)
@@ -43,8 +43,8 @@ func SendShort(context *types.Ctx) {
 	}
 
 	pushMsg := &item.PushMessage{
-		MessageID: uuid.New().String(),
-		UserID:    context.UserID,
+		ID:        uuid.New(),
+		User:      context.User,
 		Title:     "Notification",
 		Content:   string(data),
 		Long:      "",
@@ -52,28 +52,28 @@ func SendShort(context *types.Ctx) {
 		CreatedAt: time.Now(),
 	}
 
-	err = push.Send(pushMsg)
+	err = push.Send(context, pushMsg)
 	if err != nil {
 		zap.S().Errorw("send message error", "error", err)
 		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
 		return
 	}
 
-	msg, err := dao.Message.Add(
-		pushMsg.MessageID,
-		pushMsg.UserID,
+	msg, ok := dao.Message.CreateMessage(
+		context,
+		pushMsg.User,
+		pushMsg.ID,
 		pushMsg.Title,
 		pushMsg.Content,
 		pushMsg.Long,
 		pushMsg.Priority,
-	)
+		pushMsg.CreatedAt)
 
-	if err != nil {
-		zap.S().Errorw("save message error", "error", err)
-		context.JSONError(http.StatusInternalServerError, errors.WithStack(err))
+	if !ok {
+		context.JSONError(http.StatusInternalServerError, errors.New("can not create message"))
 		return
 	}
 
-	context.JSONResult(types.FromModelMessage(msg))
+	context.JSONResult(types.FromModelMessage(*msg))
 	return
 }

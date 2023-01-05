@@ -22,7 +22,7 @@ import (
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Failure		404	{object}	types.NotFoundResponse
-//	@Router			/{user_id}/{id} [get]
+//	@Router			/{user_secret}/{id} [get]
 func Detail(context *types.Ctx) {
 	messageID, err := uuid.Parse(context.Param("id"))
 

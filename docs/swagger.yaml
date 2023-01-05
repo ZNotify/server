@@ -237,8 +237,10 @@ paths:
         in: query
         name: skip
         type: integer
-      - description: The number of records to return
+      - default: 20
+        description: The number of records to return
         in: query
+        maximum: 100
         name: limit
         type: integer
       produces:
@@ -257,27 +259,27 @@ paths:
     post:
       description: Send notification to user_id
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
       - default: Notification
-        description: title
+        description: Message Title
         in: formData
         name: title
         type: string
-      - description: content
+      - description: Message Content
         in: formData
         name: content
         required: true
         type: string
-      - description: long
+      - description: Long Message Content (optional)
         in: formData
         name: long
         type: string
-      - default: '"normal"'
-        description: priority
+      - default: Normal
+        description: The priority of message
         enum:
         - low
         - normal
@@ -304,27 +306,27 @@ paths:
     put:
       description: Send notification to user_id
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
       - default: Notification
-        description: title
+        description: Message Title
         in: formData
         name: title
         type: string
-      - description: content
+      - description: Message Content
         in: formData
         name: content
         required: true
         type: string
-      - description: long
+      - description: Long Message Content (optional)
         in: formData
         name: long
         type: string
-      - default: '"normal"'
-        description: priority
+      - default: Normal
+        description: The priority of message
         enum:
         - low
         - normal

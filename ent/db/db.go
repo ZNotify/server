@@ -5,10 +5,8 @@ import (
 
 	"entgo.io/ent/dialect"
 
-	"notify-api/utils/config"
-	"notify-api/utils/ds"
-
 	"notify-api/ent/generate"
+	"notify-api/utils/config"
 
 	"go.uber.org/zap"
 
@@ -18,8 +16,6 @@ import (
 )
 
 var Client *generate.Client
-
-var RWLock ds.Mutex
 
 func Init() {
 	var err error
