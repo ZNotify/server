@@ -3,8 +3,6 @@ package config
 var Config Configuration
 
 type Configuration struct {
-	// Users config
-	Users UserConfiguration `yaml:"users"`
 	// Server config
 	Server ServerConfiguration `yaml:"server"`
 	// Database config
@@ -42,5 +40,3 @@ type DatabaseConfiguration struct {
 }
 
 type SenderConfiguration = map[string]string
-
-type UserConfiguration = []string

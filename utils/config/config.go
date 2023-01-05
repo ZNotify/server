@@ -30,7 +30,6 @@ func Load(path string) {
 			DSN:  "data/notify.db",
 		},
 		Senders: make(map[string]SenderConfiguration),
-		Users:   make(UserConfiguration, 0),
 	}
 
 	if path == "ENV" {

@@ -30,7 +30,7 @@ func (m *Message) MarshalJSON() ([]byte, error) {
 
 func FromPushMessage(msg item.PushMessage) Message {
 	return Message{
-		ID:        msg.ID,
+		ID:        msg.ID.String(),
 		Title:     msg.Title,
 		Content:   msg.Content,
 		Long:      msg.Long,
