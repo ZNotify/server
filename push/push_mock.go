@@ -3,12 +3,14 @@
 package push
 
 import (
+	"context"
+
 	"go.uber.org/zap"
 
 	pushTypes "notify-api/push/item"
 )
 
-func Send(msg *pushTypes.PushMessage) error {
+func Send(ctx context.Context, msg *pushTypes.PushMessage) error {
 	fields := []zap.Field{
 		zap.String("user_id", msg.UserID),
 		zap.String("title", msg.Title),

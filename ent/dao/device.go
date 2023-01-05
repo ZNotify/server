@@ -20,7 +20,6 @@ func (deviceDao) EnsureDevice(
 	ctx context.Context,
 	identifier string,
 	channel string,
-	channelMeta string,
 	channelToken string,
 	deviceName string,
 	deviceMeta string,
@@ -30,12 +29,11 @@ func (deviceDao) EnsureDevice(
 		Create().
 		SetIdentifier(identifier).
 		SetChannel(channel).
-		SetChannelMeta(channelMeta).
 		SetChannelToken(channelToken).
 		SetDeviceName(deviceName).
 		SetDeviceMeta(deviceMeta).
 		SetUser(u).
-		OnConflictColumns("id", "identifier").
+		OnConflictColumns(device.FieldID, device.FieldIdentifier).
 		UpdateNewValues().
 		Update(func(upsert *generate.DeviceUpsert) {
 			uc := upsert.UpdateSet.UpdateColumns()

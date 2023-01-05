@@ -7,8 +7,6 @@ import (
 
 	"notify-api/utils/config"
 
-	"notify-api/utils/user"
-
 	"github.com/gin-gonic/gin"
 
 	"notify-api/server/types"
@@ -17,11 +15,10 @@ import (
 func TestCheck(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	config.Load("test_config")
-	user.Init()
 	t.Run("check success", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
-		c.Request = httptest.NewRequest("GET", "/check?user_id=test", nil)
+		c.Request = httptest.NewRequest("GET", "/check?user_secret=test", nil)
 		types.WrapHandler(Check)(c)
 		if w.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
@@ -34,7 +31,7 @@ func TestCheck(t *testing.T) {
 	t.Run("check fail", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
-		c.Request = httptest.NewRequest("GET", "/check?user_id=error", nil)
+		c.Request = httptest.NewRequest("GET", "/check?user_secret=error", nil)
 		types.WrapHandler(Check)(c)
 		if w.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
