@@ -2,14 +2,13 @@ package send
 
 import (
 	"net/http"
-	"time"
 
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"notify-api/ent/dao"
 	"notify-api/push"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	serveTypes "notify-api/server/types"
 )
@@ -42,29 +41,21 @@ func Send(context *serveTypes.Ctx) {
 		return
 	}
 
-	var priorityConst item.Priority
+	var priorityConst enum.Priority
 	switch priority {
 	case "low":
-		priorityConst = item.PriorityLow
+		priorityConst = enum.PriorityLow
 	case "normal":
-		priorityConst = item.PriorityNormal
+		priorityConst = enum.PriorityNormal
 	case "high":
-		priorityConst = item.PriorityHigh
+		priorityConst = enum.PriorityHigh
 	default:
 		zap.S().Infof("priority is invalid")
 		context.JSONError(http.StatusBadRequest, errors.New("priority is invalid"))
 		return
 	}
 
-	pushMsg := &item.PushMessage{
-		ID:        uuid.New(),
-		User:      context.User,
-		Title:     title,
-		Content:   content,
-		Long:      long,
-		Priority:  priorityConst,
-		CreatedAt: time.Now(),
-	}
+	pushMsg := item.NewPushMessage(context.User, title, content, long, priorityConst)
 
 	err := push.Send(context, pushMsg)
 	if err != nil {
@@ -82,6 +73,7 @@ func Send(context *serveTypes.Ctx) {
 		pushMsg.Content,
 		pushMsg.Long,
 		pushMsg.Priority,
+		pushMsg.SequenceID,
 		pushMsg.CreatedAt)
 
 	if !ok {

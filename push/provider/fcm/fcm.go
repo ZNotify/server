@@ -10,6 +10,7 @@ import (
 	"google.golang.org/api/option"
 
 	"notify-api/ent/dao"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	"notify-api/push/types"
 )
@@ -47,7 +48,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 	}
 
 	var fcmPriority string
-	if msg.Priority == item.PriorityHigh {
+	if msg.Priority == enum.PriorityHigh {
 		fcmPriority = "high"
 	} else {
 		fcmPriority = "normal"
@@ -61,7 +62,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 		},
 		Data: map[string]string{
 			"long":       msg.Long,
-			"msg_id":     msg.ID,
+			"msg_id":     msg.ID.String(),
 			"title":      msg.Title,
 			"content":    msg.Content,
 			"created_at": msg.CreatedAt.Format(time.RFC3339),

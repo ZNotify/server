@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 
 	"notify-api/ent/dao"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	pushTypes "notify-api/push/types"
 	"notify-api/utils/config"
@@ -20,7 +21,7 @@ type Host struct {
 	Bot      *tgBot.BotAPI
 }
 
-func (h *Host) Start() error {
+func (h *Host) Setup() error {
 	go h.commandRoutine()
 	return nil
 }
@@ -52,7 +53,7 @@ func (h *Host) Send(ctx context.Context, msg *item.PushMessage) error {
 		tgMsg := tgBot.NewMessage(id, msgText)
 		tgMsg.ParseMode = tgBot.ModeMarkdown
 
-		if msg.Priority == item.PriorityLow {
+		if msg.Priority == enum.PriorityLow {
 			tgMsg.DisableNotification = true
 		}
 
@@ -87,7 +88,7 @@ func (h *Host) Init(cfg pushTypes.Config) error {
 }
 
 func (h *Host) Name() string {
-	return "TelegramHost"
+	return "Telegram"
 }
 
 const BotToken = "BotToken"

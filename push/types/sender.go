@@ -3,6 +3,7 @@ package types
 import (
 	"context"
 
+	"notify-api/ent/generate"
 	"notify-api/push/item"
 	"notify-api/server/types"
 )
@@ -25,9 +26,9 @@ type SenderWithConfig interface {
 	Config() []string
 }
 
-type Host interface {
+type SenderWithBackground interface {
 	Sender
-	Start() error
+	Setup() error
 }
 
 type SenderWithHandler interface {
@@ -35,4 +36,9 @@ type SenderWithHandler interface {
 	Handler(ctx *types.Ctx)
 	HandlerPath() string
 	HandlerMethod() string
+}
+
+type SenderWithDeviceDeleteAwareness interface {
+	Sender
+	OnDeleteDevice(ctx *types.Ctx, device *generate.Device) error
 }

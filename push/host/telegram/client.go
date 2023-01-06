@@ -15,7 +15,7 @@ import (
 func (h *Host) setCommand() {
 	commands := tgBot.NewSetMyCommands(tgBot.BotCommand{
 		Command:     "start",
-		Description: "Start the bot",
+		Description: "Setup the bot",
 	}, tgBot.BotCommand{
 		Command:     "help",
 		Description: "Get available commands",
@@ -75,7 +75,7 @@ func (h *Host) handleHelpCommand(msg *tgBot.Message) {
 }
 
 func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	userSecret := msg.CommandArguments()
 	if userSecret == "" {
@@ -117,7 +117,7 @@ func (h *Host) handleRegisterCommand(msg *tgBot.Message) {
 		}
 		return
 	}
-	_, ok := dao.Device.EnsureDevice(ctx,
+	_, _, _, ok := dao.Device.EnsureDevice(ctx,
 		deviceIdentifier,
 		h.Name(),
 		chatID,

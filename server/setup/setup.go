@@ -9,7 +9,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	"notify-api/ent/db"
+	"notify-api/ent/dao"
 	"notify-api/server/controller/device"
 	"notify-api/server/controller/misc"
 	"notify-api/server/controller/record"
@@ -35,7 +35,7 @@ func New() *gin.Engine {
 	requireNetwork()
 	requireX64()
 
-	db.Init()
+	dao.Init()
 	push.Init()
 
 	setupDoc(router)
@@ -108,8 +108,7 @@ func setupRouter(router *gin.Engine) {
 		push.RegisterRouter(userGroup)
 	}
 
-	debugGroup := router.Group("/debug")
-	debugGroup.GET("/pprof/*pprof", gin.WrapH(http.HandlerFunc(pprof.Index)))
+	router.GET("/debug/pprof/*pprof", gin.WrapH(http.HandlerFunc(pprof.Index)))
 
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", types.WrapHandler(misc.WebIndex))

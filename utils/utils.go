@@ -2,18 +2,17 @@ package utils
 
 import (
 	"os"
-	"regexp"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
-var uuidRe = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
-
-func IsUUID(uuid string) bool {
-	return uuidRe.MatchString(uuid)
+func IsUUID(s string) bool {
+	_, err := uuid.Parse(s)
+	return err == nil
 }
 
 func WaitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {

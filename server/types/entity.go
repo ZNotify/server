@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"notify-api/ent/generate"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 )
 
@@ -13,7 +14,7 @@ type Message struct {
 	Title     string        `json:"title"`
 	Content   string        `json:"content"`
 	Long      string        `json:"long"`
-	Priority  item.Priority `json:"priority"`
+	Priority  enum.Priority `json:"priority"`
 	CreatedAt time.Time     `json:"created_at"`
 }
 

@@ -12,21 +12,21 @@ import (
 	"notify-api/ent/generate"
 	"notify-api/ent/generate/message"
 	"notify-api/ent/generate/user"
-	"notify-api/push/item"
+	"notify-api/push/enum"
 )
 
 type messageDao struct{}
 
 var Message = messageDao{}
 
-var sequenceID atomic.Int64
+var SequenceID atomic.Int64
 
-func init() {
-	sequenceID.Store(int64(GetLatestMessageID(context.Background())))
+func GetNextSequenceID() int {
+	return int(SequenceID.Add(1))
 }
 
 func GetLatestMessageID(ctx context.Context) int {
-	m, err := db.Client.Message.Query().Order(generate.Desc(message.FieldSequenceID)).First(ctx)
+	m, err := db.C.Message.Query().Order(generate.Desc(message.FieldSequenceID)).First(ctx)
 	if err != nil {
 		if generate.IsNotFound(err) {
 			return 0
@@ -43,16 +43,16 @@ func (messageDao) CreateMessage(
 	title string,
 	content string,
 	long string,
-	priority item.Priority,
+	priority enum.Priority,
+	sequenceID int,
 	createdAt time.Time) (*generate.Message, bool) {
-	seq := sequenceID.Add(1)
-	msg, err := db.Client.Message.Create().
+	msg, err := db.C.Message.Create().
 		SetUser(u).
 		SetTitle(title).
 		SetContent(content).
 		SetLong(long).
 		SetPriority(priority).
-		SetSequenceID(int(seq)).
+		SetSequenceID(sequenceID).
 		SetID(id).
 		SetCreatedAt(createdAt).
 		Save(ctx)
@@ -63,8 +63,8 @@ func (messageDao) CreateMessage(
 	return msg, true
 }
 
-// GetUserMessagesPaginated use sequenceID as afterID
-func (messageDao) GetUserMessagesPaginated(ctx context.Context, u *generate.User, skip int, limit int) ([]*generate.Message, bool) {
+// GetUserMessagesPaginated use SequenceID as afterID
+func (messageDao) GetUserMessagesPaginated(ctx context.Context, u *generate.User, skip, limit int) ([]*generate.Message, bool) {
 	messages, err := u.QueryMessages().
 		Order(generate.Desc(message.FieldSequenceID)).
 		Offset(skip).
@@ -89,8 +89,19 @@ func (messageDao) GetUserMessage(ctx context.Context, u *generate.User, messageI
 	return m, true
 }
 
+func (messageDao) GetUserMessagesAfterID(ctx context.Context, u *generate.User, afterID int) ([]*generate.Message, bool) {
+	m, err := u.QueryMessages().
+		Where(message.SequenceIDGT(afterID)).
+		Order(generate.Desc(message.FieldSequenceID)).
+		All(ctx)
+	if err != nil {
+		return nil, false
+	}
+	return m, true
+}
+
 func (messageDao) DeleteMessageByID(ctx context.Context, u *generate.User, messageID uuid.UUID) (int, bool) {
-	row, err := db.Client.Message.Delete().
+	row, err := db.C.Message.Delete().
 		Where(message.ID(messageID)).
 		Where(message.HasUserWith(user.ID(u.ID))).
 		Exec(ctx)

@@ -1,13 +1,15 @@
 package wns
 
 import (
+	"context"
+
 	pushTypes "notify-api/push/item"
 )
 
 type Provider struct {
 }
 
-func (p *Provider) Send(msg *pushTypes.PushMessage) error {
+func (p *Provider) Send(ctx context.Context, msg *pushTypes.PushMessage) error {
 	//TODO implement me
 	panic("implement me")
 }

@@ -3,14 +3,13 @@ package send
 import (
 	"io"
 	"net/http"
-	"time"
 
 	"notify-api/ent/dao"
 	"notify-api/push"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	"notify-api/server/types"
 
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -42,15 +41,7 @@ func Short(context *types.Ctx) {
 		return
 	}
 
-	pushMsg := &item.PushMessage{
-		ID:        uuid.New(),
-		User:      context.User,
-		Title:     "Notification",
-		Content:   string(data),
-		Long:      "",
-		Priority:  item.PriorityNormal,
-		CreatedAt: time.Now(),
-	}
+	pushMsg := item.NewPushMessage(context.User, "Notification", string(data), "", enum.PriorityNormal)
 
 	err = push.Send(context, pushMsg)
 	if err != nil {
@@ -67,6 +58,7 @@ func Short(context *types.Ctx) {
 		pushMsg.Content,
 		pushMsg.Long,
 		pushMsg.Priority,
+		pushMsg.SequenceID,
 		pushMsg.CreatedAt)
 
 	if !ok {

@@ -10,7 +10,7 @@ import (
 	"notify-api/ent/generate/message"
 	"notify-api/ent/generate/predicate"
 	"notify-api/ent/generate/user"
-	"notify-api/push/item"
+	"notify-api/push/enum"
 	"sync"
 	"time"
 
@@ -799,7 +799,7 @@ type MessageMutation struct {
 	title         *string
 	content       *string
 	long          *string
-	priority      *item.Priority
+	priority      *enum.Priority
 	sequenceID    *int
 	addsequenceID *int
 	clearedFields map[string]struct{}
@@ -1059,12 +1059,12 @@ func (m *MessageMutation) ResetLong() {
 }
 
 // SetPriority sets the "priority" field.
-func (m *MessageMutation) SetPriority(i item.Priority) {
-	m.priority = &i
+func (m *MessageMutation) SetPriority(e enum.Priority) {
+	m.priority = &e
 }
 
 // Priority returns the value of the "priority" field in the mutation.
-func (m *MessageMutation) Priority() (r item.Priority, exists bool) {
+func (m *MessageMutation) Priority() (r enum.Priority, exists bool) {
 	v := m.priority
 	if v == nil {
 		return
@@ -1075,7 +1075,7 @@ func (m *MessageMutation) Priority() (r item.Priority, exists bool) {
 // OldPriority returns the old "priority" field's value of the Message entity.
 // If the Message object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MessageMutation) OldPriority(ctx context.Context) (v item.Priority, err error) {
+func (m *MessageMutation) OldPriority(ctx context.Context) (v enum.Priority, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldPriority is only allowed on UpdateOne operations")
 	}
@@ -1306,7 +1306,7 @@ func (m *MessageMutation) SetField(name string, value ent.Value) error {
 		m.SetLong(v)
 		return nil
 	case message.FieldPriority:
-		v, ok := value.(item.Priority)
+		v, ok := value.(enum.Priority)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

@@ -6,8 +6,8 @@ import (
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 
+	"notify-api/server/setup"
 	"notify-api/utils/config"
-	"notify-api/utils/setup"
 )
 
 var App = &cli.App{
