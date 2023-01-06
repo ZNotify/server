@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"notify-api/ent/mixin"
-	"notify-api/push/item"
+	"notify-api/push/enum"
 )
 
 type Message struct {
@@ -16,11 +16,11 @@ type Message struct {
 
 func (Message) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.New()),
-		field.String("title"),
-		field.String("content").NotEmpty(),
-		field.String("long"),
-		field.String("priority").NotEmpty().GoType(item.Priority("")),
+		field.UUID("id", uuid.New()).Immutable(),
+		field.String("title").Immutable(),
+		field.String("content").NotEmpty().Immutable(),
+		field.String("long").Immutable(),
+		field.String("priority").NotEmpty().GoType(enum.Priority("")).Immutable(),
 		field.Int("sequenceID").Immutable().Unique(),
 	}
 }

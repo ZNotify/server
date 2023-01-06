@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"notify-api/ent/generate/message"
 	"notify-api/ent/generate/user"
-	"notify-api/push/item"
+	"notify-api/push/enum"
 	"strings"
 	"time"
 
@@ -28,7 +28,7 @@ type Message struct {
 	// Long holds the value of the "long" field.
 	Long string `json:"long,omitempty"`
 	// Priority holds the value of the "priority" field.
-	Priority item.Priority `json:"priority,omitempty"`
+	Priority enum.Priority `json:"priority,omitempty"`
 	// SequenceID holds the value of the "sequenceID" field.
 	SequenceID int `json:"sequenceID,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -123,7 +123,7 @@ func (m *Message) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field priority", values[i])
 			} else if value.Valid {
-				m.Priority = item.Priority(value.String)
+				m.Priority = enum.Priority(value.String)
 			}
 		case message.FieldSequenceID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {

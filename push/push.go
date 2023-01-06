@@ -50,9 +50,9 @@ func Send(ctx context.Context, msg *item.PushMessage) error {
 
 func Init() {
 	for id, senderCfg := range config.Config.Senders {
-		sender, err := get(id)
+		sender, err := GetSender(id)
 		if err != nil {
-			panic(err)
+			zap.S().Fatalf("Failed to get sender %s: %v", id, err)
 		}
 
 		if authSender, ok := sender.(pushTypes.SenderWithConfig); ok {
@@ -71,20 +71,22 @@ func Init() {
 				zap.S().Fatalf("Sender %s init failed: %v", id, err)
 			}
 		} else {
-			err := sender.(pushTypes.SenderWithoutConfig).Init()
-			if err != nil {
-				zap.S().Fatalf("Sender %s init failed: %v", id, err)
+			cs, ok := sender.(pushTypes.SenderWithoutConfig)
+			if ok {
+				err = cs.Init()
+				if err != nil {
+					zap.S().Fatalf("Sender %s init failed: %v", id, err)
+				}
 			}
 		}
 
-		if host, ok := sender.(pushTypes.Host); ok {
-			err := host.Start()
+		if host, ok := sender.(pushTypes.SenderWithBackground); ok {
+			err := host.Setup()
 			if err != nil {
 				zap.S().Fatalf("Sender %s start failed: %v", sender.Name(), err)
 			}
 		}
 
 		activeSenders = append(activeSenders, sender)
-
 	}
 }

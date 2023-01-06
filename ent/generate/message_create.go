@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"notify-api/ent/generate/message"
 	"notify-api/ent/generate/user"
-	"notify-api/push/item"
+	"notify-api/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect"
@@ -59,8 +59,8 @@ func (mc *MessageCreate) SetLong(s string) *MessageCreate {
 }
 
 // SetPriority sets the "priority" field.
-func (mc *MessageCreate) SetPriority(i item.Priority) *MessageCreate {
-	mc.mutation.SetPriority(i)
+func (mc *MessageCreate) SetPriority(e enum.Priority) *MessageCreate {
+	mc.mutation.SetPriority(e)
 	return mc
 }
 
@@ -336,54 +336,6 @@ type (
 	}
 )
 
-// SetTitle sets the "title" field.
-func (u *MessageUpsert) SetTitle(v string) *MessageUpsert {
-	u.Set(message.FieldTitle, v)
-	return u
-}
-
-// UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *MessageUpsert) UpdateTitle() *MessageUpsert {
-	u.SetExcluded(message.FieldTitle)
-	return u
-}
-
-// SetContent sets the "content" field.
-func (u *MessageUpsert) SetContent(v string) *MessageUpsert {
-	u.Set(message.FieldContent, v)
-	return u
-}
-
-// UpdateContent sets the "content" field to the value that was provided on create.
-func (u *MessageUpsert) UpdateContent() *MessageUpsert {
-	u.SetExcluded(message.FieldContent)
-	return u
-}
-
-// SetLong sets the "long" field.
-func (u *MessageUpsert) SetLong(v string) *MessageUpsert {
-	u.Set(message.FieldLong, v)
-	return u
-}
-
-// UpdateLong sets the "long" field to the value that was provided on create.
-func (u *MessageUpsert) UpdateLong() *MessageUpsert {
-	u.SetExcluded(message.FieldLong)
-	return u
-}
-
-// SetPriority sets the "priority" field.
-func (u *MessageUpsert) SetPriority(v item.Priority) *MessageUpsert {
-	u.Set(message.FieldPriority, v)
-	return u
-}
-
-// UpdatePriority sets the "priority" field to the value that was provided on create.
-func (u *MessageUpsert) UpdatePriority() *MessageUpsert {
-	u.SetExcluded(message.FieldPriority)
-	return u
-}
-
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -403,6 +355,18 @@ func (u *MessageUpsertOne) UpdateNewValues() *MessageUpsertOne {
 		}
 		if _, exists := u.create.mutation.CreatedAt(); exists {
 			s.SetIgnore(message.FieldCreatedAt)
+		}
+		if _, exists := u.create.mutation.Title(); exists {
+			s.SetIgnore(message.FieldTitle)
+		}
+		if _, exists := u.create.mutation.Content(); exists {
+			s.SetIgnore(message.FieldContent)
+		}
+		if _, exists := u.create.mutation.Long(); exists {
+			s.SetIgnore(message.FieldLong)
+		}
+		if _, exists := u.create.mutation.Priority(); exists {
+			s.SetIgnore(message.FieldPriority)
 		}
 		if _, exists := u.create.mutation.SequenceID(); exists {
 			s.SetIgnore(message.FieldSequenceID)
@@ -436,62 +400,6 @@ func (u *MessageUpsertOne) Update(set func(*MessageUpsert)) *MessageUpsertOne {
 		set(&MessageUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetTitle sets the "title" field.
-func (u *MessageUpsertOne) SetTitle(v string) *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetTitle(v)
-	})
-}
-
-// UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *MessageUpsertOne) UpdateTitle() *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdateTitle()
-	})
-}
-
-// SetContent sets the "content" field.
-func (u *MessageUpsertOne) SetContent(v string) *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetContent(v)
-	})
-}
-
-// UpdateContent sets the "content" field to the value that was provided on create.
-func (u *MessageUpsertOne) UpdateContent() *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdateContent()
-	})
-}
-
-// SetLong sets the "long" field.
-func (u *MessageUpsertOne) SetLong(v string) *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetLong(v)
-	})
-}
-
-// UpdateLong sets the "long" field to the value that was provided on create.
-func (u *MessageUpsertOne) UpdateLong() *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdateLong()
-	})
-}
-
-// SetPriority sets the "priority" field.
-func (u *MessageUpsertOne) SetPriority(v item.Priority) *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetPriority(v)
-	})
-}
-
-// UpdatePriority sets the "priority" field to the value that was provided on create.
-func (u *MessageUpsertOne) UpdatePriority() *MessageUpsertOne {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdatePriority()
-	})
 }
 
 // Exec executes the query.
@@ -676,6 +584,18 @@ func (u *MessageUpsertBulk) UpdateNewValues() *MessageUpsertBulk {
 			if _, exists := b.mutation.CreatedAt(); exists {
 				s.SetIgnore(message.FieldCreatedAt)
 			}
+			if _, exists := b.mutation.Title(); exists {
+				s.SetIgnore(message.FieldTitle)
+			}
+			if _, exists := b.mutation.Content(); exists {
+				s.SetIgnore(message.FieldContent)
+			}
+			if _, exists := b.mutation.Long(); exists {
+				s.SetIgnore(message.FieldLong)
+			}
+			if _, exists := b.mutation.Priority(); exists {
+				s.SetIgnore(message.FieldPriority)
+			}
 			if _, exists := b.mutation.SequenceID(); exists {
 				s.SetIgnore(message.FieldSequenceID)
 			}
@@ -709,62 +629,6 @@ func (u *MessageUpsertBulk) Update(set func(*MessageUpsert)) *MessageUpsertBulk 
 		set(&MessageUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetTitle sets the "title" field.
-func (u *MessageUpsertBulk) SetTitle(v string) *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetTitle(v)
-	})
-}
-
-// UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *MessageUpsertBulk) UpdateTitle() *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdateTitle()
-	})
-}
-
-// SetContent sets the "content" field.
-func (u *MessageUpsertBulk) SetContent(v string) *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetContent(v)
-	})
-}
-
-// UpdateContent sets the "content" field to the value that was provided on create.
-func (u *MessageUpsertBulk) UpdateContent() *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdateContent()
-	})
-}
-
-// SetLong sets the "long" field.
-func (u *MessageUpsertBulk) SetLong(v string) *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetLong(v)
-	})
-}
-
-// UpdateLong sets the "long" field to the value that was provided on create.
-func (u *MessageUpsertBulk) UpdateLong() *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdateLong()
-	})
-}
-
-// SetPriority sets the "priority" field.
-func (u *MessageUpsertBulk) SetPriority(v item.Priority) *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.SetPriority(v)
-	})
-}
-
-// UpdatePriority sets the "priority" field to the value that was provided on create.
-func (u *MessageUpsertBulk) UpdatePriority() *MessageUpsertBulk {
-	return u.Update(func(s *MessageUpsert) {
-		s.UpdatePriority()
-	})
 }
 
 // Exec executes the query.

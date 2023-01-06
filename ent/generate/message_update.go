@@ -9,7 +9,6 @@ import (
 	"notify-api/ent/generate/message"
 	"notify-api/ent/generate/predicate"
 	"notify-api/ent/generate/user"
-	"notify-api/push/item"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -26,30 +25,6 @@ type MessageUpdate struct {
 // Where appends a list predicates to the MessageUpdate builder.
 func (mu *MessageUpdate) Where(ps ...predicate.Message) *MessageUpdate {
 	mu.mutation.Where(ps...)
-	return mu
-}
-
-// SetTitle sets the "title" field.
-func (mu *MessageUpdate) SetTitle(s string) *MessageUpdate {
-	mu.mutation.SetTitle(s)
-	return mu
-}
-
-// SetContent sets the "content" field.
-func (mu *MessageUpdate) SetContent(s string) *MessageUpdate {
-	mu.mutation.SetContent(s)
-	return mu
-}
-
-// SetLong sets the "long" field.
-func (mu *MessageUpdate) SetLong(s string) *MessageUpdate {
-	mu.mutation.SetLong(s)
-	return mu
-}
-
-// SetPriority sets the "priority" field.
-func (mu *MessageUpdate) SetPriority(i item.Priority) *MessageUpdate {
-	mu.mutation.SetPriority(i)
 	return mu
 }
 
@@ -137,16 +112,6 @@ func (mu *MessageUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (mu *MessageUpdate) check() error {
-	if v, ok := mu.mutation.Content(); ok {
-		if err := message.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`generate: validator failed for field "Message.content": %w`, err)}
-		}
-	}
-	if v, ok := mu.mutation.Priority(); ok {
-		if err := message.PriorityValidator(string(v)); err != nil {
-			return &ValidationError{Name: "priority", err: fmt.Errorf(`generate: validator failed for field "Message.priority": %w`, err)}
-		}
-	}
 	if _, ok := mu.mutation.UserID(); mu.mutation.UserCleared() && !ok {
 		return errors.New(`generate: clearing a required unique edge "Message.user"`)
 	}
@@ -170,18 +135,6 @@ func (mu *MessageUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := mu.mutation.Title(); ok {
-		_spec.SetField(message.FieldTitle, field.TypeString, value)
-	}
-	if value, ok := mu.mutation.Content(); ok {
-		_spec.SetField(message.FieldContent, field.TypeString, value)
-	}
-	if value, ok := mu.mutation.Long(); ok {
-		_spec.SetField(message.FieldLong, field.TypeString, value)
-	}
-	if value, ok := mu.mutation.Priority(); ok {
-		_spec.SetField(message.FieldPriority, field.TypeString, value)
 	}
 	if mu.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -235,30 +188,6 @@ type MessageUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *MessageMutation
-}
-
-// SetTitle sets the "title" field.
-func (muo *MessageUpdateOne) SetTitle(s string) *MessageUpdateOne {
-	muo.mutation.SetTitle(s)
-	return muo
-}
-
-// SetContent sets the "content" field.
-func (muo *MessageUpdateOne) SetContent(s string) *MessageUpdateOne {
-	muo.mutation.SetContent(s)
-	return muo
-}
-
-// SetLong sets the "long" field.
-func (muo *MessageUpdateOne) SetLong(s string) *MessageUpdateOne {
-	muo.mutation.SetLong(s)
-	return muo
-}
-
-// SetPriority sets the "priority" field.
-func (muo *MessageUpdateOne) SetPriority(i item.Priority) *MessageUpdateOne {
-	muo.mutation.SetPriority(i)
-	return muo
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
@@ -358,16 +287,6 @@ func (muo *MessageUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (muo *MessageUpdateOne) check() error {
-	if v, ok := muo.mutation.Content(); ok {
-		if err := message.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`generate: validator failed for field "Message.content": %w`, err)}
-		}
-	}
-	if v, ok := muo.mutation.Priority(); ok {
-		if err := message.PriorityValidator(string(v)); err != nil {
-			return &ValidationError{Name: "priority", err: fmt.Errorf(`generate: validator failed for field "Message.priority": %w`, err)}
-		}
-	}
 	if _, ok := muo.mutation.UserID(); muo.mutation.UserCleared() && !ok {
 		return errors.New(`generate: clearing a required unique edge "Message.user"`)
 	}
@@ -408,18 +327,6 @@ func (muo *MessageUpdateOne) sqlSave(ctx context.Context) (_node *Message, err e
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := muo.mutation.Title(); ok {
-		_spec.SetField(message.FieldTitle, field.TypeString, value)
-	}
-	if value, ok := muo.mutation.Content(); ok {
-		_spec.SetField(message.FieldContent, field.TypeString, value)
-	}
-	if value, ok := muo.mutation.Long(); ok {
-		_spec.SetField(message.FieldLong, field.TypeString, value)
-	}
-	if value, ok := muo.mutation.Priority(); ok {
-		_spec.SetField(message.FieldPriority, field.TypeString, value)
 	}
 	if muo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -15,7 +15,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var Client *generate.Client
+var C *generate.Client
 
 func Init() {
 	var err error
@@ -32,12 +32,12 @@ func Init() {
 		panic("Unsupported database type")
 	}
 
-	Client, err = generate.Open(db, config.Config.Database.DSN)
+	C, err = generate.Open(db, config.Config.Database.DSN)
 	if err != nil {
 		zap.S().Fatalf("Failed to connect database: %+v", err)
 	}
 
-	if err := Client.Schema.Create(context.Background()); err != nil {
+	if err := C.Schema.Create(context.Background()); err != nil {
 		zap.S().Fatalf("Failed to create schema resources: %+v", err)
 	}
 }

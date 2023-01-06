@@ -10,6 +10,7 @@ import (
 	"github.com/SherClockHolmes/webpush-go"
 
 	"notify-api/ent/dao"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	pushTypes "notify-api/push/types"
 )
@@ -55,11 +56,11 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 
 	option := p.getOption()
 	switch msg.Priority {
-	case item.PriorityHigh:
+	case enum.PriorityHigh:
 		option.Urgency = webpush.UrgencyHigh
-	case item.PriorityNormal:
+	case enum.PriorityNormal:
 		option.Urgency = webpush.UrgencyNormal
-	case item.PriorityLow:
+	case enum.PriorityLow:
 		option.Urgency = webpush.UrgencyLow
 	}
 

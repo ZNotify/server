@@ -1,6 +1,5 @@
 # Build the project
 build:
-	swag init
 	go build -o bin/server notify-api
 
 dependencies:
@@ -23,6 +22,7 @@ desc:
 
 gen:
 	go run ent/generate.go
+	swag init
 
 analyze:
 	godepgraph -maxlevel 16 -s -novendor -p github.com,gorm.io,modernc.com,google.golang.org,golang.org,gopkg.in,go.uber.org,go.opencensus.io,firebase.google.com,cloud.google.com notify-api | dot -Tpng -o godepgraph.png

@@ -4,7 +4,7 @@ package message
 
 import (
 	"notify-api/ent/generate/predicate"
-	"notify-api/push/item"
+	"notify-api/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -112,7 +112,7 @@ func Long(v string) predicate.Message {
 }
 
 // Priority applies equality check predicate on the "priority" field. It's identical to PriorityEQ.
-func Priority(v item.Priority) predicate.Message {
+func Priority(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldPriority), vc))
@@ -488,7 +488,7 @@ func LongContainsFold(v string) predicate.Message {
 }
 
 // PriorityEQ applies the EQ predicate on the "priority" field.
-func PriorityEQ(v item.Priority) predicate.Message {
+func PriorityEQ(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldPriority), vc))
@@ -496,7 +496,7 @@ func PriorityEQ(v item.Priority) predicate.Message {
 }
 
 // PriorityNEQ applies the NEQ predicate on the "priority" field.
-func PriorityNEQ(v item.Priority) predicate.Message {
+func PriorityNEQ(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldPriority), vc))
@@ -504,7 +504,7 @@ func PriorityNEQ(v item.Priority) predicate.Message {
 }
 
 // PriorityIn applies the In predicate on the "priority" field.
-func PriorityIn(vs ...item.Priority) predicate.Message {
+func PriorityIn(vs ...enum.Priority) predicate.Message {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = string(vs[i])
@@ -515,7 +515,7 @@ func PriorityIn(vs ...item.Priority) predicate.Message {
 }
 
 // PriorityNotIn applies the NotIn predicate on the "priority" field.
-func PriorityNotIn(vs ...item.Priority) predicate.Message {
+func PriorityNotIn(vs ...enum.Priority) predicate.Message {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = string(vs[i])
@@ -526,7 +526,7 @@ func PriorityNotIn(vs ...item.Priority) predicate.Message {
 }
 
 // PriorityGT applies the GT predicate on the "priority" field.
-func PriorityGT(v item.Priority) predicate.Message {
+func PriorityGT(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldPriority), vc))
@@ -534,7 +534,7 @@ func PriorityGT(v item.Priority) predicate.Message {
 }
 
 // PriorityGTE applies the GTE predicate on the "priority" field.
-func PriorityGTE(v item.Priority) predicate.Message {
+func PriorityGTE(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldPriority), vc))
@@ -542,7 +542,7 @@ func PriorityGTE(v item.Priority) predicate.Message {
 }
 
 // PriorityLT applies the LT predicate on the "priority" field.
-func PriorityLT(v item.Priority) predicate.Message {
+func PriorityLT(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldPriority), vc))
@@ -550,7 +550,7 @@ func PriorityLT(v item.Priority) predicate.Message {
 }
 
 // PriorityLTE applies the LTE predicate on the "priority" field.
-func PriorityLTE(v item.Priority) predicate.Message {
+func PriorityLTE(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldPriority), vc))
@@ -558,7 +558,7 @@ func PriorityLTE(v item.Priority) predicate.Message {
 }
 
 // PriorityContains applies the Contains predicate on the "priority" field.
-func PriorityContains(v item.Priority) predicate.Message {
+func PriorityContains(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldPriority), vc))
@@ -566,7 +566,7 @@ func PriorityContains(v item.Priority) predicate.Message {
 }
 
 // PriorityHasPrefix applies the HasPrefix predicate on the "priority" field.
-func PriorityHasPrefix(v item.Priority) predicate.Message {
+func PriorityHasPrefix(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldPriority), vc))
@@ -574,7 +574,7 @@ func PriorityHasPrefix(v item.Priority) predicate.Message {
 }
 
 // PriorityHasSuffix applies the HasSuffix predicate on the "priority" field.
-func PriorityHasSuffix(v item.Priority) predicate.Message {
+func PriorityHasSuffix(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldPriority), vc))
@@ -582,7 +582,7 @@ func PriorityHasSuffix(v item.Priority) predicate.Message {
 }
 
 // PriorityEqualFold applies the EqualFold predicate on the "priority" field.
-func PriorityEqualFold(v item.Priority) predicate.Message {
+func PriorityEqualFold(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldPriority), vc))
@@ -590,7 +590,7 @@ func PriorityEqualFold(v item.Priority) predicate.Message {
 }
 
 // PriorityContainsFold applies the ContainsFold predicate on the "priority" field.
-func PriorityContainsFold(v item.Priority) predicate.Message {
+func PriorityContainsFold(v enum.Priority) predicate.Message {
 	vc := string(v)
 	return predicate.Message(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldPriority), vc))

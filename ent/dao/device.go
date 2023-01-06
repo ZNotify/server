@@ -3,8 +3,6 @@ package dao
 import (
 	"context"
 
-	"golang.org/x/exp/slices"
-
 	"go.uber.org/zap"
 
 	"notify-api/ent/db"
@@ -16,43 +14,64 @@ type deviceDao struct{}
 
 var Device = deviceDao{}
 
-func (deviceDao) EnsureDevice(
+// EnsureDevice ensures that a device exists for the given user and identifier.
+func (dd deviceDao) EnsureDevice(
 	ctx context.Context,
 	identifier string,
 	channel string,
 	channelToken string,
 	deviceName string,
 	deviceMeta string,
-	u *generate.User) (*generate.Device, bool) {
-
-	id, err := db.Client.Device.
-		Create().
-		SetIdentifier(identifier).
-		SetChannel(channel).
-		SetChannelToken(channelToken).
-		SetDeviceName(deviceName).
-		SetDeviceMeta(deviceMeta).
-		SetUser(u).
-		OnConflictColumns(device.FieldID, device.FieldIdentifier).
-		UpdateNewValues().
-		Update(func(upsert *generate.DeviceUpsert) {
-			uc := upsert.UpdateSet.UpdateColumns()
-			if slices.Contains(uc, device.FieldChannel) {
-				upsert.SetChannelMeta("")
-			}
-		}).
-		ID(ctx)
-
-	if err != nil {
-		zap.S().Errorw("failed to create device", "err", err)
-		return nil, false
+	u *generate.User) (d *generate.Device, isChannelChange bool, oldDevice *generate.Device, ok bool) {
+	oldDevice, ok = dd.GetUserDeviceByIdentifier(ctx, u, identifier)
+	if ok {
+		// Update device
+		_, err := db.C.Device.UpdateOne(oldDevice).
+			SetIdentifier(identifier).
+			SetChannel(channel).
+			SetChannelToken(channelToken).
+			SetDeviceName(deviceName).
+			SetDeviceMeta(deviceMeta).
+			SetUser(u).
+			Save(ctx)
+		if err != nil {
+			zap.S().Errorw("failed to update device", "err", err)
+			return nil, false, oldDevice, false
+		}
+		if oldDevice.Channel != channel {
+			return oldDevice, true, oldDevice, true
+		} else {
+			return oldDevice, false, nil, true
+		}
+	} else {
+		// Create device
+		d, err := db.C.Device.Create().
+			SetIdentifier(identifier).
+			SetChannel(channel).
+			SetChannelToken(channelToken).
+			SetDeviceName(deviceName).
+			SetDeviceMeta(deviceMeta).
+			SetUser(u).
+			Save(ctx)
+		if err != nil {
+			zap.S().Errorw("failed to create device", "err", err)
+			return nil, false, nil, false
+		}
+		return d, false, nil, true
 	}
+}
 
-	return db.Client.Device.GetX(ctx, id), true
+func (deviceDao) UpdateDeviceChannelMeta(ctx context.Context, d *generate.Device, channelMeta string) bool {
+	_, err := db.C.Device.UpdateOne(d).SetChannelMeta(channelMeta).Save(ctx)
+	if err != nil {
+		zap.S().Errorw("failed to update device channel meta", "err", err)
+		return false
+	}
+	return true
 }
 
 func (deviceDao) GetDeviceByIdentifier(ctx context.Context, identifier string) (*generate.Device, bool) {
-	d, err := db.Client.Device.
+	d, err := db.C.Device.
 		Query().
 		Where(device.Identifier(identifier)).
 		Only(ctx)
@@ -67,7 +86,7 @@ func (deviceDao) GetDeviceByIdentifier(ctx context.Context, identifier string) (
 }
 
 func (deviceDao) GetUserDeviceByIdentifier(ctx context.Context, u *generate.User, identifier string) (*generate.Device, bool) {
-	d, err := u.QueryDevices().Where(device.Identifier(identifier)).Only(ctx)
+	d, err := u.QueryDevices().Where(device.Identifier(identifier)).WithUser().Only(ctx)
 	if err != nil {
 		if !generate.IsNotFound(err) {
 			zap.S().Errorw("failed to get user device by identifier", "err", err)
@@ -92,7 +111,7 @@ func (deviceDao) GetUserDeviceChannelTokens(ctx context.Context, u *generate.Use
 }
 
 func (deviceDao) DeleteDeviceByIdentifier(ctx context.Context, identifier string) bool {
-	_, err := db.Client.Device.Delete().Where(device.Identifier(identifier)).Exec(ctx)
+	_, err := db.C.Device.Delete().Where(device.Identifier(identifier)).Exec(ctx)
 	if err != nil {
 		if !generate.IsNotFound(err) {
 			zap.S().Errorw("failed to delete device by identifier", "err", err)
@@ -103,7 +122,7 @@ func (deviceDao) DeleteDeviceByIdentifier(ctx context.Context, identifier string
 }
 
 func (deviceDao) DeleteDevice(ctx context.Context, d *generate.Device) bool {
-	err := db.Client.Device.DeleteOne(d).Exec(ctx)
+	err := db.C.Device.DeleteOne(d).Exec(ctx)
 	if err != nil {
 		if !generate.IsNotFound(err) {
 			zap.S().Errorw("failed to delete device", "err", err)

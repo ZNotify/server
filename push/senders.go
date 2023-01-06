@@ -23,7 +23,7 @@ var availableSenders = senders{
 
 var activeSenders = senders{}
 
-func IsValid(id string) bool {
+func IsSenderIdValid(id string) bool {
 	for _, v := range activeSenders {
 		if v.Name() == id {
 			return true
@@ -32,7 +32,7 @@ func IsValid(id string) bool {
 	return false
 }
 
-func get(id string) (pushTypes.Sender, error) {
+func GetSender(id string) (pushTypes.Sender, error) {
 	for _, v := range availableSenders {
 		if v.Name() == id {
 			return v, nil
