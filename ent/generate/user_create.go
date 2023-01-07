@@ -60,8 +60,8 @@ func (uc *UserCreate) SetSecret(s string) *UserCreate {
 }
 
 // SetGithubID sets the "githubID" field.
-func (uc *UserCreate) SetGithubID(s string) *UserCreate {
-	uc.mutation.SetGithubID(s)
+func (uc *UserCreate) SetGithubID(i int64) *UserCreate {
+	uc.mutation.SetGithubID(i)
 	return uc
 }
 
@@ -274,7 +274,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_node.Secret = value
 	}
 	if value, ok := uc.mutation.GithubID(); ok {
-		_spec.SetField(user.FieldGithubID, field.TypeString, value)
+		_spec.SetField(user.FieldGithubID, field.TypeInt64, value)
 		_node.GithubID = value
 	}
 	if value, ok := uc.mutation.GithubName(); ok {
@@ -404,7 +404,7 @@ func (u *UserUpsert) UpdateSecret() *UserUpsert {
 }
 
 // SetGithubID sets the "githubID" field.
-func (u *UserUpsert) SetGithubID(v string) *UserUpsert {
+func (u *UserUpsert) SetGithubID(v int64) *UserUpsert {
 	u.Set(user.FieldGithubID, v)
 	return u
 }
@@ -412,6 +412,12 @@ func (u *UserUpsert) SetGithubID(v string) *UserUpsert {
 // UpdateGithubID sets the "githubID" field to the value that was provided on create.
 func (u *UserUpsert) UpdateGithubID() *UserUpsert {
 	u.SetExcluded(user.FieldGithubID)
+	return u
+}
+
+// AddGithubID adds v to the "githubID" field.
+func (u *UserUpsert) AddGithubID(v int64) *UserUpsert {
+	u.Add(user.FieldGithubID, v)
 	return u
 }
 
@@ -525,9 +531,16 @@ func (u *UserUpsertOne) UpdateSecret() *UserUpsertOne {
 }
 
 // SetGithubID sets the "githubID" field.
-func (u *UserUpsertOne) SetGithubID(v string) *UserUpsertOne {
+func (u *UserUpsertOne) SetGithubID(v int64) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.SetGithubID(v)
+	})
+}
+
+// AddGithubID adds v to the "githubID" field.
+func (u *UserUpsertOne) AddGithubID(v int64) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddGithubID(v)
 	})
 }
 
@@ -816,9 +829,16 @@ func (u *UserUpsertBulk) UpdateSecret() *UserUpsertBulk {
 }
 
 // SetGithubID sets the "githubID" field.
-func (u *UserUpsertBulk) SetGithubID(v string) *UserUpsertBulk {
+func (u *UserUpsertBulk) SetGithubID(v int64) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.SetGithubID(v)
+	})
+}
+
+// AddGithubID adds v to the "githubID" field.
+func (u *UserUpsertBulk) AddGithubID(v int64) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddGithubID(v)
 	})
 }
 

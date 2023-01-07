@@ -1,19 +1,25 @@
-users:
-  - test
 database:
   type: sqlite
-  dsn: "file:./data/notify.db?cache=shared&mode=rwc&_journal_mode=WAL"
+  dsn: "file:./data/notify.db?cache=shared&mode=rwc&_journal_mode=WAL&_fk=1"
 server:
   host: "127.0.0.1"
   mode: development
+  url: http://localhost:14444
   port: 14444
+
+user:
+  admins: [ 'test' ]
+  sso:
+    github:
+      client_id: ""
+      client_secret: ""
 senders:
-  WebSocketHost:
+  WebSocket:
   FCM:
     Credential: ""
   WebPush:
     VAPIDPrivateKey: ""
     VAPIDPublicKey: ""
     Mailto: ""
-  TelegramHost:
+  Telegram:
     BotToken: ""

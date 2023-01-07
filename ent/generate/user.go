@@ -23,7 +23,7 @@ type User struct {
 	// Secret holds the value of the "secret" field.
 	Secret string `json:"secret,omitempty"`
 	// GithubID holds the value of the "githubID" field.
-	GithubID string `json:"githubID,omitempty"`
+	GithubID int64 `json:"githubID,omitempty"`
 	// GithubName holds the value of the "githubName" field.
 	GithubName string `json:"githubName,omitempty"`
 	// GithubLogin holds the value of the "githubLogin" field.
@@ -69,9 +69,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID:
+		case user.FieldID, user.FieldGithubID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldSecret, user.FieldGithubID, user.FieldGithubName, user.FieldGithubLogin, user.FieldGithubOauthToken:
+		case user.FieldSecret, user.FieldGithubName, user.FieldGithubLogin, user.FieldGithubOauthToken:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -115,10 +115,10 @@ func (u *User) assignValues(columns []string, values []any) error {
 				u.Secret = value.String
 			}
 		case user.FieldGithubID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field githubID", values[i])
 			} else if value.Valid {
-				u.GithubID = value.String
+				u.GithubID = value.Int64
 			}
 		case user.FieldGithubName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -186,7 +186,7 @@ func (u *User) String() string {
 	builder.WriteString(u.Secret)
 	builder.WriteString(", ")
 	builder.WriteString("githubID=")
-	builder.WriteString(u.GithubID)
+	builder.WriteString(fmt.Sprintf("%v", u.GithubID))
 	builder.WriteString(", ")
 	builder.WriteString("githubName=")
 	builder.WriteString(u.GithubName)

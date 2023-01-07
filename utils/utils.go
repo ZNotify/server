@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"os"
 	"strings"
 	"sync"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"golang.org/x/oauth2"
 )
 
 func IsUUID(s string) bool {
@@ -60,10 +62,25 @@ func RequireFile(path string) {
 	}
 }
 
-func TokenClean(token string) string {
+func YamlStringClean(token string) string {
 	token = strings.Trim(token, " ")
 	token = strings.Trim(token, "\t")
 	token = strings.Trim(token, "\r")
 	token = strings.Trim(token, "\n")
 	return token
+}
+
+func OAuthTokenSerialize(token *oauth2.Token) string {
+	if d, err := json.Marshal(token); err == nil {
+		return string(d)
+	}
+	return ""
+}
+
+func OAuthTokenDeserialize(token string) *oauth2.Token {
+	var t oauth2.Token
+	if err := json.Unmarshal([]byte(token), &t); err == nil {
+		return &t
+	}
+	return nil
 }

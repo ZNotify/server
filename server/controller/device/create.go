@@ -27,7 +27,7 @@ import (
 //	@Success		200	{object}	types.Response[bool]
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
-//	@Router			/{user_id}/token/{device_id} [put]
+//	@Router			/{user_secret}/device/{device_id} [put]
 func Create(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {

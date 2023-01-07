@@ -5,14 +5,17 @@
   "default": {},
   "title": "ZNotify config schema",
   "required": [
-    "senders"
+    "senders",
+    "user"
   ],
   "properties": {
     "server": {
       "type": "object",
       "default": {},
       "title": "The server config",
-      "required": [],
+      "required": [
+        "url"
+      ],
       "properties": {
         "port": {
           "type": "integer",
@@ -36,6 +39,12 @@
             "development",
             "test"
           ]
+        },
+        "url": {
+          "type": "string",
+          "default": "http://localhost:14444",
+          "title": "The url the server will be available at.",
+          "description": "This is used to generate the links in the oauth. Don not include a trailing slash."
         }
       }
     },
@@ -77,7 +86,7 @@
       "title": "The senders Schema",
       "minProperties": 1,
       "properties": {
-        "WebSocketHost": {
+        "WebSocket": {
           "type": "null",
           "default": null,
           "title": "The WebSocket Host Sender"
@@ -123,7 +132,7 @@
             }
           }
         },
-        "TelegramHost": {
+        "Telegram": {
           "type": "object",
           "default": {},
           "title": "The TelegramHost config schema",
@@ -136,6 +145,54 @@
               "default": "",
               "title": "The BotToken",
               "description": "The BotToken from @BotFather"
+            }
+          }
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "default": {},
+      "title": "The user config schema",
+      "required": [
+        "admins",
+        "sso"
+      ],
+      "properties": {
+        "admins": {
+          "type": "array",
+          "default": [],
+          "title": "The admins of the server.",
+          "description": "The admins of the server, they can do everything. As for now, it is login from GitHub.",
+          "minLength": 1
+        },
+        "sso": {
+          "type": "object",
+          "default": {},
+          "title": "The SSO config schema",
+          "required": [
+            "github"
+          ],
+          "properties": {
+            "github": {
+              "type": "object",
+              "title": "The GitHub SSO config schema",
+              "required": [
+                "client_id",
+                "client_secret"
+              ],
+              "properties": {
+                "client_id": {
+                  "type": "string",
+                  "default": "",
+                  "title": "The client id from GitHub."
+                },
+                "client_secret": {
+                  "type": "string",
+                  "default": "",
+                  "title": "The client secret from GitHub."
+                }
+              }
             }
           }
         }

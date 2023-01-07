@@ -2,6 +2,8 @@ package setup
 
 import (
 	"testing"
+
+	"notify-api/server/setup/misc"
 )
 
 func Test_checkInternetConnection(t *testing.T) {
@@ -13,6 +15,6 @@ func Test_checkInternetConnection(t *testing.T) {
 				t.Errorf("You should keep global network access.")
 			}
 		}()
-		requireNetwork()
+		misc.RequireNetwork()
 	})
 }

@@ -1488,7 +1488,8 @@ type UserMutation struct {
 	created_at       *time.Time
 	updated_at       *time.Time
 	secret           *string
-	githubID         *string
+	githubID         *int64
+	addgithubID      *int64
 	githubName       *string
 	githubLogin      *string
 	githubOauthToken *string
@@ -1711,12 +1712,13 @@ func (m *UserMutation) ResetSecret() {
 }
 
 // SetGithubID sets the "githubID" field.
-func (m *UserMutation) SetGithubID(s string) {
-	m.githubID = &s
+func (m *UserMutation) SetGithubID(i int64) {
+	m.githubID = &i
+	m.addgithubID = nil
 }
 
 // GithubID returns the value of the "githubID" field in the mutation.
-func (m *UserMutation) GithubID() (r string, exists bool) {
+func (m *UserMutation) GithubID() (r int64, exists bool) {
 	v := m.githubID
 	if v == nil {
 		return
@@ -1727,7 +1729,7 @@ func (m *UserMutation) GithubID() (r string, exists bool) {
 // OldGithubID returns the old "githubID" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldGithubID(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldGithubID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldGithubID is only allowed on UpdateOne operations")
 	}
@@ -1741,9 +1743,28 @@ func (m *UserMutation) OldGithubID(ctx context.Context) (v string, err error) {
 	return oldValue.GithubID, nil
 }
 
+// AddGithubID adds i to the "githubID" field.
+func (m *UserMutation) AddGithubID(i int64) {
+	if m.addgithubID != nil {
+		*m.addgithubID += i
+	} else {
+		m.addgithubID = &i
+	}
+}
+
+// AddedGithubID returns the value that was added to the "githubID" field in this mutation.
+func (m *UserMutation) AddedGithubID() (r int64, exists bool) {
+	v := m.addgithubID
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetGithubID resets all changes to the "githubID" field.
 func (m *UserMutation) ResetGithubID() {
 	m.githubID = nil
+	m.addgithubID = nil
 }
 
 // SetGithubName sets the "githubName" field.
@@ -2079,7 +2100,7 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		m.SetSecret(v)
 		return nil
 	case user.FieldGithubID:
-		v, ok := value.(string)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -2113,13 +2134,21 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addgithubID != nil {
+		fields = append(fields, user.FieldGithubID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case user.FieldGithubID:
+		return m.AddedGithubID()
+	}
 	return nil, false
 }
 
@@ -2128,6 +2157,13 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldGithubID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddGithubID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }

@@ -44,8 +44,15 @@ func (uu *UserUpdate) SetSecret(s string) *UserUpdate {
 }
 
 // SetGithubID sets the "githubID" field.
-func (uu *UserUpdate) SetGithubID(s string) *UserUpdate {
-	uu.mutation.SetGithubID(s)
+func (uu *UserUpdate) SetGithubID(i int64) *UserUpdate {
+	uu.mutation.ResetGithubID()
+	uu.mutation.SetGithubID(i)
+	return uu
+}
+
+// AddGithubID adds i to the "githubID" field.
+func (uu *UserUpdate) AddGithubID(i int64) *UserUpdate {
+	uu.mutation.AddGithubID(i)
 	return uu
 }
 
@@ -253,7 +260,10 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(user.FieldSecret, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.GithubID(); ok {
-		_spec.SetField(user.FieldGithubID, field.TypeString, value)
+		_spec.SetField(user.FieldGithubID, field.TypeInt64, value)
+	}
+	if value, ok := uu.mutation.AddedGithubID(); ok {
+		_spec.AddField(user.FieldGithubID, field.TypeInt64, value)
 	}
 	if value, ok := uu.mutation.GithubName(); ok {
 		_spec.SetField(user.FieldGithubName, field.TypeString, value)
@@ -404,8 +414,15 @@ func (uuo *UserUpdateOne) SetSecret(s string) *UserUpdateOne {
 }
 
 // SetGithubID sets the "githubID" field.
-func (uuo *UserUpdateOne) SetGithubID(s string) *UserUpdateOne {
-	uuo.mutation.SetGithubID(s)
+func (uuo *UserUpdateOne) SetGithubID(i int64) *UserUpdateOne {
+	uuo.mutation.ResetGithubID()
+	uuo.mutation.SetGithubID(i)
+	return uuo
+}
+
+// AddGithubID adds i to the "githubID" field.
+func (uuo *UserUpdateOne) AddGithubID(i int64) *UserUpdateOne {
+	uuo.mutation.AddGithubID(i)
 	return uuo
 }
 
@@ -643,7 +660,10 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.SetField(user.FieldSecret, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.GithubID(); ok {
-		_spec.SetField(user.FieldGithubID, field.TypeString, value)
+		_spec.SetField(user.FieldGithubID, field.TypeInt64, value)
+	}
+	if value, ok := uuo.mutation.AddedGithubID(); ok {
+		_spec.AddField(user.FieldGithubID, field.TypeInt64, value)
 	}
 	if value, ok := uuo.mutation.GithubName(); ok {
 		_spec.SetField(user.FieldGithubName, field.TypeString, value)
