@@ -64,7 +64,7 @@ func (c *client) ping() error {
 
 func (c *client) writeMessage(msg *item.PushMessage) error {
 	c.updateWriteDeadline()
-	err := c.conn.WriteJSON(msg)
+	err := c.conn.WriteJSON(types.FromPushMessage(*msg))
 	if err != nil {
 		c.logWebsocketError(err)
 	}

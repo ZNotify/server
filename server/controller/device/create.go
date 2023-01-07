@@ -13,7 +13,7 @@ import (
 	"notify-api/utils"
 )
 
-// Device godoc
+// Create godoc
 //
 //	@Summary		Create or update device
 //	@Description	Create or update device information
@@ -28,7 +28,7 @@ import (
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_id}/token/{device_id} [put]
-func Device(context *types.Ctx) {
+func Create(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {
 		zap.S().Infof("device id %s is not a valid UUID", deviceID)

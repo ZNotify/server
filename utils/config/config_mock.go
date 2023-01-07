@@ -20,7 +20,6 @@ func Load(path string) {
 			DSN:  "file:memory:main?mode=memory&cache=shared&_fk=1",
 		},
 		Senders: make(map[string]SenderConfiguration),
-		Users:   make(UserConfiguration, 0),
 	}
 	gin.SetMode(gin.TestMode)
 }

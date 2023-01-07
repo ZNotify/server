@@ -11,7 +11,7 @@ import (
 	"notify-api/server/types"
 )
 
-// Records godoc
+// List godoc
 //
 //	@Summary		Get record
 //	@Description	Get records
@@ -22,7 +22,7 @@ import (
 //	@Success		200	{object}	types.Response[[]types.Message]
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_secret}/record [get]
-func Records(context *types.Ctx) {
+func List(context *types.Ctx) {
 	skip, err := strconv.Atoi(context.DefaultQuery("skip", "0"))
 	if err != nil {
 		zap.S().Infof("can not parse skip %s to int", context.DefaultQuery("skip", "0"))

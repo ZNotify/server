@@ -11,7 +11,7 @@ import (
 	"notify-api/server/types"
 )
 
-// Detail godoc
+// Get godoc
 //
 //	@Summary		Get message record detail
 //	@Description	Get message record detail of a message
@@ -23,7 +23,7 @@ import (
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Failure		404	{object}	types.NotFoundResponse
 //	@Router			/{user_secret}/{id} [get]
-func Detail(context *types.Ctx) {
+func Get(context *types.Ctx) {
 	messageID, err := uuid.Parse(context.Param("id"))
 
 	if err != nil {
