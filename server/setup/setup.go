@@ -92,8 +92,8 @@ func setupRouter(router *gin.Engine) {
 	userGroup := router.Group("/:user_secret")
 	userGroup.Use(middleware.UserAuth)
 	{
-		userGroup.GET("/record", types.WrapHandler(record.Records))
-		userGroup.GET("/:id", types.WrapHandler(record.Detail))
+		userGroup.GET("/record", types.WrapHandler(record.List))
+		userGroup.GET("/:id", types.WrapHandler(record.Get))
 		userGroup.DELETE("/:id", types.WrapHandler(record.Delete))
 
 		userGroup.POST("/send", types.WrapHandler(send.Send))
@@ -102,13 +102,27 @@ func setupRouter(router *gin.Engine) {
 		userGroup.POST("", types.WrapHandler(send.Short))
 		userGroup.PUT("", types.WrapHandler(send.Short))
 
-		userGroup.PUT("/device/:device_id", types.WrapHandler(device.Device))
+		userGroup.PUT("/device/:device_id", types.WrapHandler(device.Create))
 		userGroup.DELETE("/device/:device_id", types.WrapHandler(device.Delete))
 
 		push.RegisterRouter(userGroup)
 	}
 
-	router.GET("/debug/pprof/*pprof", gin.WrapH(http.HandlerFunc(pprof.Index)))
+	debugGroup := router.Group("/debug/pprof/")
+	{
+		debugGroup.GET("/", gin.WrapH(http.HandlerFunc(pprof.Index)))
+		debugGroup.GET("/cmdline", gin.WrapH(http.HandlerFunc(pprof.Cmdline)))
+		debugGroup.GET("/profile", gin.WrapH(http.HandlerFunc(pprof.Profile)))
+		debugGroup.POST("/symbol", gin.WrapH(http.HandlerFunc(pprof.Symbol)))
+		debugGroup.GET("/symbol", gin.WrapH(http.HandlerFunc(pprof.Symbol)))
+		debugGroup.GET("/trace", gin.WrapH(http.HandlerFunc(pprof.Trace)))
+		debugGroup.GET("/allocs", gin.WrapH(http.HandlerFunc(pprof.Handler("allocs").ServeHTTP)))
+		debugGroup.GET("/block", gin.WrapH(http.HandlerFunc(pprof.Handler("block").ServeHTTP)))
+		debugGroup.GET("/goroutine", gin.WrapH(http.HandlerFunc(pprof.Handler("goroutine").ServeHTTP)))
+		debugGroup.GET("/heap", gin.WrapH(http.HandlerFunc(pprof.Handler("heap").ServeHTTP)))
+		debugGroup.GET("/mutex", gin.WrapH(http.HandlerFunc(pprof.Handler("mutex").ServeHTTP)))
+		debugGroup.GET("/threadcreate", gin.WrapH(http.HandlerFunc(pprof.Handler("threadcreate").ServeHTTP)))
+	}
 
 	router.StaticFS("/fs", web.StaticHttpFS)
 	router.GET("/", types.WrapHandler(misc.WebIndex))

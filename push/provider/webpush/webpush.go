@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/SherClockHolmes/webpush-go"
 
@@ -13,6 +12,7 @@ import (
 	"notify-api/push/enum"
 	"notify-api/push/item"
 	pushTypes "notify-api/push/types"
+	"notify-api/server/types"
 )
 
 var client = &http.Client{}
@@ -49,7 +49,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 		return nil
 	}
 
-	data, err := json.Marshal(msg)
+	data, err := json.Marshal(types.FromPushMessage(*msg))
 	if err != nil {
 		return err
 	}
@@ -63,9 +63,6 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 	case enum.PriorityLow:
 		option.Urgency = webpush.UrgencyLow
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
 
 	size := len(tokens)
 	c := make(chan error, 0)
@@ -85,7 +82,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case err := <-c:
+		case err = <-c:
 			if err != nil {
 				return err
 			} else {
