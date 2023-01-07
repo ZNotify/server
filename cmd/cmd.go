@@ -1,13 +1,7 @@
 package cmd
 
 import (
-	"strconv"
-
 	"github.com/urfave/cli/v2"
-	"go.uber.org/zap"
-
-	"notify-api/server/setup"
-	"notify-api/utils/config"
 )
 
 var App = &cli.App{
@@ -34,33 +28,5 @@ var App = &cli.App{
 			Usage: "Set listen address to `ADDRESS`.",
 		},
 	},
-	Action: func(ctx *cli.Context) error {
-		host := ctx.String("host")
-		port := ctx.Int("port")
-
-		path := ctx.String("config")
-		config.Load(path)
-
-		if host != "" {
-			config.Config.Server.Host = host
-		}
-		if port != 0 {
-			config.Config.Server.Port = port
-		}
-
-		var address string
-		if ctx.String("address") != "" {
-			address = ctx.String("address")
-		} else {
-			address = config.Config.Server.Host + ":" + strconv.Itoa(config.Config.Server.Port)
-		}
-
-		zap.S().Infof("Server is running on %s", address)
-
-		err := setup.New().Run(address)
-		if err != nil {
-			return err
-		}
-		return nil
-	},
+	Action: start,
 }

@@ -11,7 +11,7 @@ import (
 
 	"notify-api/ent/helper"
 	"notify-api/push/item"
-	"notify-api/utils/config"
+	"notify-api/server/setup/config"
 
 	"go.uber.org/zap"
 
@@ -64,7 +64,7 @@ func Init() {
 				if !ok {
 					zap.S().Fatalf("Sender %s config %s not found", id, v)
 				}
-				cfg[v] = utils.TokenClean(value)
+				cfg[v] = utils.YamlStringClean(value)
 			}
 			err = authSender.Init(cfg)
 			if err != nil {

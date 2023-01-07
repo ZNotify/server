@@ -103,7 +103,7 @@ func Secret(v string) predicate.User {
 }
 
 // GithubID applies equality check predicate on the "githubID" field. It's identical to GithubIDEQ.
-func GithubID(v string) predicate.User {
+func GithubID(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldGithubID), v))
 	})
@@ -358,21 +358,21 @@ func SecretContainsFold(v string) predicate.User {
 }
 
 // GithubIDEQ applies the EQ predicate on the "githubID" field.
-func GithubIDEQ(v string) predicate.User {
+func GithubIDEQ(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldGithubID), v))
 	})
 }
 
 // GithubIDNEQ applies the NEQ predicate on the "githubID" field.
-func GithubIDNEQ(v string) predicate.User {
+func GithubIDNEQ(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldGithubID), v))
 	})
 }
 
 // GithubIDIn applies the In predicate on the "githubID" field.
-func GithubIDIn(vs ...string) predicate.User {
+func GithubIDIn(vs ...int64) predicate.User {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -383,7 +383,7 @@ func GithubIDIn(vs ...string) predicate.User {
 }
 
 // GithubIDNotIn applies the NotIn predicate on the "githubID" field.
-func GithubIDNotIn(vs ...string) predicate.User {
+func GithubIDNotIn(vs ...int64) predicate.User {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -394,65 +394,30 @@ func GithubIDNotIn(vs ...string) predicate.User {
 }
 
 // GithubIDGT applies the GT predicate on the "githubID" field.
-func GithubIDGT(v string) predicate.User {
+func GithubIDGT(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldGithubID), v))
 	})
 }
 
 // GithubIDGTE applies the GTE predicate on the "githubID" field.
-func GithubIDGTE(v string) predicate.User {
+func GithubIDGTE(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldGithubID), v))
 	})
 }
 
 // GithubIDLT applies the LT predicate on the "githubID" field.
-func GithubIDLT(v string) predicate.User {
+func GithubIDLT(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldGithubID), v))
 	})
 }
 
 // GithubIDLTE applies the LTE predicate on the "githubID" field.
-func GithubIDLTE(v string) predicate.User {
+func GithubIDLTE(v int64) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldGithubID), v))
-	})
-}
-
-// GithubIDContains applies the Contains predicate on the "githubID" field.
-func GithubIDContains(v string) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldGithubID), v))
-	})
-}
-
-// GithubIDHasPrefix applies the HasPrefix predicate on the "githubID" field.
-func GithubIDHasPrefix(v string) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldGithubID), v))
-	})
-}
-
-// GithubIDHasSuffix applies the HasSuffix predicate on the "githubID" field.
-func GithubIDHasSuffix(v string) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldGithubID), v))
-	})
-}
-
-// GithubIDEqualFold applies the EqualFold predicate on the "githubID" field.
-func GithubIDEqualFold(v string) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldGithubID), v))
-	})
-}
-
-// GithubIDContainsFold applies the ContainsFold predicate on the "githubID" field.
-func GithubIDContainsFold(v string) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldGithubID), v))
 	})
 }
 

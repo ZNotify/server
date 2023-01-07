@@ -66,7 +66,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "secret", Type: field.TypeString, Unique: true},
-		{Name: "github_id", Type: field.TypeString, Unique: true},
+		{Name: "github_id", Type: field.TypeInt64, Unique: true},
 		{Name: "github_name", Type: field.TypeString},
 		{Name: "github_login", Type: field.TypeString},
 		{Name: "github_oauth_token", Type: field.TypeString},

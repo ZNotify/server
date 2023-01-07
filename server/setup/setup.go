@@ -3,7 +3,6 @@ package setup
 import (
 	"net/http"
 	"net/http/pprof"
-	"strconv"
 	"time"
 
 	swaggerFiles "github.com/swaggo/files"
@@ -15,7 +14,9 @@ import (
 	"notify-api/server/controller/record"
 	"notify-api/server/controller/send"
 	"notify-api/server/controller/user"
-	"notify-api/utils/config"
+	"notify-api/server/setup/config"
+	setupMisc "notify-api/server/setup/misc"
+	"notify-api/server/setup/oauth"
 
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"
@@ -29,40 +30,23 @@ import (
 	"notify-api/web"
 )
 
-func New() *gin.Engine {
-	router := gin.New()
-
-	requireNetwork()
-	requireX64()
+func Setup() {
+	setupMisc.RequireNetwork()
+	setupMisc.RequireX64()
 
 	dao.Init()
 	push.Init()
+	oauth.Init()
+}
+
+func NewRouter() *gin.Engine {
+	router := gin.New()
 
 	setupDoc(router)
 	setupMiddleware(router)
-	setupRouter(router)
+	setupController(router)
 
 	return router
-}
-
-func requireNetwork() {
-	if !config.IsProd() {
-		zap.S().Info("Skip connection check in non-production mode")
-		return
-	}
-
-	go func() {
-		_, err := http.Get("https://www.google.com/robots.txt")
-		if err != nil {
-			zap.S().Panicf("Failed to connect to internet: %v", err)
-		}
-	}()
-}
-
-func requireX64() {
-	if strconv.IntSize != 64 {
-		zap.S().Panic("Only 64-bit platform is supported")
-	}
 }
 
 func setupMiddleware(router *gin.Engine) {
@@ -80,7 +64,7 @@ func setupDoc(router *gin.Engine) {
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
-func setupRouter(router *gin.Engine) {
+func setupController(router *gin.Engine) {
 	router.Use(ginzap.Ginzap(zap.L(), time.RFC3339, false))
 	router.Use(ginzap.RecoveryWithZap(zap.L(), true))
 
@@ -88,6 +72,12 @@ func setupRouter(router *gin.Engine) {
 
 	router.GET("/check", types.WrapHandler(user.Check))
 	router.GET("/alive", types.WrapHandler(misc.Alive))
+
+	loginGroup := router.Group("/login")
+	{
+		loginGroup.GET("", types.WrapHandler(user.Login))
+		loginGroup.GET("/github", types.WrapHandler(user.GitHub))
+	}
 
 	userGroup := router.Group("/:user_secret")
 	userGroup.Use(middleware.UserAuth)
@@ -108,7 +98,7 @@ func setupRouter(router *gin.Engine) {
 		push.RegisterRouter(userGroup)
 	}
 
-	debugGroup := router.Group("/debug/pprof/")
+	debugGroup := router.Group("/debug/pprof")
 	{
 		debugGroup.GET("/", gin.WrapH(http.HandlerFunc(pprof.Index)))
 		debugGroup.GET("/cmdline", gin.WrapH(http.HandlerFunc(pprof.Cmdline)))

@@ -62,12 +62,12 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Check if the user_id is valid",
+                "summary": "Check if the user secret is valid",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "query",
                         "required": true
                     }
@@ -98,7 +98,54 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_id}": {
+        "/login": {
+            "get": {
+                "summary": "Login with GitHub",
+                "responses": {
+                    "307": {
+                        "description": "Temporary Redirect"
+                    }
+                }
+            }
+        },
+        "/login/github": {
+            "get": {
+                "summary": "OAuth callback for GitHub, redirect to ui with user_secret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "should always be 'no_need_to_set_state'",
+                        "name": "state",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "access code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "307": {
+                        "description": "Temporary Redirect"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/{user_secret}": {
             "put": {
                 "description": "Send notification to user_id",
                 "consumes": [
@@ -111,13 +158,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "content",
+                        "description": "Message Content",
                         "name": "string",
                         "in": "body",
                         "required": true,
@@ -159,13 +206,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
+                        "description": "Secret of user",
+                        "name": "user_secret",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "content",
+                        "description": "Message Content",
                         "name": "string",
                         "in": "body",
                         "required": true,
@@ -196,7 +243,115 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_id}/record": {
+        "/{user_secret}/device/{device_id}": {
+            "put": {
+                "description": "Create or update device information",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create or update device",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret of user",
+                        "name": "user_secret",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "device_id should be a valid UUID",
+                        "name": "device_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Telegram",
+                            "WebSocket",
+                            "FCM",
+                            "WebPush",
+                            "WNS"
+                        ],
+                        "type": "string",
+                        "description": "channel can be used.",
+                        "name": "channel",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "device name",
+                        "name": "device_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "additional device meta",
+                        "name": "device_meta",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "channel token",
+                        "name": "token",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-bool"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete device with device_id",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete device",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret of user",
+                        "name": "user_secret",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "The identifier of device, should be a UUID",
+                        "name": "device_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-bool"
+                        }
+                    }
+                }
+            }
+        },
+        "/{user_secret}/record": {
             "get": {
                 "description": "Get records",
                 "produces": [
@@ -212,13 +367,16 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "minimum": 0,
                         "type": "integer",
+                        "default": 0,
                         "description": "The number of records to skip",
                         "name": "skip",
                         "in": "query"
                     },
                     {
                         "maximum": 100,
+                        "minimum": 0,
                         "type": "integer",
                         "default": 20,
                         "description": "The number of records to return",
@@ -242,7 +400,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_id}/send": {
+        "/{user_secret}/send": {
             "put": {
                 "description": "Send notification to user_id",
                 "produces": [
@@ -380,111 +538,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_id}/token/{client_id}": {
-            "put": {
-                "description": "Create or update token of device",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create or update token",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "client_id should be a valid UUID",
-                        "name": "client_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "enum": [
-                            "TelegramHost",
-                            "WebSocketHost",
-                            "FCM",
-                            "WebPush",
-                            "WNS"
-                        ],
-                        "type": "string",
-                        "description": "channel can be used. Sometimes less than document.",
-                        "name": "channel",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Additional info about client",
-                        "name": "info",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/{user_id}/token/{device_id}": {
-            "delete": {
-                "description": "Delete token of device",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete token",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "device_id",
-                        "name": "device_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
-                        }
-                    }
-                }
-            }
-        },
-        "/{user_id}/{id}": {
+        "/{user_secret}/{id}": {
             "get": {
                 "description": "Get message record detail of a message",
                 "produces": [
@@ -574,7 +628,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "item.Priority": {
+        "enum.Priority": {
             "type": "string",
             "enum": [
                 "low",
@@ -620,7 +674,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "priority": {
-                    "$ref": "#/definitions/item.Priority"
+                    "$ref": "#/definitions/enum.Priority"
                 },
                 "title": {
                     "type": "string"

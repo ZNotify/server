@@ -1,5 +1,5 @@
 definitions:
-  item.Priority:
+  enum.Priority:
     enum:
     - low
     - normal
@@ -32,7 +32,7 @@ definitions:
       long:
         type: string
       priority:
-        $ref: '#/definitions/item.Priority'
+        $ref: '#/definitions/enum.Priority'
       title:
         type: string
     type: object
@@ -100,18 +100,18 @@ paths:
           schema:
             type: string
       summary: Web Index
-  /{user_id}:
+  /{user_secret}:
     post:
       consumes:
       - text/plain
       description: Send notification to user_id
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
-      - description: content
+      - description: Message Content
         in: body
         name: string
         required: true
@@ -138,12 +138,12 @@ paths:
       - text/plain
       description: Send notification to user_id
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: path
-        name: user_id
+        name: user_secret
         required: true
         type: string
-      - description: content
+      - description: Message Content
         in: body
         name: string
         required: true
@@ -165,7 +165,7 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
-  /{user_id}/{id}:
+  /{user_secret}/{id}:
     delete:
       description: Delete message record with id
       parameters:
@@ -224,7 +224,81 @@ paths:
           schema:
             $ref: '#/definitions/types.NotFoundResponse'
       summary: Get message record detail
-  /{user_id}/record:
+  /{user_secret}/device/{device_id}:
+    delete:
+      description: Delete device with device_id
+      parameters:
+      - description: Secret of user
+        in: path
+        name: user_secret
+        required: true
+        type: string
+      - description: The identifier of device, should be a UUID
+        in: path
+        name: device_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+      summary: Delete device
+    put:
+      description: Create or update device information
+      parameters:
+      - description: Secret of user
+        in: path
+        name: user_secret
+        required: true
+        type: string
+      - description: device_id should be a valid UUID
+        in: path
+        name: device_id
+        required: true
+        type: string
+      - description: channel can be used.
+        enum:
+        - Telegram
+        - WebSocket
+        - FCM
+        - WebPush
+        - WNS
+        in: formData
+        name: channel
+        required: true
+        type: string
+      - description: device name
+        in: formData
+        name: device_name
+        type: string
+      - description: additional device meta
+        in: formData
+        name: device_meta
+        type: string
+      - description: channel token
+        in: formData
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: Create or update device
+  /{user_secret}/record:
     get:
       description: Get records
       parameters:
@@ -233,14 +307,17 @@ paths:
         name: user_secret
         required: true
         type: string
-      - description: The number of records to skip
+      - default: 0
+        description: The number of records to skip
         in: query
+        minimum: 0
         name: skip
         type: integer
       - default: 20
         description: The number of records to return
         in: query
         maximum: 100
+        minimum: 0
         name: limit
         type: integer
       produces:
@@ -255,7 +332,7 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Get record
-  /{user_id}/send:
+  /{user_secret}/send:
     post:
       description: Send notification to user_id
       parameters:
@@ -350,77 +427,6 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
-  /{user_id}/token/{client_id}:
-    put:
-      description: Create or update token of device
-      parameters:
-      - description: user_id
-        in: path
-        name: user_id
-        required: true
-        type: string
-      - description: client_id should be a valid UUID
-        in: path
-        name: client_id
-        required: true
-        type: string
-      - description: channel can be used. Sometimes less than document.
-        enum:
-        - TelegramHost
-        - WebSocketHost
-        - FCM
-        - WebPush
-        - WNS
-        in: formData
-        name: channel
-        required: true
-        type: string
-      - description: token
-        in: formData
-        name: token
-        type: string
-      - description: Additional info about client
-        in: formData
-        name: info
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-bool'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/types.BadRequestResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
-      summary: Create or update token
-  /{user_id}/token/{device_id}:
-    delete:
-      description: Delete token of device
-      parameters:
-      - description: user_id
-        in: path
-        name: user_id
-        required: true
-        type: string
-      - description: device_id
-        in: path
-        name: device_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-bool'
-      summary: Delete token
   /alive:
     get:
       description: If the server is alive
@@ -435,9 +441,9 @@ paths:
   /check:
     get:
       parameters:
-      - description: user_id
+      - description: Secret of user
         in: query
-        name: user_id
+        name: user_secret
         required: true
         type: string
       produces:
@@ -447,7 +453,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Response-bool'
-      summary: Check if the user_id is valid
+      summary: Check if the user secret is valid
   /docs:
     get:
       produces:
@@ -458,4 +464,34 @@ paths:
           schema:
             type: string
       summary: Redirect to docs
+  /login:
+    get:
+      responses:
+        "307":
+          description: Temporary Redirect
+      summary: Login with GitHub
+  /login/github:
+    get:
+      parameters:
+      - description: should always be 'no_need_to_set_state'
+        in: query
+        name: state
+        type: string
+      - description: access code
+        in: query
+        name: code
+        required: true
+        type: string
+      responses:
+        "307":
+          description: Temporary Redirect
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: OAuth callback for GitHub, redirect to ui with user_secret
 swagger: "2.0"
