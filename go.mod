@@ -1,6 +1,6 @@
 module notify-api
 
-go 1.18
+go 1.19
 
 require (
 	entgo.io/ent v0.11.4
@@ -18,7 +18,7 @@ require (
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/pkg/errors v0.9.1
-	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
+	github.com/swaggo/files v1.0.1-0.20221208235034-c9c7565fbd33
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.8
 	github.com/urfave/cli/v2 v2.23.6
