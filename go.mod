@@ -3,13 +3,13 @@ module notify-api
 go 1.19
 
 require (
-	entgo.io/ent v0.11.4
+	entgo.io/ent v0.11.5
 	firebase.google.com/go/v4 v4.10.0
 	github.com/SherClockHolmes/webpush-go v1.2.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/zap v0.1.0
 	github.com/gin-gonic/gin v1.8.2
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/google/go-github/v49 v49.0.0
 	github.com/google/uuid v1.3.0
@@ -29,7 +29,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.7.3-0.20221011160332-3ca609863edd // indirect
+	ariga.io/atlas v0.8.4-0.20221212165942-e53dd27a603d // indirect
 	cloud.google.com/go v0.105.0 // indirect
 	cloud.google.com/go/compute v1.14.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
@@ -82,13 +82,13 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
-	golang.org/x/mod v0.6.0 // indirect
+	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 	golang.org/x/time v0.1.0 // indirect
-	golang.org/x/tools v0.2.0 // indirect
+	golang.org/x/tools v0.3.1-0.20221202221704-aa9f4b2f3d57 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/appengine/v2 v2.0.2 // indirect
