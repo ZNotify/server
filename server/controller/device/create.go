@@ -15,19 +15,20 @@ import (
 
 // Create godoc
 //
-//	@Summary		Create or update device
-//	@Description	Create or update device information
-//	@Param			user_secret	path		string	true	"Secret of user"
-//	@Param			device_id	path		string	true	"device_id should be a valid UUID"
-//	@Param			channel		formData	string	true	"channel can be used."	Enums(Telegram, WebSocket, FCM, WebPush, WNS)
-//	@Param			device_name	formData	string	false	"device name"
-//	@Param			device_meta	formData	string	false	"additional device meta"
-//	@Param			token		formData	string	false	"channel token"
-//	@Produce		json
-//	@Success		200	{object}	types.Response[bool]
-//	@Failure		400	{object}	types.BadRequestResponse
-//	@Failure		401	{object}	types.UnauthorizedResponse
-//	@Router			/{user_secret}/device/{device_id} [put]
+//		@Summary		Create or update device
+//	 @Id				device.create
+//		@Description	Create or update device information
+//		@Param			user_secret	path		string	true	"Secret of user"
+//		@Param			device_id	path		string	true	"device_id should be a valid UUID"
+//		@Param			channel		formData	string	true	"channel can be used."	Enums(Telegram, WebSocket, FCM, WebPush, WNS)
+//		@Param			device_name	formData	string	false	"device name"
+//		@Param			device_meta	formData	string	false	"additional device meta"
+//		@Param			token		formData	string	false	"channel token"
+//		@Produce		json
+//		@Success		200	{object}	types.Response[bool]
+//		@Failure		400	{object}	types.BadRequestResponse
+//		@Failure		401	{object}	types.UnauthorizedResponse
+//		@Router			/{user_secret}/device/{device_id} [put]
 func Create(context *types.Ctx) {
 	deviceID := context.Param("device_id")
 	if !utils.IsUUID(deviceID) {

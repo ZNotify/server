@@ -9,15 +9,16 @@ import (
 	"go.uber.org/zap"
 
 	"notify-api/ent/dao"
-	"notify-api/server/setup/config"
-	"notify-api/server/setup/oauth"
 	"notify-api/server/types"
+	"notify-api/setup/config"
+	"notify-api/setup/oauth"
 	"notify-api/utils"
 )
 
 // GitHub
 //
 //	@Summary	OAuth callback for GitHub, redirect to ui with user_secret
+//	@Id			user.github
 //	@Success	307
 //	@Router		/login/github [get]
 //	@Param		state	query		string	false	"should always be 'no_need_to_set_state'"

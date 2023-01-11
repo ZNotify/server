@@ -13,14 +13,15 @@ import (
 
 // Delete godoc
 //
-//	@Summary		Delete message record
-//	@Description	Delete message record with id
-//	@Param			user_secret	path	string	true	"Secret of user"
-//	@Param			id			path	string	true	"ID of message"
-//	@Produce		json
-//	@Success		200	{object}	types.Response[bool]
-//	@Failure		401	{object}	types.UnauthorizedResponse
-//	@Router			/{user_secret}/{id} [delete]
+//		@Summary		Delete message record
+//	 @Id				record.delete
+//		@Description	Delete message record with id
+//		@Param			user_secret	path	string	true	"Secret of user"
+//		@Param			id			path	string	true	"ID of message"
+//		@Produce		json
+//		@Success		200	{object}	types.Response[bool]
+//		@Failure		401	{object}	types.UnauthorizedResponse
+//		@Router			/{user_secret}/{id} [delete]
 func Delete(context *types.Ctx) {
 	id, err := uuid.Parse(context.Param("id"))
 	if err != nil {

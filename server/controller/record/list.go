@@ -14,6 +14,7 @@ import (
 // List godoc
 //
 //	@Summary		Get record
+//	@Id				record.list
 //	@Description	Get records
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			skip		query	int		false	"The number of records to skip"		default(0)	minimum(0)

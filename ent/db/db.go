@@ -6,7 +6,7 @@ import (
 	"entgo.io/ent/dialect"
 
 	"notify-api/ent/generate"
-	"notify-api/server/setup/config"
+	"notify-api/setup/config"
 
 	"go.uber.org/zap"
 

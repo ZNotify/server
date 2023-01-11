@@ -3,7 +3,7 @@ package setup
 import (
 	"testing"
 
-	"notify-api/server/setup/misc"
+	"notify-api/setup/misc"
 )
 
 func Test_checkInternetConnection(t *testing.T) {

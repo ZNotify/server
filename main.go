@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"notify-api/cmd"
-	"notify-api/server/setup/log"
+	"notify-api/setup/log"
 )
 
 // @title			Notify API

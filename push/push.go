@@ -11,7 +11,7 @@ import (
 
 	"notify-api/ent/helper"
 	"notify-api/push/item"
-	"notify-api/server/setup/config"
+	"notify-api/setup/config"
 
 	"go.uber.org/zap"
 

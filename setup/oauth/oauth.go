@@ -4,7 +4,7 @@ import (
 	"golang.org/x/oauth2"
 	githubOAuth "golang.org/x/oauth2/github"
 
-	"notify-api/server/setup/config"
+	"notify-api/setup/config"
 )
 
 var OAuthConf *oauth2.Config

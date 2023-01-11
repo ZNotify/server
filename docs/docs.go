@@ -47,6 +47,7 @@ const docTemplate = `{
                     "text/plain"
                 ],
                 "summary": "Server Heartbeat",
+                "operationId": "misc.alive",
                 "responses": {
                     "204": {
                         "description": "No Content",
@@ -63,6 +64,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Check if the user secret is valid",
+                "operationId": "user.check",
                 "parameters": [
                     {
                         "type": "string",
@@ -101,6 +103,7 @@ const docTemplate = `{
         "/login": {
             "get": {
                 "summary": "Login with GitHub",
+                "operationId": "user.login",
                 "responses": {
                     "307": {
                         "description": "Temporary Redirect"
@@ -111,6 +114,7 @@ const docTemplate = `{
         "/login/github": {
             "get": {
                 "summary": "OAuth callback for GitHub, redirect to ui with user_secret",
+                "operationId": "user.github",
                 "parameters": [
                     {
                         "type": "string",
@@ -155,6 +159,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Send notification",
+                "operationId": "send.short",
                 "parameters": [
                     {
                         "type": "string",
@@ -203,6 +208,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Send notification",
+                "operationId": "send.short",
                 "parameters": [
                     {
                         "type": "string",
@@ -250,6 +256,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Create or update device",
+                "operationId": "device.create",
                 "parameters": [
                     {
                         "type": "string",
@@ -325,6 +332,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete device",
+                "operationId": "device.delete",
                 "parameters": [
                     {
                         "type": "string",
@@ -358,6 +366,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get record",
+                "operationId": "record.list",
                 "parameters": [
                     {
                         "type": "string",
@@ -407,6 +416,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Send notification",
+                "operationId": "send.send",
                 "parameters": [
                     {
                         "type": "string",
@@ -475,6 +485,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Send notification",
+                "operationId": "send.send",
                 "parameters": [
                     {
                         "type": "string",
@@ -545,6 +556,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get message record detail",
+                "operationId": "record.get",
                 "parameters": [
                     {
                         "type": "string",
@@ -594,6 +606,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete message record",
+                "operationId": "record.delete",
                 "parameters": [
                     {
                         "type": "string",

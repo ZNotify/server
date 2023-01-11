@@ -13,7 +13,7 @@ import (
 	"notify-api/push/enum"
 	"notify-api/push/item"
 	pushTypes "notify-api/push/types"
-	"notify-api/server/setup/config"
+	"notify-api/setup/config"
 )
 
 type Host struct {

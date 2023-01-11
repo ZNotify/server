@@ -14,9 +14,9 @@ import (
 	"notify-api/server/controller/record"
 	"notify-api/server/controller/send"
 	"notify-api/server/controller/user"
-	"notify-api/server/setup/config"
-	setupMisc "notify-api/server/setup/misc"
-	"notify-api/server/setup/oauth"
+	"notify-api/setup/config"
+	setupMisc "notify-api/setup/misc"
+	"notify-api/setup/oauth"
 
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"

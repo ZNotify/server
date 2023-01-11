@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"notify-api/server/setup/config"
+	"notify-api/setup/config"
 )
 
 func RequireNetwork() {
