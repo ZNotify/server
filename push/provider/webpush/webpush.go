@@ -110,5 +110,5 @@ func (p *Provider) Config() []string {
 }
 
 func (p *Provider) Name() string {
-	return "WebPush"
+	return string(enum.SenderWebPush)
 }

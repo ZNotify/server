@@ -3,6 +3,7 @@ package wns
 import (
 	"context"
 
+	"notify-api/push/enum"
 	pushTypes "notify-api/push/item"
 )
 
@@ -21,5 +22,5 @@ func (p *Provider) Init() error {
 
 func (p *Provider) Name() string {
 	// Windows Push Notification Services
-	return "WNS"
+	return string(enum.SenderWns)
 }

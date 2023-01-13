@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"notify-api/ent/generate"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	"notify-api/server/types"
 )
@@ -23,5 +24,5 @@ func (h *Host) Send(ctx context.Context, msg *item.PushMessage) error {
 }
 
 func (h *Host) Name() string {
-	return "WebSocket"
+	return string(enum.SenderWebSocket)
 }

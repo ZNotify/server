@@ -10,12 +10,12 @@ import (
 
 // Check godoc
 //
-//		@Summary	Check if the user secret is valid
-//	 @Id			user.check
-//		@Produce	json
-//		@Param		user_secret	query		string	true	"Secret of user"
-//		@Success	200			{object}	types.Response[bool]
-//		@Router		/check [get]
+//	@Summary	Check if the user secret is valid
+//	@Id			user.check
+//	@Produce	json
+//	@Param		user_secret	query		string	true	"Secret of user"
+//	@Success	200			{object}	types.Response[bool]
+//	@Router		/check [get]
 func Check(context *types.Ctx) {
 	userSecret := context.Query("user_secret")
 	if userSecret == "" {

@@ -274,11 +274,11 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "Telegram",
-                            "WebSocket",
                             "FCM",
                             "WebPush",
-                            "WNS"
+                            "WNS",
+                            "Telegram",
+                            "WebSocket"
                         ],
                         "type": "string",
                         "description": "channel can be used.",

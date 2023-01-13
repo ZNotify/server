@@ -13,17 +13,17 @@ import (
 
 // Get godoc
 //
-//		@Summary		Get message record detail
-//	 @Id				record.get
-//		@Description	Get message record detail of a message
-//		@Param			user_secret	path	string	true	"Secret of user"
-//		@Param			id			path	string	true	"ID of message"
-//		@Produce		json
-//		@Success		200	{object}	types.Response[types.Message]
-//		@Failure		400	{object}	types.BadRequestResponse
-//		@Failure		401	{object}	types.UnauthorizedResponse
-//		@Failure		404	{object}	types.NotFoundResponse
-//		@Router			/{user_secret}/{id} [get]
+//	@Summary		Get message record detail
+//	@Id				record.get
+//	@Description	Get message record detail of a message
+//	@Param			user_secret	path	string	true	"Secret of user"
+//	@Param			id			path	string	true	"ID of message"
+//	@Produce		json
+//	@Success		200	{object}	types.Response[types.Message]
+//	@Failure		400	{object}	types.BadRequestResponse
+//	@Failure		401	{object}	types.UnauthorizedResponse
+//	@Failure		404	{object}	types.NotFoundResponse
+//	@Router			/{user_secret}/{id} [get]
 func Get(context *types.Ctx) {
 	messageID, err := uuid.Parse(context.Param("id"))
 

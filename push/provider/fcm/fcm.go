@@ -86,5 +86,5 @@ func (p *Provider) Config() []string {
 }
 
 func (p *Provider) Name() string {
-	return "FCM"
+	return string(enum.SenderFcm)
 }

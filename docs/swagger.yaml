@@ -267,11 +267,11 @@ paths:
         type: string
       - description: channel can be used.
         enum:
-        - Telegram
-        - WebSocket
         - FCM
         - WebPush
         - WNS
+        - Telegram
+        - WebSocket
         in: formData
         name: channel
         required: true
