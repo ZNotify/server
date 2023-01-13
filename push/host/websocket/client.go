@@ -12,6 +12,7 @@ import (
 	"notify-api/ent/generate"
 	"notify-api/push/item"
 	"notify-api/server/types"
+	"notify-api/server/types/entity"
 )
 
 type client struct {
@@ -64,7 +65,7 @@ func (c *client) ping() error {
 
 func (c *client) writeMessage(msg *item.PushMessage) error {
 	c.updateWriteDeadline()
-	err := c.conn.WriteJSON(types.FromPushMessage(*msg))
+	err := c.conn.WriteJSON(entity.FromPushMessage(*msg))
 	if err != nil {
 		c.logWebsocketError(err)
 	}

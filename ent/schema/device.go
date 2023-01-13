@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema/field"
 
 	"notify-api/ent/mixin"
+	"notify-api/push/enum"
 )
 
 type Device struct {
@@ -15,7 +16,7 @@ type Device struct {
 func (Device) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("identifier").Unique(),
-		field.String("channel"),
+		field.String("channel").GoType(enum.Sender("")),
 		field.String("channelMeta"),
 		field.String("channelToken"),
 		field.String("deviceName"),

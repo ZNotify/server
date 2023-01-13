@@ -182,7 +182,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-types_Message"
+                            "$ref": "#/definitions/types.Response-entity_Message"
                         }
                     },
                     "400": {
@@ -231,7 +231,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-types_Message"
+                            "$ref": "#/definitions/types.Response-entity_Message"
                         }
                     },
                     "400": {
@@ -359,14 +359,131 @@ const docTemplate = `{
                 }
             }
         },
-        "/{user_secret}/record": {
+        "/{user_secret}/devices": {
             "get": {
-                "description": "Get records",
+                "description": "Delete device with device_id",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get record",
-                "operationId": "record.list",
+                "summary": "Messages user devices",
+                "operationId": "user.devices",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret of user",
+                        "name": "user_secret",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-array_entity_Device"
+                        }
+                    }
+                }
+            }
+        },
+        "/{user_secret}/message/{id}": {
+            "get": {
+                "description": "Get message record detail of a message",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get message record detail",
+                "operationId": "record.get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret of user",
+                        "name": "user_secret",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID of message",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-entity_Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/types.NotFoundResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete message record with id",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete message record",
+                "operationId": "record.delete",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Secret of user",
+                        "name": "user_secret",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID of message",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-bool"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/{user_secret}/messages": {
+            "get": {
+                "description": "Get messages of user with pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get messages of user",
+                "operationId": "user.messages",
                 "parameters": [
                     {
                         "type": "string",
@@ -397,7 +514,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-array_types_Message"
+                            "$ref": "#/definitions/types.Response-array_entity_Message"
                         }
                     },
                     "401": {
@@ -462,7 +579,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-types_Message"
+                            "$ref": "#/definitions/types.Response-entity_Message"
                         }
                     },
                     "400": {
@@ -531,103 +648,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-types_Message"
+                            "$ref": "#/definitions/types.Response-entity_Message"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/types.BadRequestResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/{user_secret}/{id}": {
-            "get": {
-                "description": "Get message record detail of a message",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get message record detail",
-                "operationId": "record.get",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Secret of user",
-                        "name": "user_secret",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "ID of message",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-types_Message"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/types.NotFoundResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete message record with id",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete message record",
-                "operationId": "record.delete",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Secret of user",
-                        "name": "user_secret",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "ID of message",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
                         }
                     },
                     "401": {
@@ -641,37 +668,24 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "enum.Priority": {
-            "type": "string",
-            "enum": [
-                "low",
-                "normal",
-                "high"
-            ],
-            "x-enum-comments": {
-                "PriorityHigh": "high",
-                "PriorityLow": "low",
-                "PriorityNormal": "normal"
-            },
-            "x-enum-varnames": [
-                "PriorityLow",
-                "PriorityNormal",
-                "PriorityHigh"
-            ]
-        },
-        "types.BadRequestResponse": {
+        "entity.Device": {
             "type": "object",
             "properties": {
-                "body": {
+                "channel": {
+                    "$ref": "#/definitions/enum.Sender"
+                },
+                "deviceMeta": {
                     "type": "string"
                 },
-                "code": {
-                    "type": "integer",
-                    "default": 400
+                "deviceName": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "string"
                 }
             }
         },
-        "types.Message": {
+        "entity.Message": {
             "type": "object",
             "properties": {
                 "content": {
@@ -694,6 +708,60 @@ const docTemplate = `{
                 }
             }
         },
+        "enum.Priority": {
+            "type": "string",
+            "enum": [
+                "low",
+                "normal",
+                "high"
+            ],
+            "x-enum-comments": {
+                "PriorityHigh": "high",
+                "PriorityLow": "low",
+                "PriorityNormal": "normal"
+            },
+            "x-enum-varnames": [
+                "PriorityLow",
+                "PriorityNormal",
+                "PriorityHigh"
+            ]
+        },
+        "enum.Sender": {
+            "type": "string",
+            "enum": [
+                "FCM",
+                "WebPush",
+                "WNS",
+                "Telegram",
+                "WebSocket"
+            ],
+            "x-enum-comments": {
+                "SenderFcm": "FCM",
+                "SenderTelegram": "Telegram",
+                "SenderWebPush": "WebPush",
+                "SenderWebSocket": "WebSocket",
+                "SenderWns": "WNS"
+            },
+            "x-enum-varnames": [
+                "SenderFcm",
+                "SenderWebPush",
+                "SenderWns",
+                "SenderTelegram",
+                "SenderWebSocket"
+            ]
+        },
+        "types.BadRequestResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 400
+                }
+            }
+        },
         "types.NotFoundResponse": {
             "type": "object",
             "properties": {
@@ -706,13 +774,28 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Response-array_types_Message": {
+        "types.Response-array_entity_Device": {
             "type": "object",
             "properties": {
                 "body": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/types.Message"
+                        "$ref": "#/definitions/entity.Device"
+                    }
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
+        "types.Response-array_entity_Message": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Message"
                     }
                 },
                 "code": {
@@ -733,11 +816,11 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Response-types_Message": {
+        "types.Response-entity_Message": {
             "type": "object",
             "properties": {
                 "body": {
-                    "$ref": "#/definitions/types.Message"
+                    "$ref": "#/definitions/entity.Message"
                 },
                 "code": {
                     "type": "integer",

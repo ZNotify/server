@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"notify-api/ent/helper"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	"notify-api/setup/config"
 
@@ -50,7 +51,7 @@ func Send(ctx context.Context, msg *item.PushMessage) error {
 
 func Init() {
 	for id, senderCfg := range config.Config.Senders {
-		sender, err := GetSender(id)
+		sender, err := GetSender(enum.Sender(id))
 		if err != nil {
 			zap.S().Fatalf("Failed to get sender %s: %v", id, err)
 		}

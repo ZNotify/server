@@ -12,7 +12,7 @@ import (
 	"notify-api/push/enum"
 	"notify-api/push/item"
 	pushTypes "notify-api/push/types"
-	"notify-api/server/types"
+	"notify-api/server/types/entity"
 )
 
 var client = &http.Client{}
@@ -49,7 +49,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 		return nil
 	}
 
-	data, err := json.Marshal(types.FromPushMessage(*msg))
+	data, err := json.Marshal(entity.FromPushMessage(*msg))
 	if err != nil {
 		return err
 	}
@@ -109,6 +109,6 @@ func (p *Provider) Config() []string {
 	return []string{VAPIDPublicKey, VAPIDPrivateKey, Mailto}
 }
 
-func (p *Provider) Name() string {
-	return string(enum.SenderWebPush)
+func (p *Provider) Name() enum.Sender {
+	return enum.SenderWebPush
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"notify-api/ent/generate/device"
 	"notify-api/ent/generate/user"
+	"notify-api/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -58,8 +59,8 @@ func (dc *DeviceCreate) SetIdentifier(s string) *DeviceCreate {
 }
 
 // SetChannel sets the "channel" field.
-func (dc *DeviceCreate) SetChannel(s string) *DeviceCreate {
-	dc.mutation.SetChannel(s)
+func (dc *DeviceCreate) SetChannel(e enum.Sender) *DeviceCreate {
+	dc.mutation.SetChannel(e)
 	return dc
 }
 
@@ -371,7 +372,7 @@ func (u *DeviceUpsert) UpdateIdentifier() *DeviceUpsert {
 }
 
 // SetChannel sets the "channel" field.
-func (u *DeviceUpsert) SetChannel(v string) *DeviceUpsert {
+func (u *DeviceUpsert) SetChannel(v enum.Sender) *DeviceUpsert {
 	u.Set(device.FieldChannel, v)
 	return u
 }
@@ -504,7 +505,7 @@ func (u *DeviceUpsertOne) UpdateIdentifier() *DeviceUpsertOne {
 }
 
 // SetChannel sets the "channel" field.
-func (u *DeviceUpsertOne) SetChannel(v string) *DeviceUpsertOne {
+func (u *DeviceUpsertOne) SetChannel(v enum.Sender) *DeviceUpsertOne {
 	return u.Update(func(s *DeviceUpsert) {
 		s.SetChannel(v)
 	})
@@ -809,7 +810,7 @@ func (u *DeviceUpsertBulk) UpdateIdentifier() *DeviceUpsertBulk {
 }
 
 // SetChannel sets the "channel" field.
-func (u *DeviceUpsertBulk) SetChannel(v string) *DeviceUpsertBulk {
+func (u *DeviceUpsertBulk) SetChannel(v enum.Sender) *DeviceUpsertBulk {
 	return u.Update(func(s *DeviceUpsert) {
 		s.SetChannel(v)
 	})

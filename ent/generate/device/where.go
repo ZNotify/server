@@ -4,6 +4,7 @@ package device
 
 import (
 	"notify-api/ent/generate/predicate"
+	"notify-api/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -103,9 +104,10 @@ func Identifier(v string) predicate.Device {
 }
 
 // Channel applies equality check predicate on the "channel" field. It's identical to ChannelEQ.
-func Channel(v string) predicate.Device {
+func Channel(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChannel), v))
+		s.Where(sql.EQ(s.C(FieldChannel), vc))
 	})
 }
 
@@ -365,24 +367,26 @@ func IdentifierContainsFold(v string) predicate.Device {
 }
 
 // ChannelEQ applies the EQ predicate on the "channel" field.
-func ChannelEQ(v string) predicate.Device {
+func ChannelEQ(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldChannel), v))
+		s.Where(sql.EQ(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelNEQ applies the NEQ predicate on the "channel" field.
-func ChannelNEQ(v string) predicate.Device {
+func ChannelNEQ(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldChannel), v))
+		s.Where(sql.NEQ(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelIn applies the In predicate on the "channel" field.
-func ChannelIn(vs ...string) predicate.Device {
+func ChannelIn(vs ...enum.Sender) predicate.Device {
 	v := make([]any, len(vs))
 	for i := range v {
-		v[i] = vs[i]
+		v[i] = string(vs[i])
 	}
 	return predicate.Device(func(s *sql.Selector) {
 		s.Where(sql.In(s.C(FieldChannel), v...))
@@ -390,10 +394,10 @@ func ChannelIn(vs ...string) predicate.Device {
 }
 
 // ChannelNotIn applies the NotIn predicate on the "channel" field.
-func ChannelNotIn(vs ...string) predicate.Device {
+func ChannelNotIn(vs ...enum.Sender) predicate.Device {
 	v := make([]any, len(vs))
 	for i := range v {
-		v[i] = vs[i]
+		v[i] = string(vs[i])
 	}
 	return predicate.Device(func(s *sql.Selector) {
 		s.Where(sql.NotIn(s.C(FieldChannel), v...))
@@ -401,65 +405,74 @@ func ChannelNotIn(vs ...string) predicate.Device {
 }
 
 // ChannelGT applies the GT predicate on the "channel" field.
-func ChannelGT(v string) predicate.Device {
+func ChannelGT(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldChannel), v))
+		s.Where(sql.GT(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelGTE applies the GTE predicate on the "channel" field.
-func ChannelGTE(v string) predicate.Device {
+func ChannelGTE(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldChannel), v))
+		s.Where(sql.GTE(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelLT applies the LT predicate on the "channel" field.
-func ChannelLT(v string) predicate.Device {
+func ChannelLT(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldChannel), v))
+		s.Where(sql.LT(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelLTE applies the LTE predicate on the "channel" field.
-func ChannelLTE(v string) predicate.Device {
+func ChannelLTE(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldChannel), v))
+		s.Where(sql.LTE(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelContains applies the Contains predicate on the "channel" field.
-func ChannelContains(v string) predicate.Device {
+func ChannelContains(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldChannel), v))
+		s.Where(sql.Contains(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelHasPrefix applies the HasPrefix predicate on the "channel" field.
-func ChannelHasPrefix(v string) predicate.Device {
+func ChannelHasPrefix(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldChannel), v))
+		s.Where(sql.HasPrefix(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelHasSuffix applies the HasSuffix predicate on the "channel" field.
-func ChannelHasSuffix(v string) predicate.Device {
+func ChannelHasSuffix(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldChannel), v))
+		s.Where(sql.HasSuffix(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelEqualFold applies the EqualFold predicate on the "channel" field.
-func ChannelEqualFold(v string) predicate.Device {
+func ChannelEqualFold(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldChannel), v))
+		s.Where(sql.EqualFold(s.C(FieldChannel), vc))
 	})
 }
 
 // ChannelContainsFold applies the ContainsFold predicate on the "channel" field.
-func ChannelContainsFold(v string) predicate.Device {
+func ChannelContainsFold(v enum.Sender) predicate.Device {
+	vc := string(v)
 	return predicate.Device(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldChannel), v))
+		s.Where(sql.ContainsFold(s.C(FieldChannel), vc))
 	})
 }
 

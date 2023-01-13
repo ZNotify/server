@@ -8,6 +8,7 @@ import (
 	"notify-api/ent/db"
 	"notify-api/ent/generate"
 	"notify-api/ent/generate/device"
+	"notify-api/push/enum"
 )
 
 type deviceDao struct{}
@@ -18,7 +19,7 @@ var Device = deviceDao{}
 func (dd deviceDao) EnsureDevice(
 	ctx context.Context,
 	identifier string,
-	channel string,
+	channel enum.Sender,
 	channelToken string,
 	deviceName string,
 	deviceMeta string,
@@ -85,6 +86,15 @@ func (deviceDao) GetDeviceByIdentifier(ctx context.Context, identifier string) (
 	return d, true
 }
 
+func (deviceDao) GetUserDevices(ctx context.Context, u *generate.User) ([]*generate.Device, bool) {
+	ds, err := u.QueryDevices().All(ctx)
+	if err != nil {
+		zap.S().Errorw("failed to get user devices", "err", err)
+		return nil, false
+	}
+	return ds, true
+}
+
 func (deviceDao) GetUserDeviceByIdentifier(ctx context.Context, u *generate.User, identifier string) (*generate.Device, bool) {
 	d, err := u.QueryDevices().Where(device.Identifier(identifier)).WithUser().Only(ctx)
 	if err != nil {
@@ -96,7 +106,7 @@ func (deviceDao) GetUserDeviceByIdentifier(ctx context.Context, u *generate.User
 	return d, true
 }
 
-func (deviceDao) GetUserDeviceChannelTokens(ctx context.Context, u *generate.User, channel string) ([]string, bool) {
+func (deviceDao) GetUserDeviceChannelTokens(ctx context.Context, u *generate.User, channel enum.Sender) ([]string, bool) {
 	devices := make([]string, 0)
 	err := u.
 		QueryDevices().

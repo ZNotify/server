@@ -8,6 +8,7 @@ import (
 
 	"notify-api/ent/dao"
 	"notify-api/push"
+	"notify-api/push/enum"
 	pushTypes "notify-api/push/types"
 	"notify-api/server/types"
 	"notify-api/utils"
@@ -38,7 +39,7 @@ func Create(context *types.Ctx) {
 	}
 
 	channel := context.PostForm("channel")
-	if !push.IsSenderIdValid(channel) {
+	if !push.IsSenderIdValid(enum.Sender(channel)) {
 		zap.S().Infof("channel %s is not supported", channel)
 		context.JSONError(http.StatusBadRequest, errors.New("channel is not supported"))
 		return
@@ -50,7 +51,7 @@ func Create(context *types.Ctx) {
 
 	_, isChannelChange, oldDevice, ok := dao.Device.EnsureDevice(context,
 		deviceID,
-		channel,
+		enum.Sender(channel),
 		token,
 		deviceName,
 		deviceMeta,

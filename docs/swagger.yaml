@@ -1,27 +1,16 @@
 definitions:
-  enum.Priority:
-    enum:
-    - low
-    - normal
-    - high
-    type: string
-    x-enum-comments:
-      PriorityHigh: high
-      PriorityLow: low
-      PriorityNormal: normal
-    x-enum-varnames:
-    - PriorityLow
-    - PriorityNormal
-    - PriorityHigh
-  types.BadRequestResponse:
+  entity.Device:
     properties:
-      body:
+      channel:
+        $ref: '#/definitions/enum.Sender'
+      deviceMeta:
         type: string
-      code:
-        default: 400
-        type: integer
+      deviceName:
+        type: string
+      identifier:
+        type: string
     type: object
-  types.Message:
+  entity.Message:
     properties:
       content:
         type: string
@@ -36,6 +25,48 @@ definitions:
       title:
         type: string
     type: object
+  enum.Priority:
+    enum:
+    - low
+    - normal
+    - high
+    type: string
+    x-enum-comments:
+      PriorityHigh: high
+      PriorityLow: low
+      PriorityNormal: normal
+    x-enum-varnames:
+    - PriorityLow
+    - PriorityNormal
+    - PriorityHigh
+  enum.Sender:
+    enum:
+    - FCM
+    - WebPush
+    - WNS
+    - Telegram
+    - WebSocket
+    type: string
+    x-enum-comments:
+      SenderFcm: FCM
+      SenderTelegram: Telegram
+      SenderWebPush: WebPush
+      SenderWebSocket: WebSocket
+      SenderWns: WNS
+    x-enum-varnames:
+    - SenderFcm
+    - SenderWebPush
+    - SenderWns
+    - SenderTelegram
+    - SenderWebSocket
+  types.BadRequestResponse:
+    properties:
+      body:
+        type: string
+      code:
+        default: 400
+        type: integer
+    type: object
   types.NotFoundResponse:
     properties:
       body:
@@ -44,11 +75,21 @@ definitions:
         default: 404
         type: integer
     type: object
-  types.Response-array_types_Message:
+  types.Response-array_entity_Device:
     properties:
       body:
         items:
-          $ref: '#/definitions/types.Message'
+          $ref: '#/definitions/entity.Device'
+        type: array
+      code:
+        default: 200
+        type: integer
+    type: object
+  types.Response-array_entity_Message:
+    properties:
+      body:
+        items:
+          $ref: '#/definitions/entity.Message'
         type: array
       code:
         default: 200
@@ -62,10 +103,10 @@ definitions:
         default: 200
         type: integer
     type: object
-  types.Response-types_Message:
+  types.Response-entity_Message:
     properties:
       body:
-        $ref: '#/definitions/types.Message'
+        $ref: '#/definitions/entity.Message'
       code:
         default: 200
         type: integer
@@ -124,7 +165,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-types_Message'
+            $ref: '#/definitions/types.Response-entity_Message'
         "400":
           description: Bad Request
           schema:
@@ -157,7 +198,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-types_Message'
+            $ref: '#/definitions/types.Response-entity_Message'
         "400":
           description: Bad Request
           schema:
@@ -167,67 +208,6 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
-  /{user_secret}/{id}:
-    delete:
-      description: Delete message record with id
-      operationId: record.delete
-      parameters:
-      - description: Secret of user
-        in: path
-        name: user_secret
-        required: true
-        type: string
-      - description: ID of message
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-bool'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
-      summary: Delete message record
-    get:
-      description: Get message record detail of a message
-      operationId: record.get
-      parameters:
-      - description: Secret of user
-        in: path
-        name: user_secret
-        required: true
-        type: string
-      - description: ID of message
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-types_Message'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/types.BadRequestResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/types.NotFoundResponse'
-      summary: Get message record detail
   /{user_secret}/device/{device_id}:
     delete:
       description: Delete device with device_id
@@ -304,10 +284,89 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Create or update device
-  /{user_secret}/record:
+  /{user_secret}/devices:
     get:
-      description: Get records
-      operationId: record.list
+      description: Delete device with device_id
+      operationId: user.devices
+      parameters:
+      - description: Secret of user
+        in: path
+        name: user_secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-array_entity_Device'
+      summary: Messages user devices
+  /{user_secret}/message/{id}:
+    delete:
+      description: Delete message record with id
+      operationId: record.delete
+      parameters:
+      - description: Secret of user
+        in: path
+        name: user_secret
+        required: true
+        type: string
+      - description: ID of message
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-bool'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: Delete message record
+    get:
+      description: Get message record detail of a message
+      operationId: record.get
+      parameters:
+      - description: Secret of user
+        in: path
+        name: user_secret
+        required: true
+        type: string
+      - description: ID of message
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-entity_Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/types.NotFoundResponse'
+      summary: Get message record detail
+  /{user_secret}/messages:
+    get:
+      description: Get messages of user with pagination
+      operationId: user.messages
       parameters:
       - description: Secret of user
         in: path
@@ -333,12 +392,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-array_types_Message'
+            $ref: '#/definitions/types.Response-array_entity_Message'
         "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
-      summary: Get record
+      summary: Get messages of user
   /{user_secret}/send:
     post:
       description: Send notification to user_id
@@ -378,7 +437,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-types_Message'
+            $ref: '#/definitions/types.Response-entity_Message'
         "400":
           description: Bad Request
           schema:
@@ -426,7 +485,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-types_Message'
+            $ref: '#/definitions/types.Response-entity_Message'
         "400":
           description: Bad Request
           schema:

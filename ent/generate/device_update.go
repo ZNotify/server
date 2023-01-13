@@ -9,6 +9,7 @@ import (
 	"notify-api/ent/generate/device"
 	"notify-api/ent/generate/predicate"
 	"notify-api/ent/generate/user"
+	"notify-api/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -42,8 +43,8 @@ func (du *DeviceUpdate) SetIdentifier(s string) *DeviceUpdate {
 }
 
 // SetChannel sets the "channel" field.
-func (du *DeviceUpdate) SetChannel(s string) *DeviceUpdate {
-	du.mutation.SetChannel(s)
+func (du *DeviceUpdate) SetChannel(e enum.Sender) *DeviceUpdate {
+	du.mutation.SetChannel(e)
 	return du
 }
 
@@ -276,8 +277,8 @@ func (duo *DeviceUpdateOne) SetIdentifier(s string) *DeviceUpdateOne {
 }
 
 // SetChannel sets the "channel" field.
-func (duo *DeviceUpdateOne) SetChannel(s string) *DeviceUpdateOne {
-	duo.mutation.SetChannel(s)
+func (duo *DeviceUpdateOne) SetChannel(e enum.Sender) *DeviceUpdateOne {
+	duo.mutation.SetChannel(e)
 	return duo
 }
 

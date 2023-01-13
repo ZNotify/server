@@ -42,7 +42,7 @@ type DeviceMutation struct {
 	created_at    *time.Time
 	updated_at    *time.Time
 	identifier    *string
-	channel       *string
+	channel       *enum.Sender
 	channelMeta   *string
 	channelToken  *string
 	deviceName    *string
@@ -262,12 +262,12 @@ func (m *DeviceMutation) ResetIdentifier() {
 }
 
 // SetChannel sets the "channel" field.
-func (m *DeviceMutation) SetChannel(s string) {
-	m.channel = &s
+func (m *DeviceMutation) SetChannel(e enum.Sender) {
+	m.channel = &e
 }
 
 // Channel returns the value of the "channel" field in the mutation.
-func (m *DeviceMutation) Channel() (r string, exists bool) {
+func (m *DeviceMutation) Channel() (r enum.Sender, exists bool) {
 	v := m.channel
 	if v == nil {
 		return
@@ -278,7 +278,7 @@ func (m *DeviceMutation) Channel() (r string, exists bool) {
 // OldChannel returns the old "channel" field's value of the Device entity.
 // If the Device object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DeviceMutation) OldChannel(ctx context.Context) (v string, err error) {
+func (m *DeviceMutation) OldChannel(ctx context.Context) (v enum.Sender, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldChannel is only allowed on UpdateOne operations")
 	}
@@ -604,7 +604,7 @@ func (m *DeviceMutation) SetField(name string, value ent.Value) error {
 		m.SetIdentifier(v)
 		return nil
 	case device.FieldChannel:
-		v, ok := value.(string)
+		v, ok := value.(enum.Sender)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

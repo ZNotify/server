@@ -3,6 +3,7 @@ package push
 import (
 	"github.com/pkg/errors"
 
+	"notify-api/push/enum"
 	"notify-api/push/host/telegram"
 	"notify-api/push/host/websocket"
 	"notify-api/push/provider/fcm"
@@ -23,7 +24,7 @@ var availableSenders = senders{
 
 var activeSenders = senders{}
 
-func IsSenderIdValid(id string) bool {
+func IsSenderIdValid(id enum.Sender) bool {
 	for _, v := range activeSenders {
 		if v.Name() == id {
 			return true
@@ -32,7 +33,7 @@ func IsSenderIdValid(id string) bool {
 	return false
 }
 
-func GetSender(id string) (pushTypes.Sender, error) {
+func GetSender(id enum.Sender) (pushTypes.Sender, error) {
 	for _, v := range availableSenders {
 		if v.Name() == id {
 			return v, nil

@@ -20,7 +20,7 @@ func (p *Provider) Init() error {
 	panic("implement me")
 }
 
-func (p *Provider) Name() string {
+func (p *Provider) Name() enum.Sender {
 	// Windows Push Notification Services
-	return string(enum.SenderWns)
+	return enum.SenderWns
 }

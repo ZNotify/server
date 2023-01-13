@@ -1,4 +1,4 @@
-package record
+package message
 
 import (
 	"net/http"
@@ -9,6 +9,7 @@ import (
 
 	"notify-api/ent/dao"
 	"notify-api/server/types"
+	"notify-api/server/types/entity"
 )
 
 // Get godoc
@@ -19,11 +20,11 @@ import (
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			id			path	string	true	"ID of message"
 //	@Produce		json
-//	@Success		200	{object}	types.Response[types.Message]
+//	@Success		200	{object}	types.Response[entity.Message]
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Failure		404	{object}	types.NotFoundResponse
-//	@Router			/{user_secret}/{id} [get]
+//	@Router			/{user_secret}/message/{id} [get]
 func Get(context *types.Ctx) {
 	messageID, err := uuid.Parse(context.Param("id"))
 
@@ -43,5 +44,5 @@ func Get(context *types.Ctx) {
 		return
 	}
 
-	context.JSONResult(types.FromModelMessage(*message))
+	context.JSONResult(entity.FromModelMessage(*message))
 }

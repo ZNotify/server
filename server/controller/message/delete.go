@@ -1,4 +1,4 @@
-package record
+package message
 
 import (
 	"net/http"
@@ -21,7 +21,7 @@ import (
 //	@Produce		json
 //	@Success		200	{object}	types.Response[bool]
 //	@Failure		401	{object}	types.UnauthorizedResponse
-//	@Router			/{user_secret}/{id} [delete]
+//	@Router			/{user_secret}/message/{id} [delete]
 func Delete(context *types.Ctx) {
 	id, err := uuid.Parse(context.Param("id"))
 	if err != nil {

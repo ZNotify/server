@@ -85,6 +85,6 @@ func (p *Provider) Config() []string {
 	return []string{Credential}
 }
 
-func (p *Provider) Name() string {
-	return string(enum.SenderFcm)
+func (p *Provider) Name() enum.Sender {
+	return enum.SenderFcm
 }

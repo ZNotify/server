@@ -23,6 +23,6 @@ func (h *Host) Send(ctx context.Context, msg *item.PushMessage) error {
 	return nil
 }
 
-func (h *Host) Name() string {
-	return string(enum.SenderWebSocket)
+func (h *Host) Name() enum.Sender {
+	return enum.SenderWebSocket
 }

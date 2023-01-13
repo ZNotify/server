@@ -87,8 +87,8 @@ func (h *Host) Init(cfg pushTypes.Config) error {
 	return nil
 }
 
-func (h *Host) Name() string {
-	return string(enum.SenderTelegram)
+func (h *Host) Name() enum.Sender {
+	return enum.SenderTelegram
 }
 
 const BotToken = "BotToken"

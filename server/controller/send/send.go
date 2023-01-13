@@ -10,7 +10,8 @@ import (
 	"notify-api/push"
 	"notify-api/push/enum"
 	"notify-api/push/item"
-	serveTypes "notify-api/server/types"
+	"notify-api/server/types"
+	"notify-api/server/types/entity"
 )
 
 // Send godoc
@@ -24,12 +25,12 @@ import (
 //	@Param			long		formData	string			false	"Long Message Content (optional)"
 //	@Param			priority	formData	enum.Priority	false	"The priority of message"	default(Normal)
 //	@Produce		json
-//	@Success		200	{object}	serveTypes.Response[serveTypes.Message]
-//	@Failure		400	{object}	serveTypes.BadRequestResponse
-//	@Failure		401	{object}	serveTypes.UnauthorizedResponse
+//	@Success		200	{object}	types.Response[entity.Message]
+//	@Failure		400	{object}	types.BadRequestResponse
+//	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_secret}/send  [post]
 //	@Router			/{user_secret}/send  [put]
-func Send(context *serveTypes.Ctx) {
+func Send(context *types.Ctx) {
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")
 	content := context.PostForm("content")
@@ -82,6 +83,6 @@ func Send(context *serveTypes.Ctx) {
 		return
 	}
 
-	context.JSONResult(serveTypes.FromModelMessage(*msg))
+	context.JSONResult(entity.FromModelMessage(*msg))
 	return
 }

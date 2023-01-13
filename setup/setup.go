@@ -10,8 +10,8 @@ import (
 
 	"notify-api/ent/dao"
 	"notify-api/server/controller/device"
+	"notify-api/server/controller/message"
 	"notify-api/server/controller/misc"
-	"notify-api/server/controller/record"
 	"notify-api/server/controller/send"
 	"notify-api/server/controller/user"
 	"notify-api/setup/config"
@@ -82,18 +82,19 @@ func setupController(router *gin.Engine) {
 	userGroup := router.Group("/:user_secret")
 	userGroup.Use(middleware.UserAuth)
 	{
-		userGroup.GET("/record", types.WrapHandler(record.List))
-		userGroup.GET("/:id", types.WrapHandler(record.Get))
-		userGroup.DELETE("/:id", types.WrapHandler(record.Delete))
+		userGroup.GET("/messages", types.WrapHandler(user.Messages))
+		userGroup.GET("/message/:id", types.WrapHandler(message.Get))
+		userGroup.DELETE("/message/:id", types.WrapHandler(message.Delete))
+
+		userGroup.GET("/devices", types.WrapHandler(user.Devices))
+		userGroup.PUT("/device/:device_id", types.WrapHandler(device.Create))
+		userGroup.DELETE("/device/:device_id", types.WrapHandler(device.Delete))
 
 		userGroup.POST("/send", types.WrapHandler(send.Send))
 		userGroup.PUT("/send", types.WrapHandler(send.Send))
 
 		userGroup.POST("", types.WrapHandler(send.Short))
 		userGroup.PUT("", types.WrapHandler(send.Short))
-
-		userGroup.PUT("/device/:device_id", types.WrapHandler(device.Create))
-		userGroup.DELETE("/device/:device_id", types.WrapHandler(device.Delete))
 
 		push.RegisterRouter(userGroup)
 	}

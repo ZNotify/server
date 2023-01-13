@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"notify-api/ent/generate"
+	"notify-api/push/enum"
 	"notify-api/push/item"
 	"notify-api/server/types"
 )
@@ -12,7 +13,7 @@ type Config = map[string]string
 
 type Sender interface {
 	Send(ctx context.Context, msg *item.PushMessage) error
-	Name() string
+	Name() enum.Sender
 }
 
 type SenderWithoutConfig interface {

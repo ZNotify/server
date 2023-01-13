@@ -9,6 +9,7 @@ import (
 	"notify-api/push/enum"
 	"notify-api/push/item"
 	"notify-api/server/types"
+	"notify-api/server/types/entity"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -23,7 +24,7 @@ import (
 //	@Param			string		body	string	true	"Message Content"
 //	@Accept			plain
 //	@Produce		json
-//	@Success		200	{object}	types.Response[types.Message]
+//	@Success		200	{object}	types.Response[entity.Message]
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_secret} [post]
@@ -67,6 +68,6 @@ func Short(context *types.Ctx) {
 		return
 	}
 
-	context.JSONResult(types.FromModelMessage(*msg))
+	context.JSONResult(entity.FromModelMessage(*msg))
 	return
 }

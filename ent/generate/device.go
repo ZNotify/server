@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"notify-api/ent/generate/device"
 	"notify-api/ent/generate/user"
+	"notify-api/push/enum"
 	"strings"
 	"time"
 
@@ -24,7 +25,7 @@ type Device struct {
 	// Identifier holds the value of the "identifier" field.
 	Identifier string `json:"identifier,omitempty"`
 	// Channel holds the value of the "channel" field.
-	Channel string `json:"channel,omitempty"`
+	Channel enum.Sender `json:"channel,omitempty"`
 	// ChannelMeta holds the value of the "channelMeta" field.
 	ChannelMeta string `json:"channelMeta,omitempty"`
 	// ChannelToken holds the value of the "channelToken" field.
@@ -117,7 +118,7 @@ func (d *Device) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field channel", values[i])
 			} else if value.Valid {
-				d.Channel = value.String
+				d.Channel = enum.Sender(value.String)
 			}
 		case device.FieldChannelMeta:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -193,7 +194,7 @@ func (d *Device) String() string {
 	builder.WriteString(d.Identifier)
 	builder.WriteString(", ")
 	builder.WriteString("channel=")
-	builder.WriteString(d.Channel)
+	builder.WriteString(fmt.Sprintf("%v", d.Channel))
 	builder.WriteString(", ")
 	builder.WriteString("channelMeta=")
 	builder.WriteString(d.ChannelMeta)
