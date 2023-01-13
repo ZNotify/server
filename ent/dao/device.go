@@ -52,6 +52,7 @@ func (dd deviceDao) EnsureDevice(
 			SetChannelToken(channelToken).
 			SetDeviceName(deviceName).
 			SetDeviceMeta(deviceMeta).
+			SetChannelMeta("").
 			SetUser(u).
 			Save(ctx)
 		if err != nil {

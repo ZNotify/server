@@ -75,5 +75,10 @@ func Create(context *types.Ctx) {
 		}
 	}
 
-	context.JSONResult(ok)
+	if !ok {
+		context.JSONError(http.StatusInternalServerError, errors.New("can't create device"))
+		return
+	}
+
+	context.JSONResult(true)
 }
