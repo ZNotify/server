@@ -10,7 +10,7 @@ import (
 
 // Devices
 //
-//	@Summary		Messages user devices
+//	@Summary		Get user devices
 //	@Id				user.devices
 //	@Description	Delete device with device_id
 //	@Param			user_secret	path	string	true	"Secret of user"

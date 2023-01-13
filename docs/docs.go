@@ -365,7 +365,7 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Messages user devices",
+                "summary": "Get user devices",
                 "operationId": "user.devices",
                 "parameters": [
                     {

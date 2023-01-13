@@ -301,7 +301,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Response-array_entity_Device'
-      summary: Messages user devices
+      summary: Get user devices
   /{user_secret}/message/{id}:
     delete:
       description: Delete message record with id
