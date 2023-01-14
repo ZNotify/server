@@ -12,7 +12,7 @@ func Load(path string) {
 	Config = Configuration{
 		Server: ServerConfiguration{
 			Port: 14444,
-			Host: "127.0.0.1",
+			Host: "0.0.0.0",
 			Mode: TestMode,
 		},
 		Database: DatabaseConfiguration{

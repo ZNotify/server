@@ -44,6 +44,7 @@ jobs:
     needs: [ test ]
     env:
       GOARCH: amd64
+      CGO_ENABLED: 1
     steps:
       - uses: actions/checkout@v3
 
@@ -61,17 +62,17 @@ jobs:
           mv build web/static
 
       - name: Build Linux
-        run: go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o server-linux
+        run: make build-production BINARY=server-linux
         env:
           GOOS: linux
 
       - name: Build Windows
-        run: go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o server-windows.exe
+        run: make build-production BINARY=server-windows.exe
         env:
           GOOS: windows
 
       - name: Build MacOS
-        run: go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o server-macos
+        run: make build-production BINARY=server-macos
         env:
           GOOS: darwin
 
@@ -92,6 +93,7 @@ jobs:
     needs: [ test ]
     env:
       GOARCH: amd64
+      CGO_ENABLED: 1
     steps:
       - uses: actions/checkout@v3
 
@@ -109,17 +111,17 @@ jobs:
           mv build web/static
 
       - name: Build Linux
-        run: go build -tags test -o test-server-linux
+        run: make build-test BINARY=test-server-linux
         env:
           GOOS: linux
 
       - name: Build Windows
-        run: go build -tags test -o test-server-windows.exe
+        run: make build-test BINARY=test-server-windows.exe
         env:
           GOOS: windows
 
       - name: Build MacOS
-        run: go build -tags test -o test-server-macos
+        run: make build-test BINARY=test-server-macos
         env:
           GOOS: darwin
 

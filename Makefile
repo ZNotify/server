@@ -1,7 +1,19 @@
-# Build the project
-build:
-	go build -o bin/server notify-api
 
+BINARY = server
+
+.PHONY: build
+build:
+	go build -o "$(BINARY)" notify-api
+
+.PHONY: build-production
+build-production:
+	go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o "$(BINARY)" notify-api
+
+.PHONY: build-test
+build-test:
+	go build -tags test -o "$(BINARY)" notify-api
+
+.PHONY: dependencies
 dependencies:
 	go mod vendor
 	go install github.com/swaggo/swag/cmd/swag@latest
@@ -9,20 +21,20 @@ dependencies:
 	go install entgo.io/ent/cmd/ent@latest
 	go install github.com/kisielk/godepgraph@latest
 
-# Run the project with hot reload
+.PHONY: dev
 dev:
 	air
 
+.PHONY: fmt
 fmt:
 	swag fmt
 	go fmt ./...
 
+.PHONY: desc
 desc:
 	go generate ent/generate.go
 
+.PHONY: gen
 gen:
 	go run ent/generate.go
 	swag init
-
-analyze:
-	godepgraph -maxlevel 16 -s -novendor -p github.com,gorm.io,modernc.com,google.golang.org,golang.org,gopkg.in,go.uber.org,go.opencensus.io,firebase.google.com,cloud.google.com notify-api | dot -Tpng -o godepgraph.png
