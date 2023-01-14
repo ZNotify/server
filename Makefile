@@ -11,7 +11,7 @@ build-production:
 
 .PHONY: frontend
 frontend:
-	go run scripts/main.go download
+	go run notify-api/scripts download
 
 
 .PHONY: build-test
