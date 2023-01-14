@@ -54,11 +54,11 @@ jobs:
           go-version: 1.19
           cache: true
 
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+
       - name: Fetch frontend asset
         run: make frontend
-
-      - name: Setup cross compile dependencies
-        run: sudo apt-get install gcc-mingw-w64
 
       - name: Build Linux
         run: make build-production BINARY=server-linux
@@ -69,12 +69,13 @@ jobs:
         run: make build-production BINARY=server-windows.exe
         env:
           GOOS: windows
-          CC: x86_64-w64-mingw32-gcc
+          CC: zig cc -target x86_64-windows-gnu
 
       - name: Build MacOS
         run: make build-production BINARY=server-macos
         env:
           GOOS: darwin
+          CC: zig cc -target x86_64-macos-none
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -103,11 +104,11 @@ jobs:
           go-version: 1.19
           cache: true
 
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+
       - name: Fetch frontend asset
         run: make frontend
-
-      - name: Setup cross compile dependencies
-        run: sudo apt-get install gcc-mingw-w64
 
       - name: Build Linux
         run: make build-test BINARY=test-server-linux
@@ -118,12 +119,13 @@ jobs:
         run: make build-test BINARY=test-server-windows.exe
         env:
           GOOS: windows
-          CC: x86_64-w64-mingw32-gcc
+          CC: zig cc -target x86_64-windows-gnu
 
       - name: Build MacOS
         run: make build-test BINARY=test-server-macos
         env:
           GOOS: darwin
+          CC: zig cc -target x86_64-macos-none
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
