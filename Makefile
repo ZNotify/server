@@ -9,6 +9,11 @@ build:
 build-production:
 	go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o "$(BINARY)" notify-api
 
+.PHONY: frontend
+frontend:
+	go run scripts/main.go download
+
+
 .PHONY: build-test
 build-test:
 	go build -tags test -o "$(BINARY)" notify-api
@@ -19,7 +24,6 @@ dependencies:
 	go install github.com/swaggo/swag/cmd/swag@latest
 	go install github.com/cosmtrek/air@latest
 	go install entgo.io/ent/cmd/ent@latest
-	go install github.com/kisielk/godepgraph@latest
 
 .PHONY: dev
 dev:
