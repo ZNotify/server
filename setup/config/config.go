@@ -3,6 +3,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -38,13 +39,17 @@ func Load(path string) {
 		// read config file
 		data, err = os.ReadFile(path)
 		if err != nil {
-			panic(err)
+			fmt.Println("Failed to read config file.")
+			fmt.Printf("%+v\n", err)
+			os.Exit(1)
 		}
 	}
 
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
-		panic(err)
+		fmt.Println("Failed to parse config file.")
+		fmt.Printf("%+v\n", err)
+		os.Exit(1)
 	}
 	Config = config
 }

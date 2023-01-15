@@ -42,7 +42,7 @@ jobs:
         run: make build-production BINARY=${{ matrix.binary }}
 
       - name: Build ${{ matrix.id }} test binary
-        run: make build-production BINARY=test-${{ matrix.binary }}
+        run: make build-test BINARY=test-${{ matrix.binary }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
