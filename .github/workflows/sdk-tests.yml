@@ -1,0 +1,25 @@
+name: Server unit tests
+
+on:
+  workflow_call:
+
+jobs:
+  test-js-sdk:
+    name: Test JS SDK
+    uses: ZNotify/js-sdk/.github/workflows/test.yml@master
+
+  test-kt-sdk:
+    name: Test Kotlin SDK
+    uses: ZNotify/kt-sdk/.github/workflows/test.yml@master
+
+  test-py-sdk:
+    name: Test Python SDK
+    uses: ZNotify/py-sdk/.github/workflows/test.yml@master
+
+  test-rs-sdk:
+    name: Test Rust SDK
+    uses: ZNotify/rs-sdk/.github/workflows/test.yml@master
+
+  test-cs-sdk:
+    name: Test C# SDK
+    uses: ZNotify/cs-sdk/.github/workflows/test.yml@master

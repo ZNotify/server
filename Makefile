@@ -5,18 +5,21 @@ BINARY = server
 build:
 	go build -o "$(BINARY)" notify-api
 
-.PHONY: build-production
-build-production:
-	go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o "$(BINARY)" notify-api
-
 .PHONY: frontend
 frontend:
 	go run notify-api/scripts download
 
+.PHONY: build-production
+build-production: frontend
+	go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o "$(BINARY)" notify-api
 
 .PHONY: build-test
-build-test:
+build-test: frontend
 	go build -tags test -o "$(BINARY)" notify-api
+
+.PHONY: unit-test
+unit-test: frontend
+	go test -v -tags test ./...
 
 .PHONY: dependencies
 dependencies:

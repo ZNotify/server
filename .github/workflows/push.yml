@@ -1,0 +1,27 @@
+name: Test and publish
+
+on:
+  push:
+    branches: [ master ]
+
+permissions: write-all
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  build:
+    needs: [ tests ]
+    uses: ./.github/workflows/build.yml
+
+  sdk-tests:
+    needs: [ build ]
+    uses: ./.github/workflows/sdk-tests.yml
+
+  release:
+    uses: ./.github/workflows/release.yml
+    needs: [ build ]
+
+  docker:
+    uses: ./.github/workflows/docker.yml
+    needs: [ test ]

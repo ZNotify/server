@@ -1,0 +1,16 @@
+name: Test
+
+on:
+  pull_request:
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  build:
+    needs: [ tests ]
+    uses: ./.github/workflows/build.yml
+
+  sdk-tests:
+    needs: [ build ]
+    uses: ./.github/workflows/sdk-tests.yml

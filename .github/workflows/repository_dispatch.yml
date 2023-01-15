@@ -1,0 +1,16 @@
+name: Update ui and publish
+
+on:
+  repository_dispatch:
+    types: [ frontend_update ]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  release:
+    uses: ./.github/workflows/release.yml
+    needs: [ build ]
+
+  docker:
+    uses: ./.github/workflows/docker.yml

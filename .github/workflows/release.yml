@@ -1,38 +1,34 @@
-name: Build Release
+name: GitHub Release
 
 on:
   workflow_call:
 
-env:
-  IMAGE_NAME: notify-api
-
 permissions: write-all
-
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
-        with:
-          name: server
-      - uses: actions/download-artifact@v3
-        with:
-          name: test-server
 
-      - name: Release
+      - name: Release production binary
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
           files: |
-            server-linux
-            test-server-linux
-            server-windows.exe
-            test-server-windows.exe
-            server-macos
-            test-server-macos
+            server-linux/server-linux
+            server-windows/server-windows.exe
+            server-macos/server-macos
+
+      - name: Release test binary
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          files: |
+            server-linux/test-server-linux
+            server-windows/test-server-windows.exe
+            server-macos/test-server-macos

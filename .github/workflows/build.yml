@@ -3,48 +3,35 @@ name: Run Tests
 on:
   push:
     branches: [ master ]
-  pull_request:
   repository_dispatch:
     types: [ frontend_update ]
 
 permissions: write-all
 
 jobs:
-  test:
-    name: Server unit tests
-    runs-on: ubuntu-latest
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    env:
+      GOARCH: amd64
+      GOOS: ${{ matrix.goos }}
+      CGO_ENABLED: 1
     strategy:
       fail-fast: true
       matrix:
-        go: [ '1.19' ]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ matrix.go }}
-          cache: true
-
-      - name: Fetch frontend asset
-        run: |
-          wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip
-          unzip build.zip
-          rm build.zip
-          mv build web/static
-
-      - name: Run tests
-        run: go test -tags test ./...
-
-  build-release-artifact:
-    name: Upload Artifact for release
-    runs-on: ubuntu-latest
-    if: github.event_name != 'repository_dispatch'
-    needs: [ test ]
-    env:
-      GOARCH: amd64
-      CGO_ENABLED: 1
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            id: server-linux
+            binary: server-linux
+          - os: windows-latest
+            goos: windows
+            id: server-windows
+            binary: server-windows.exe
+          - os: macos-latest
+            goos: darwin
+            id: server-macos
+            binary: server-macos
     steps:
       - uses: actions/checkout@v3
 
@@ -54,122 +41,21 @@ jobs:
           go-version: 1.19
           cache: true
 
-      - name: Setup Zig
-        uses: goto-bus-stop/setup-zig@v2
-
       - name: Fetch frontend asset
         run: make frontend
 
-      - name: Build Linux
-        run: make build-production BINARY=server-linux
-        env:
-          GOOS: linux
+      - name: Build ${{ matrix.id }} production binary
+        run: make build-production BINARY=${{ matrix.binary }}
 
-      - name: Build Windows
-        run: make build-production BINARY=server-windows.exe
-        env:
-          GOOS: windows
-          CC: zig cc -target x86_64-windows-gnu
-
-      - name: Build MacOS
-        run: make build-production BINARY=server-macos
-        env:
-          GOOS: darwin
-          CC: zig cc -target x86_64-macos-none
+      - name: Build ${{ matrix.id }} test binary
+        run: make build-production BINARY=test-${{ matrix.binary }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: server
+          name: ${{ matrix.id }}
           path: |
-            server-linux
-            server-windows.exe
-            server-macos
+            ${{ matrix.binary }}
+            test-${{ matrix.binary }}
           if-no-files-found: error
 
-  build-test-artifact:
-    name: Upload Artifact for SDK testing
-    runs-on: ubuntu-latest
-    if: github.event_name != 'repository_dispatch'
-    needs: [ test ]
-    env:
-      GOARCH: amd64
-      CGO_ENABLED: 1
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
-          cache: true
-
-      - name: Setup Zig
-        uses: goto-bus-stop/setup-zig@v2
-
-      - name: Fetch frontend asset
-        run: make frontend
-
-      - name: Build Linux
-        run: make build-test BINARY=test-server-linux
-        env:
-          GOOS: linux
-
-      - name: Build Windows
-        run: make build-test BINARY=test-server-windows.exe
-        env:
-          GOOS: windows
-          CC: zig cc -target x86_64-windows-gnu
-
-      - name: Build MacOS
-        run: make build-test BINARY=test-server-macos
-        env:
-          GOOS: darwin
-          CC: zig cc -target x86_64-macos-none
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-server
-          path: |
-            test-server-linux
-            test-server-windows.exe
-            test-server-macos
-          if-no-files-found: error
-
-  test-js-sdk:
-    needs: [ build-test-artifact ]
-    uses: ZNotify/js-sdk/.github/workflows/test.yml@master
-    secrets: inherit
-
-  test-kt-sdk:
-    needs: [ build-test-artifact ]
-    uses: ZNotify/kt-sdk/.github/workflows/test.yml@master
-    secrets: inherit
-
-  test-py-sdk:
-    needs: [ build-test-artifact ]
-    uses: ZNotify/py-sdk/.github/workflows/test.yml@master
-    secrets: inherit
-
-  test-rs-sdk:
-    needs: [ build-test-artifact ]
-    uses: ZNotify/rs-sdk/.github/workflows/test.yml@master
-    secrets: inherit
-
-  test-cs-sdk:
-    needs: [ build-test-artifact ]
-    uses: ZNotify/cs-sdk/.github/workflows/test.yml@master
-    secrets: inherit
-
-  release:
-    uses: ./.github/workflows/release.yml
-    needs: [ build-test-artifact, build-release-artifact ]
-    if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
-    secrets: inherit
-
-  docker:
-    uses: ./.github/workflows/docker.yml
-    needs: [ test ]
-    if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
-    secrets: inherit
