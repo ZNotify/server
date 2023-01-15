@@ -3,6 +3,7 @@ package main
 import (
 	"archive/zip"
 	"bytes"
+	"flag"
 	"io"
 	"log"
 	"net/http"
@@ -12,7 +13,25 @@ import (
 
 const AssetUrl = "https://github.com/ZNotify/frontend/releases/download/bundle/build.zip"
 
+func exist(filename string) bool {
+	stat, err := os.Stat(filename)
+	if err != nil && os.IsNotExist(err) {
+		return false
+	}
+
+	return !stat.IsDir()
+}
+
 func download() {
+	isForce := flag.Bool("force", false, "force download")
+	flag.Parse()
+
+	if exist("web/static/index.html") && !*isForce {
+		log.Println("web/static/index.html exists, skip download")
+		log.Println("if you still want to download, please use -f")
+		return
+	}
+
 	resp, err := http.Get(AssetUrl)
 	if err != nil {
 		panic(err)
