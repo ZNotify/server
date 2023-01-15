@@ -25,3 +25,4 @@ jobs:
   docker:
     uses: ./.github/workflows/docker.yml
     needs: [ tests ]
+    secrets: inherit
