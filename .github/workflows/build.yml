@@ -1,10 +1,7 @@
 name: Run Tests
 
 on:
-  push:
-    branches: [ master ]
-  repository_dispatch:
-    types: [ frontend_update ]
+  workflow_call:
 
 permissions: write-all
 
