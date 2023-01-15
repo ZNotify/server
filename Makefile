@@ -6,7 +6,7 @@ build:
 	go build -o "$(BINARY)" notify-api
 
 .PHONY: frontend
-frontend:
+frontend: web/static/index.html
 	go run notify-api/scripts download
 
 .PHONY: build-production

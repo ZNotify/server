@@ -38,9 +38,6 @@ jobs:
           go-version: 1.19
           cache: true
 
-      - name: Fetch frontend asset
-        run: make frontend
-
       - name: Build ${{ matrix.id }} production binary
         run: make build-production BINARY=${{ matrix.binary }}
 
