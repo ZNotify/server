@@ -4,14 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip gcc musl-dev
+RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip gcc musl-dev make
 
-RUN wget https://github.com/ZNotify/frontend/releases/download/bundle/build.zip && \
-          unzip build.zip && \
-          rm build.zip && \
-          mv build web/static
-
-RUN go build -o /app/server -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension notify-api
+RUN make build-production
 
 FROM scratch
 

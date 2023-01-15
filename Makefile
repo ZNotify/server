@@ -11,7 +11,7 @@ frontend:
 
 .PHONY: build-production
 build-production: frontend
-	go build -trimpath -ldflags "-s -w -extldflags=-static" -tags osusergo,netgo,sqlite_omit_load_extension -o "$(BINARY)" notify-api
+	go build -trimpath -ldflags "-s -w" -o "$(BINARY)" notify-api
 
 .PHONY: build-test
 build-test: frontend
