@@ -24,4 +24,4 @@ jobs:
 
   docker:
     uses: ./.github/workflows/docker.yml
-    needs: [ test ]
+    needs: [ tests ]
