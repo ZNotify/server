@@ -8,21 +8,26 @@ permissions: write-all
 
 jobs:
   tests:
+    name: Server unit tests
     uses: ./.github/workflows/tests.yml
 
   build:
+    name: Build server
     needs: [ tests ]
     uses: ./.github/workflows/build.yml
 
   sdk-tests:
+    name: SDK tests
     needs: [ build ]
     uses: ./.github/workflows/sdk-tests.yml
 
   release:
+    name: Release server
     uses: ./.github/workflows/release.yml
     needs: [ build ]
 
   docker:
+    name: Build and publish docker image
     uses: ./.github/workflows/docker.yml
     needs: [ tests ]
     secrets: inherit
