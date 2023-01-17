@@ -29,7 +29,6 @@ import (
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_secret}/send  [post]
-//	@Router			/{user_secret}/send  [put]
 func Send(context *types.Ctx) {
 	// get notification info
 	title := context.DefaultPostForm("title", "Notification")

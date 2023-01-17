@@ -150,55 +150,6 @@ const docTemplate = `{
             }
         },
         "/{user_secret}": {
-            "put": {
-                "description": "Send notification to user_id",
-                "consumes": [
-                    "text/plain"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Send notification",
-                "operationId": "send.short",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Secret of user",
-                        "name": "user_secret",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Message Content",
-                        "name": "string",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "Send notification to user_id",
                 "consumes": [
@@ -527,75 +478,6 @@ const docTemplate = `{
             }
         },
         "/{user_secret}/send": {
-            "put": {
-                "description": "Send notification to user_id",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Send notification",
-                "operationId": "send.send",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Secret of user",
-                        "name": "user_secret",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "default": "Notification",
-                        "description": "Message Title",
-                        "name": "title",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Message Content",
-                        "name": "content",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Long Message Content (optional)",
-                        "name": "long",
-                        "in": "formData"
-                    },
-                    {
-                        "enum": [
-                            "low",
-                            "normal",
-                            "high"
-                        ],
-                        "type": "string",
-                        "default": "Normal",
-                        "description": "The priority of message",
-                        "name": "priority",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "Send notification to user_id",
                 "produces": [

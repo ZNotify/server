@@ -28,7 +28,6 @@ import (
 //	@Failure		400	{object}	types.BadRequestResponse
 //	@Failure		401	{object}	types.UnauthorizedResponse
 //	@Router			/{user_secret} [post]
-//	@Router			/{user_secret} [put]
 func Short(context *types.Ctx) {
 	data, err := io.ReadAll(context.Request.Body)
 	if err != nil {

@@ -32,8 +32,8 @@ fmt:
 	go fmt ./...
 
 desc:
-	go generate ent/generate.go
+	go run -mod=mod entgo.io/ent/cmd/ent describe ./schema
 
 gen:
-	go run ent/generate.go
+	go run notify-api/scripts ent
 	swag init

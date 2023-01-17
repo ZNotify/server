@@ -175,39 +175,6 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
-    put:
-      consumes:
-      - text/plain
-      description: Send notification to user_id
-      operationId: send.short
-      parameters:
-      - description: Secret of user
-        in: path
-        name: user_secret
-        required: true
-        type: string
-      - description: Message Content
-        in: body
-        name: string
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-entity_Message'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/types.BadRequestResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
-      summary: Send notification
   /{user_secret}/device/{device_id}:
     delete:
       description: Delete device with device_id
@@ -400,54 +367,6 @@ paths:
       summary: Get messages of user
   /{user_secret}/send:
     post:
-      description: Send notification to user_id
-      operationId: send.send
-      parameters:
-      - description: Secret of user
-        in: path
-        name: user_secret
-        required: true
-        type: string
-      - default: Notification
-        description: Message Title
-        in: formData
-        name: title
-        type: string
-      - description: Message Content
-        in: formData
-        name: content
-        required: true
-        type: string
-      - description: Long Message Content (optional)
-        in: formData
-        name: long
-        type: string
-      - default: Normal
-        description: The priority of message
-        enum:
-        - low
-        - normal
-        - high
-        in: formData
-        name: priority
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Response-entity_Message'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/types.BadRequestResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
-      summary: Send notification
-    put:
       description: Send notification to user_id
       operationId: send.send
       parameters:
