@@ -389,7 +389,7 @@ paths:
         in: formData
         name: long
         type: string
-      - default: Normal
+      - default: normal
         description: The priority of message
         enum:
         - low

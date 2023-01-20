@@ -23,7 +23,7 @@ import (
 //	@Param			title		formData	string			false	"Message Title"	default(Notification)
 //	@Param			content		formData	string			true	"Message Content"
 //	@Param			long		formData	string			false	"Long Message Content (optional)"
-//	@Param			priority	formData	enum.Priority	false	"The priority of message"	default(Normal)
+//	@Param			priority	formData	enum.Priority	false	"The priority of message"	default(normal)
 //	@Produce		json
 //	@Success		200	{object}	types.Response[entity.Message]
 //	@Failure		400	{object}	types.BadRequestResponse

@@ -520,7 +520,7 @@ const docTemplate = `{
                             "high"
                         ],
                         "type": "string",
-                        "default": "Normal",
+                        "default": "normal",
                         "description": "The priority of message",
                         "name": "priority",
                         "in": "formData"
