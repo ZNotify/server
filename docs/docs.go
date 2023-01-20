@@ -47,7 +47,7 @@ const docTemplate = `{
                     "text/plain"
                 ],
                 "summary": "Server Heartbeat",
-                "operationId": "misc.alive",
+                "operationId": "alive",
                 "responses": {
                     "204": {
                         "description": "No Content",
@@ -64,7 +64,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Check if the user secret is valid",
-                "operationId": "user.check",
+                "operationId": "checkUserSecret",
                 "parameters": [
                     {
                         "type": "string",
@@ -103,7 +103,7 @@ const docTemplate = `{
         "/login": {
             "get": {
                 "summary": "Login with GitHub",
-                "operationId": "user.login",
+                "operationId": "userLogin",
                 "responses": {
                     "307": {
                         "description": "Temporary Redirect"
@@ -114,7 +114,7 @@ const docTemplate = `{
         "/login/github": {
             "get": {
                 "summary": "OAuth callback for GitHub, redirect to ui with user_secret",
-                "operationId": "user.github",
+                "operationId": "githubOAuthCallback",
                 "parameters": [
                     {
                         "type": "string",
@@ -159,7 +159,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Send notification",
-                "operationId": "send.short",
+                "operationId": "sendMessageLite",
                 "parameters": [
                     {
                         "type": "string",
@@ -207,7 +207,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Create or update device",
-                "operationId": "device.create",
+                "operationId": "createDevice",
                 "parameters": [
                     {
                         "type": "string",
@@ -283,7 +283,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete device",
-                "operationId": "device.delete",
+                "operationId": "deleteDevice",
                 "parameters": [
                     {
                         "type": "string",
@@ -317,7 +317,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get user devices",
-                "operationId": "user.devices",
+                "operationId": "getDevicesByUserSecret",
                 "parameters": [
                     {
                         "type": "string",
@@ -344,7 +344,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get message record detail",
-                "operationId": "record.get",
+                "operationId": "getMessageById",
                 "parameters": [
                     {
                         "type": "string",
@@ -394,7 +394,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete message record",
-                "operationId": "record.delete",
+                "operationId": "deleteMessageById",
                 "parameters": [
                     {
                         "type": "string",
@@ -434,7 +434,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get messages of user",
-                "operationId": "user.messages",
+                "operationId": "getMessagesByUserSecret",
                 "parameters": [
                     {
                         "type": "string",
@@ -484,7 +484,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Send notification",
-                "operationId": "send.send",
+                "operationId": "sendMessage",
                 "parameters": [
                     {
                         "type": "string",

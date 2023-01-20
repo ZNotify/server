@@ -17,7 +17,7 @@ import (
 // Send godoc
 //
 //	@Summary		Send notification
-//	@Id				send.send
+//	@Id				sendMessage
 //	@Description	Send notification to user_id
 //	@Param			user_secret	path		string			true	"Secret of user"
 //	@Param			title		formData	string			false	"Message Title"	default(Notification)

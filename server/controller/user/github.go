@@ -18,7 +18,7 @@ import (
 // GitHub
 //
 //	@Summary	OAuth callback for GitHub, redirect to ui with user_secret
-//	@Id			user.github
+//	@Id			githubOAuthCallback
 //	@Success	307
 //	@Router		/login/github [get]
 //	@Param		state	query		string	false	"should always be 'no_need_to_set_state'"

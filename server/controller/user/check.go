@@ -11,7 +11,7 @@ import (
 // Check godoc
 //
 //	@Summary	Check if the user secret is valid
-//	@Id			user.check
+//	@Id			checkUserSecret
 //	@Produce	json
 //	@Param		user_secret	query		string	true	"Secret of user"
 //	@Success	200			{object}	types.Response[bool]

@@ -9,7 +9,7 @@ import (
 // Alive godoc
 //
 //	@Summary		Server Heartbeat
-//	@Id				misc.alive
+//	@Id				alive
 //	@Description	If the server is alive
 //	@Produce		plain
 //	@Success		204	{string}	string	""

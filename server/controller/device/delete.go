@@ -8,7 +8,7 @@ import (
 // Delete godoc
 //
 //	@Summary		Delete device
-//	@Id				device.delete
+//	@Id				deleteDevice
 //	@Description	Delete device with device_id
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			device_id	path	string	true	"The identifier of device, should be a UUID"

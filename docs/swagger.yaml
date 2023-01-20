@@ -146,7 +146,7 @@ paths:
       consumes:
       - text/plain
       description: Send notification to user_id
-      operationId: send.short
+      operationId: sendMessageLite
       parameters:
       - description: Secret of user
         in: path
@@ -178,7 +178,7 @@ paths:
   /{user_secret}/device/{device_id}:
     delete:
       description: Delete device with device_id
-      operationId: device.delete
+      operationId: deleteDevice
       parameters:
       - description: Secret of user
         in: path
@@ -200,7 +200,7 @@ paths:
       summary: Delete device
     put:
       description: Create or update device information
-      operationId: device.create
+      operationId: createDevice
       parameters:
       - description: Secret of user
         in: path
@@ -254,7 +254,7 @@ paths:
   /{user_secret}/devices:
     get:
       description: Delete device with device_id
-      operationId: user.devices
+      operationId: getDevicesByUserSecret
       parameters:
       - description: Secret of user
         in: path
@@ -272,7 +272,7 @@ paths:
   /{user_secret}/message/{id}:
     delete:
       description: Delete message record with id
-      operationId: record.delete
+      operationId: deleteMessageById
       parameters:
       - description: Secret of user
         in: path
@@ -298,7 +298,7 @@ paths:
       summary: Delete message record
     get:
       description: Get message record detail of a message
-      operationId: record.get
+      operationId: getMessageById
       parameters:
       - description: Secret of user
         in: path
@@ -333,7 +333,7 @@ paths:
   /{user_secret}/messages:
     get:
       description: Get messages of user with pagination
-      operationId: user.messages
+      operationId: getMessagesByUserSecret
       parameters:
       - description: Secret of user
         in: path
@@ -368,7 +368,7 @@ paths:
   /{user_secret}/send:
     post:
       description: Send notification to user_id
-      operationId: send.send
+      operationId: sendMessage
       parameters:
       - description: Secret of user
         in: path
@@ -417,7 +417,7 @@ paths:
   /alive:
     get:
       description: If the server is alive
-      operationId: misc.alive
+      operationId: alive
       produces:
       - text/plain
       responses:
@@ -428,7 +428,7 @@ paths:
       summary: Server Heartbeat
   /check:
     get:
-      operationId: user.check
+      operationId: checkUserSecret
       parameters:
       - description: Secret of user
         in: query
@@ -455,14 +455,14 @@ paths:
       summary: Redirect to docs
   /login:
     get:
-      operationId: user.login
+      operationId: userLogin
       responses:
         "307":
           description: Temporary Redirect
       summary: Login with GitHub
   /login/github:
     get:
-      operationId: user.github
+      operationId: githubOAuthCallback
       parameters:
       - description: should always be 'no_need_to_set_state'
         in: query

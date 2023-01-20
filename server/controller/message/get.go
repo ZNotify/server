@@ -15,7 +15,7 @@ import (
 // Get godoc
 //
 //	@Summary		Get message record detail
-//	@Id				record.get
+//	@Id				getMessageById
 //	@Description	Get message record detail of a message
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			id			path	string	true	"ID of message"
