@@ -14,11 +14,10 @@ type DeviceFunc func(context.Context, *generate.DeviceMutation) (generate.Value,
 
 // Mutate calls f(ctx, m).
 func (f DeviceFunc) Mutate(ctx context.Context, m generate.Mutation) (generate.Value, error) {
-	mv, ok := m.(*generate.DeviceMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *generate.DeviceMutation", m)
+	if mv, ok := m.(*generate.DeviceMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generate.DeviceMutation", m)
 }
 
 // The MessageFunc type is an adapter to allow the use of ordinary
@@ -27,11 +26,10 @@ type MessageFunc func(context.Context, *generate.MessageMutation) (generate.Valu
 
 // Mutate calls f(ctx, m).
 func (f MessageFunc) Mutate(ctx context.Context, m generate.Mutation) (generate.Value, error) {
-	mv, ok := m.(*generate.MessageMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *generate.MessageMutation", m)
+	if mv, ok := m.(*generate.MessageMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generate.MessageMutation", m)
 }
 
 // The UserFunc type is an adapter to allow the use of ordinary
@@ -40,11 +38,10 @@ type UserFunc func(context.Context, *generate.UserMutation) (generate.Value, err
 
 // Mutate calls f(ctx, m).
 func (f UserFunc) Mutate(ctx context.Context, m generate.Mutation) (generate.Value, error) {
-	mv, ok := m.(*generate.UserMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *generate.UserMutation", m)
+	if mv, ok := m.(*generate.UserMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generate.UserMutation", m)
 }
 
 // Condition is a hook condition function.

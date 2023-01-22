@@ -12,6 +12,7 @@ import (
 //
 //	@Summary		Get user devices
 //	@Id				getDevicesByUserSecret
+//	@Tags			User
 //	@Description	Delete device with device_id
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Produce		json

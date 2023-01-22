@@ -106,50 +106,8 @@ func (dc *DeviceCreate) Mutation() *DeviceMutation {
 
 // Save creates the Device in the database.
 func (dc *DeviceCreate) Save(ctx context.Context) (*Device, error) {
-	var (
-		err  error
-		node *Device
-	)
 	dc.defaults()
-	if len(dc.hooks) == 0 {
-		if err = dc.check(); err != nil {
-			return nil, err
-		}
-		node, err = dc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*DeviceMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = dc.check(); err != nil {
-				return nil, err
-			}
-			dc.mutation = mutation
-			if node, err = dc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(dc.hooks) - 1; i >= 0; i-- {
-			if dc.hooks[i] == nil {
-				return nil, fmt.Errorf("generate: uninitialized hook (forgotten import generate/runtime?)")
-			}
-			mut = dc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, dc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*Device)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from DeviceMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*Device, DeviceMutation](ctx, dc.sqlSave, dc.mutation, dc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -219,6 +177,9 @@ func (dc *DeviceCreate) check() error {
 }
 
 func (dc *DeviceCreate) sqlSave(ctx context.Context) (*Device, error) {
+	if err := dc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := dc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, dc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -228,6 +189,8 @@ func (dc *DeviceCreate) sqlSave(ctx context.Context) (*Device, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
+	dc.mutation.id = &_node.ID
+	dc.mutation.done = true
 	return _node, nil
 }
 

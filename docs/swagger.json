@@ -20,7 +20,11 @@
                 "produces": [
                     "text/html"
                 ],
+                "tags": [
+                    "UI"
+                ],
                 "summary": "Web Index",
+                "operationId": "webIndex",
                 "responses": {
                     "200": {
                         "description": "html",
@@ -36,6 +40,9 @@
                 "description": "If the server is alive",
                 "produces": [
                     "text/plain"
+                ],
+                "tags": [
+                    "Health"
                 ],
                 "summary": "Server Heartbeat",
                 "operationId": "alive",
@@ -53,6 +60,9 @@
             "get": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Check if the user secret is valid",
                 "operationId": "checkUserSecret",
@@ -80,7 +90,11 @@
                 "produces": [
                     "text/plain"
                 ],
+                "tags": [
+                    "UI"
+                ],
                 "summary": "Redirect to docs",
+                "operationId": "docRedirect",
                 "responses": {
                     "301": {
                         "description": "Moved Permanently",
@@ -93,6 +107,9 @@
         },
         "/login": {
             "get": {
+                "tags": [
+                    "User"
+                ],
                 "summary": "Login with GitHub",
                 "operationId": "userLogin",
                 "responses": {
@@ -104,6 +121,9 @@
         },
         "/login/github": {
             "get": {
+                "tags": [
+                    "User"
+                ],
                 "summary": "OAuth callback for GitHub, redirect to ui with user_secret",
                 "operationId": "githubOAuthCallback",
                 "parameters": [
@@ -148,6 +168,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Message"
                 ],
                 "summary": "Send notification",
                 "operationId": "sendMessageLite",
@@ -196,6 +219,9 @@
                 "description": "Create or update device information",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Device"
                 ],
                 "summary": "Create or update device",
                 "operationId": "createDevice",
@@ -273,6 +299,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Device"
+                ],
                 "summary": "Delete device",
                 "operationId": "deleteDevice",
                 "parameters": [
@@ -307,6 +336,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "User"
+                ],
                 "summary": "Get user devices",
                 "operationId": "getDevicesByUserSecret",
                 "parameters": [
@@ -333,6 +365,9 @@
                 "description": "Get message record detail of a message",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Message"
                 ],
                 "summary": "Get message record detail",
                 "operationId": "getMessageById",
@@ -384,6 +419,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Message"
+                ],
                 "summary": "Delete message record",
                 "operationId": "deleteMessageById",
                 "parameters": [
@@ -423,6 +461,9 @@
                 "description": "Get messages of user with pagination",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Get messages of user",
                 "operationId": "getMessagesByUserSecret",
@@ -473,6 +514,9 @@
                 "description": "Send notification to user_id",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Message"
                 ],
                 "summary": "Send notification",
                 "operationId": "sendMessage",
@@ -713,5 +757,27 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "Device management",
+            "name": "Device"
+        },
+        {
+            "description": "User management",
+            "name": "User"
+        },
+        {
+            "description": "Message management",
+            "name": "Message"
+        },
+        {
+            "description": "Health check",
+            "name": "Health"
+        },
+        {
+            "description": "UI for documentation and WebPush",
+            "name": "UI"
+        }
+    ]
 }

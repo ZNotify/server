@@ -35,7 +35,7 @@ type Client struct {
 
 // NewClient creates a new client configured with the given options.
 func NewClient(opts ...Option) *Client {
-	cfg := config{log: log.Println, hooks: &hooks{}}
+	cfg := config{log: log.Println, hooks: &hooks{}, inters: &inters{}}
 	cfg.options(opts...)
 	client := &Client{config: cfg}
 	client.init()
@@ -138,6 +138,28 @@ func (c *Client) Use(hooks ...Hook) {
 	c.User.Use(hooks...)
 }
 
+// Intercept adds the query interceptors to all the entity clients.
+// In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
+func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.Device.Intercept(interceptors...)
+	c.Message.Intercept(interceptors...)
+	c.User.Intercept(interceptors...)
+}
+
+// Mutate implements the ent.Mutator interface.
+func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
+	switch m := m.(type) {
+	case *DeviceMutation:
+		return c.Device.mutate(ctx, m)
+	case *MessageMutation:
+		return c.Message.mutate(ctx, m)
+	case *UserMutation:
+		return c.User.mutate(ctx, m)
+	default:
+		return nil, fmt.Errorf("generate: unknown mutation type %T", m)
+	}
+}
+
 // DeviceClient is a client for the Device schema.
 type DeviceClient struct {
 	config
@@ -152,6 +174,12 @@ func NewDeviceClient(c config) *DeviceClient {
 // A call to `Use(f, g, h)` equals to `device.Hooks(f(g(h())))`.
 func (c *DeviceClient) Use(hooks ...Hook) {
 	c.hooks.Device = append(c.hooks.Device, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `device.Intercept(f(g(h())))`.
+func (c *DeviceClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Device = append(c.inters.Device, interceptors...)
 }
 
 // Create returns a builder for creating a Device entity.
@@ -206,6 +234,8 @@ func (c *DeviceClient) DeleteOneID(id int) *DeviceDeleteOne {
 func (c *DeviceClient) Query() *DeviceQuery {
 	return &DeviceQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeDevice},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -225,7 +255,7 @@ func (c *DeviceClient) GetX(ctx context.Context, id int) *Device {
 
 // QueryUser queries the user edge of a Device.
 func (c *DeviceClient) QueryUser(d *Device) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := d.ID
 		step := sqlgraph.NewStep(
@@ -244,6 +274,26 @@ func (c *DeviceClient) Hooks() []Hook {
 	return c.hooks.Device
 }
 
+// Interceptors returns the client interceptors.
+func (c *DeviceClient) Interceptors() []Interceptor {
+	return c.inters.Device
+}
+
+func (c *DeviceClient) mutate(ctx context.Context, m *DeviceMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&DeviceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&DeviceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&DeviceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&DeviceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generate: unknown Device mutation op: %q", m.Op())
+	}
+}
+
 // MessageClient is a client for the Message schema.
 type MessageClient struct {
 	config
@@ -258,6 +308,12 @@ func NewMessageClient(c config) *MessageClient {
 // A call to `Use(f, g, h)` equals to `message.Hooks(f(g(h())))`.
 func (c *MessageClient) Use(hooks ...Hook) {
 	c.hooks.Message = append(c.hooks.Message, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `message.Intercept(f(g(h())))`.
+func (c *MessageClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Message = append(c.inters.Message, interceptors...)
 }
 
 // Create returns a builder for creating a Message entity.
@@ -312,6 +368,8 @@ func (c *MessageClient) DeleteOneID(id uuid.UUID) *MessageDeleteOne {
 func (c *MessageClient) Query() *MessageQuery {
 	return &MessageQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeMessage},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -331,7 +389,7 @@ func (c *MessageClient) GetX(ctx context.Context, id uuid.UUID) *Message {
 
 // QueryUser queries the user edge of a Message.
 func (c *MessageClient) QueryUser(m *Message) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := m.ID
 		step := sqlgraph.NewStep(
@@ -350,6 +408,26 @@ func (c *MessageClient) Hooks() []Hook {
 	return c.hooks.Message
 }
 
+// Interceptors returns the client interceptors.
+func (c *MessageClient) Interceptors() []Interceptor {
+	return c.inters.Message
+}
+
+func (c *MessageClient) mutate(ctx context.Context, m *MessageMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MessageCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MessageUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MessageDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generate: unknown Message mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -364,6 +442,12 @@ func NewUserClient(c config) *UserClient {
 // A call to `Use(f, g, h)` equals to `user.Hooks(f(g(h())))`.
 func (c *UserClient) Use(hooks ...Hook) {
 	c.hooks.User = append(c.hooks.User, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `user.Intercept(f(g(h())))`.
+func (c *UserClient) Intercept(interceptors ...Interceptor) {
+	c.inters.User = append(c.inters.User, interceptors...)
 }
 
 // Create returns a builder for creating a User entity.
@@ -418,6 +502,8 @@ func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
 func (c *UserClient) Query() *UserQuery {
 	return &UserQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeUser},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -437,7 +523,7 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 
 // QueryDevices queries the devices edge of a User.
 func (c *UserClient) QueryDevices(u *User) *DeviceQuery {
-	query := &DeviceQuery{config: c.config}
+	query := (&DeviceClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -453,7 +539,7 @@ func (c *UserClient) QueryDevices(u *User) *DeviceQuery {
 
 // QueryMessages queries the messages edge of a User.
 func (c *UserClient) QueryMessages(u *User) *MessageQuery {
-	query := &MessageQuery{config: c.config}
+	query := (&MessageClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -470,4 +556,24 @@ func (c *UserClient) QueryMessages(u *User) *MessageQuery {
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
 	return c.hooks.User
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserClient) Interceptors() []Interceptor {
+	return c.inters.User
+}
+
+func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generate: unknown User mutation op: %q", m.Op())
+	}
 }

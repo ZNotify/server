@@ -9,6 +9,8 @@ import (
 //
 //	@Summary		Web Index
 //	@Description	Provide UI
+//	@Id				webIndex
+//	@Tags			UI
 //	@Produce		html
 //	@Success		200	{string}	string	"html"
 //	@Router			/ [get]

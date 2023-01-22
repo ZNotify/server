@@ -16,6 +16,7 @@ import (
 //
 //	@Summary		Get message record detail
 //	@Id				getMessageById
+//	@Tags			Message
 //	@Description	Get message record detail of a message
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			id			path	string	true	"ID of message"

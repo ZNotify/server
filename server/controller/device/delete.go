@@ -9,6 +9,7 @@ import (
 //
 //	@Summary		Delete device
 //	@Id				deleteDevice
+//	@Tags			Device
 //	@Description	Delete device with device_id
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			device_id	path	string	true	"The identifier of device, should be a UUID"

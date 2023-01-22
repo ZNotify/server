@@ -158,14 +158,14 @@ func (d *Device) assignValues(columns []string, values []any) error {
 
 // QueryUser queries the "user" edge of the Device entity.
 func (d *Device) QueryUser() *UserQuery {
-	return (&DeviceClient{config: d.config}).QueryUser(d)
+	return NewDeviceClient(d.config).QueryUser(d)
 }
 
 // Update returns a builder for updating this Device.
 // Note that you need to call Device.Unwrap() before calling this method if this Device
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (d *Device) Update() *DeviceUpdateOne {
-	return (&DeviceClient{config: d.config}).UpdateOne(d)
+	return NewDeviceClient(d.config).UpdateOne(d)
 }
 
 // Unwrap unwraps the Device entity that was returned from a transaction after it was closed,

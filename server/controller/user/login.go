@@ -13,6 +13,7 @@ import (
 //
 //	@Summary	Login with GitHub
 //	@Id			userLogin
+//	@Tags		User
 //	@Success	307
 //	@Router		/login [get]
 func Login(context *types.Ctx) {

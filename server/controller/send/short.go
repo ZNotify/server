@@ -19,6 +19,7 @@ import (
 //
 //	@Summary		Send notification
 //	@Id				sendMessageLite
+//	@Tags			Message
 //	@Description	Send notification to user_id
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			string		body	string	true	"Message Content"

@@ -12,6 +12,7 @@ import (
 //
 //	@Summary	Check if the user secret is valid
 //	@Id			checkUserSecret
+//	@Tags		User
 //	@Produce	json
 //	@Param		user_secret	query		string	true	"Secret of user"
 //	@Success	200			{object}	types.Response[bool]

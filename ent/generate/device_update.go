@@ -96,41 +96,8 @@ func (du *DeviceUpdate) ClearUser() *DeviceUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (du *DeviceUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
 	du.defaults()
-	if len(du.hooks) == 0 {
-		if err = du.check(); err != nil {
-			return 0, err
-		}
-		affected, err = du.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*DeviceMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = du.check(); err != nil {
-				return 0, err
-			}
-			du.mutation = mutation
-			affected, err = du.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(du.hooks) - 1; i >= 0; i-- {
-			if du.hooks[i] == nil {
-				return 0, fmt.Errorf("generate: uninitialized hook (forgotten import generate/runtime?)")
-			}
-			mut = du.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, du.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, DeviceMutation](ctx, du.sqlSave, du.mutation, du.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -172,6 +139,9 @@ func (du *DeviceUpdate) check() error {
 }
 
 func (du *DeviceUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := du.check(); err != nil {
+		return n, err
+	}
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   device.Table,
@@ -253,6 +223,7 @@ func (du *DeviceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
+	du.mutation.done = true
 	return n, nil
 }
 
@@ -337,47 +308,8 @@ func (duo *DeviceUpdateOne) Select(field string, fields ...string) *DeviceUpdate
 
 // Save executes the query and returns the updated Device entity.
 func (duo *DeviceUpdateOne) Save(ctx context.Context) (*Device, error) {
-	var (
-		err  error
-		node *Device
-	)
 	duo.defaults()
-	if len(duo.hooks) == 0 {
-		if err = duo.check(); err != nil {
-			return nil, err
-		}
-		node, err = duo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*DeviceMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = duo.check(); err != nil {
-				return nil, err
-			}
-			duo.mutation = mutation
-			node, err = duo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(duo.hooks) - 1; i >= 0; i-- {
-			if duo.hooks[i] == nil {
-				return nil, fmt.Errorf("generate: uninitialized hook (forgotten import generate/runtime?)")
-			}
-			mut = duo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, duo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*Device)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from DeviceMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*Device, DeviceMutation](ctx, duo.sqlSave, duo.mutation, duo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -419,6 +351,9 @@ func (duo *DeviceUpdateOne) check() error {
 }
 
 func (duo *DeviceUpdateOne) sqlSave(ctx context.Context) (_node *Device, err error) {
+	if err := duo.check(); err != nil {
+		return _node, err
+	}
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   device.Table,
@@ -520,5 +455,6 @@ func (duo *DeviceUpdateOne) sqlSave(ctx context.Context) (_node *Device, err err
 		}
 		return nil, err
 	}
+	duo.mutation.done = true
 	return _node, nil
 }

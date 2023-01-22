@@ -145,14 +145,14 @@ func (m *Message) assignValues(columns []string, values []any) error {
 
 // QueryUser queries the "user" edge of the Message entity.
 func (m *Message) QueryUser() *UserQuery {
-	return (&MessageClient{config: m.config}).QueryUser(m)
+	return NewMessageClient(m.config).QueryUser(m)
 }
 
 // Update returns a builder for updating this Message.
 // Note that you need to call Message.Unwrap() before calling this method if this Message
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (m *Message) Update() *MessageUpdateOne {
-	return (&MessageClient{config: m.config}).UpdateOne(m)
+	return NewMessageClient(m.config).UpdateOne(m)
 }
 
 // Unwrap unwraps the Message entity that was returned from a transaction after it was closed,

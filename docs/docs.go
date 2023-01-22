@@ -29,7 +29,11 @@ const docTemplate = `{
                 "produces": [
                     "text/html"
                 ],
+                "tags": [
+                    "UI"
+                ],
                 "summary": "Web Index",
+                "operationId": "webIndex",
                 "responses": {
                     "200": {
                         "description": "html",
@@ -45,6 +49,9 @@ const docTemplate = `{
                 "description": "If the server is alive",
                 "produces": [
                     "text/plain"
+                ],
+                "tags": [
+                    "Health"
                 ],
                 "summary": "Server Heartbeat",
                 "operationId": "alive",
@@ -62,6 +69,9 @@ const docTemplate = `{
             "get": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Check if the user secret is valid",
                 "operationId": "checkUserSecret",
@@ -89,7 +99,11 @@ const docTemplate = `{
                 "produces": [
                     "text/plain"
                 ],
+                "tags": [
+                    "UI"
+                ],
                 "summary": "Redirect to docs",
+                "operationId": "docRedirect",
                 "responses": {
                     "301": {
                         "description": "Moved Permanently",
@@ -102,6 +116,9 @@ const docTemplate = `{
         },
         "/login": {
             "get": {
+                "tags": [
+                    "User"
+                ],
                 "summary": "Login with GitHub",
                 "operationId": "userLogin",
                 "responses": {
@@ -113,6 +130,9 @@ const docTemplate = `{
         },
         "/login/github": {
             "get": {
+                "tags": [
+                    "User"
+                ],
                 "summary": "OAuth callback for GitHub, redirect to ui with user_secret",
                 "operationId": "githubOAuthCallback",
                 "parameters": [
@@ -157,6 +177,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Message"
                 ],
                 "summary": "Send notification",
                 "operationId": "sendMessageLite",
@@ -205,6 +228,9 @@ const docTemplate = `{
                 "description": "Create or update device information",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Device"
                 ],
                 "summary": "Create or update device",
                 "operationId": "createDevice",
@@ -282,6 +308,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Device"
+                ],
                 "summary": "Delete device",
                 "operationId": "deleteDevice",
                 "parameters": [
@@ -316,6 +345,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "User"
+                ],
                 "summary": "Get user devices",
                 "operationId": "getDevicesByUserSecret",
                 "parameters": [
@@ -342,6 +374,9 @@ const docTemplate = `{
                 "description": "Get message record detail of a message",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Message"
                 ],
                 "summary": "Get message record detail",
                 "operationId": "getMessageById",
@@ -393,6 +428,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Message"
+                ],
                 "summary": "Delete message record",
                 "operationId": "deleteMessageById",
                 "parameters": [
@@ -432,6 +470,9 @@ const docTemplate = `{
                 "description": "Get messages of user with pagination",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Get messages of user",
                 "operationId": "getMessagesByUserSecret",
@@ -482,6 +523,9 @@ const docTemplate = `{
                 "description": "Send notification to user_id",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Message"
                 ],
                 "summary": "Send notification",
                 "operationId": "sendMessage",
@@ -722,7 +766,29 @@ const docTemplate = `{
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "Device management",
+            "name": "Device"
+        },
+        {
+            "description": "User management",
+            "name": "User"
+        },
+        {
+            "description": "Message management",
+            "name": "Message"
+        },
+        {
+            "description": "Health check",
+            "name": "Health"
+        },
+        {
+            "description": "UI for documentation and WebPush",
+            "name": "UI"
+        }
+    ]
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

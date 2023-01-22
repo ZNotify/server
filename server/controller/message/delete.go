@@ -15,6 +15,7 @@ import (
 //
 //	@Summary		Delete message record
 //	@Id				deleteMessageById
+//	@Tags			Message
 //	@Description	Delete message record with id
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			id			path	string	true	"ID of message"

@@ -10,6 +10,7 @@ import (
 //
 //	@Summary		Server Heartbeat
 //	@Id				alive
+//	@Tags			Health
 //	@Description	If the server is alive
 //	@Produce		plain
 //	@Success		204	{string}	string	""

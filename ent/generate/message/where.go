@@ -14,493 +14,325 @@ import (
 
 // ID filters vertices based on their ID field.
 func ID(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
 func IDEQ(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
 func IDNEQ(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		v := make([]any, len(ids))
-		for i := range v {
-			v[i] = ids[i]
-		}
-		s.Where(sql.In(s.C(FieldID), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		v := make([]any, len(ids))
-		for i := range v {
-			v[i] = ids[i]
-		}
-		s.Where(sql.NotIn(s.C(FieldID), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
 func IDGT(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
 func IDGTE(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
 func IDLT(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
 func IDLTE(id uuid.UUID) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldID), id))
-	})
+	return predicate.Message(sql.FieldLTE(FieldID, id))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldCreatedAt, v))
 }
 
 // Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
 func Title(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldTitle, v))
 }
 
 // Content applies equality check predicate on the "content" field. It's identical to ContentEQ.
 func Content(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldContent, v))
 }
 
 // Long applies equality check predicate on the "long" field. It's identical to LongEQ.
 func Long(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldLong, v))
 }
 
 // Priority applies equality check predicate on the "priority" field. It's identical to PriorityEQ.
 func Priority(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldEQ(FieldPriority, vc))
 }
 
 // SequenceID applies equality check predicate on the "sequenceID" field. It's identical to SequenceIDEQ.
 func SequenceID(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldSequenceID, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldCreatedAt, v))
 }
 
 // CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
 func CreatedAtNEQ(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldCreatedAt, v))
 }
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldCreatedAt), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldCreatedAt, vs...))
 }
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldCreatedAt, vs...))
 }
 
 // CreatedAtGT applies the GT predicate on the "created_at" field.
 func CreatedAtGT(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldGT(FieldCreatedAt, v))
 }
 
 // CreatedAtGTE applies the GTE predicate on the "created_at" field.
 func CreatedAtGTE(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldGTE(FieldCreatedAt, v))
 }
 
 // CreatedAtLT applies the LT predicate on the "created_at" field.
 func CreatedAtLT(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldLT(FieldCreatedAt, v))
 }
 
 // CreatedAtLTE applies the LTE predicate on the "created_at" field.
 func CreatedAtLTE(v time.Time) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
-	})
+	return predicate.Message(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // TitleEQ applies the EQ predicate on the "title" field.
 func TitleEQ(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldTitle, v))
 }
 
 // TitleNEQ applies the NEQ predicate on the "title" field.
 func TitleNEQ(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldTitle, v))
 }
 
 // TitleIn applies the In predicate on the "title" field.
 func TitleIn(vs ...string) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldTitle), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldTitle, vs...))
 }
 
 // TitleNotIn applies the NotIn predicate on the "title" field.
 func TitleNotIn(vs ...string) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldTitle), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldTitle, vs...))
 }
 
 // TitleGT applies the GT predicate on the "title" field.
 func TitleGT(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldGT(FieldTitle, v))
 }
 
 // TitleGTE applies the GTE predicate on the "title" field.
 func TitleGTE(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldGTE(FieldTitle, v))
 }
 
 // TitleLT applies the LT predicate on the "title" field.
 func TitleLT(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldLT(FieldTitle, v))
 }
 
 // TitleLTE applies the LTE predicate on the "title" field.
 func TitleLTE(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldLTE(FieldTitle, v))
 }
 
 // TitleContains applies the Contains predicate on the "title" field.
 func TitleContains(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldContains(FieldTitle, v))
 }
 
 // TitleHasPrefix applies the HasPrefix predicate on the "title" field.
 func TitleHasPrefix(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldHasPrefix(FieldTitle, v))
 }
 
 // TitleHasSuffix applies the HasSuffix predicate on the "title" field.
 func TitleHasSuffix(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldHasSuffix(FieldTitle, v))
 }
 
 // TitleEqualFold applies the EqualFold predicate on the "title" field.
 func TitleEqualFold(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldEqualFold(FieldTitle, v))
 }
 
 // TitleContainsFold applies the ContainsFold predicate on the "title" field.
 func TitleContainsFold(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldTitle), v))
-	})
+	return predicate.Message(sql.FieldContainsFold(FieldTitle, v))
 }
 
 // ContentEQ applies the EQ predicate on the "content" field.
 func ContentEQ(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldContent, v))
 }
 
 // ContentNEQ applies the NEQ predicate on the "content" field.
 func ContentNEQ(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldContent, v))
 }
 
 // ContentIn applies the In predicate on the "content" field.
 func ContentIn(vs ...string) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldContent), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldContent, vs...))
 }
 
 // ContentNotIn applies the NotIn predicate on the "content" field.
 func ContentNotIn(vs ...string) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldContent), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldContent, vs...))
 }
 
 // ContentGT applies the GT predicate on the "content" field.
 func ContentGT(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldGT(FieldContent, v))
 }
 
 // ContentGTE applies the GTE predicate on the "content" field.
 func ContentGTE(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldGTE(FieldContent, v))
 }
 
 // ContentLT applies the LT predicate on the "content" field.
 func ContentLT(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldLT(FieldContent, v))
 }
 
 // ContentLTE applies the LTE predicate on the "content" field.
 func ContentLTE(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldLTE(FieldContent, v))
 }
 
 // ContentContains applies the Contains predicate on the "content" field.
 func ContentContains(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldContains(FieldContent, v))
 }
 
 // ContentHasPrefix applies the HasPrefix predicate on the "content" field.
 func ContentHasPrefix(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldHasPrefix(FieldContent, v))
 }
 
 // ContentHasSuffix applies the HasSuffix predicate on the "content" field.
 func ContentHasSuffix(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldHasSuffix(FieldContent, v))
 }
 
 // ContentEqualFold applies the EqualFold predicate on the "content" field.
 func ContentEqualFold(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldEqualFold(FieldContent, v))
 }
 
 // ContentContainsFold applies the ContainsFold predicate on the "content" field.
 func ContentContainsFold(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldContent), v))
-	})
+	return predicate.Message(sql.FieldContainsFold(FieldContent, v))
 }
 
 // LongEQ applies the EQ predicate on the "long" field.
 func LongEQ(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldLong, v))
 }
 
 // LongNEQ applies the NEQ predicate on the "long" field.
 func LongNEQ(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldLong, v))
 }
 
 // LongIn applies the In predicate on the "long" field.
 func LongIn(vs ...string) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldLong), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldLong, vs...))
 }
 
 // LongNotIn applies the NotIn predicate on the "long" field.
 func LongNotIn(vs ...string) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldLong), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldLong, vs...))
 }
 
 // LongGT applies the GT predicate on the "long" field.
 func LongGT(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldGT(FieldLong, v))
 }
 
 // LongGTE applies the GTE predicate on the "long" field.
 func LongGTE(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldGTE(FieldLong, v))
 }
 
 // LongLT applies the LT predicate on the "long" field.
 func LongLT(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldLT(FieldLong, v))
 }
 
 // LongLTE applies the LTE predicate on the "long" field.
 func LongLTE(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldLTE(FieldLong, v))
 }
 
 // LongContains applies the Contains predicate on the "long" field.
 func LongContains(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldContains(FieldLong, v))
 }
 
 // LongHasPrefix applies the HasPrefix predicate on the "long" field.
 func LongHasPrefix(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldHasPrefix(FieldLong, v))
 }
 
 // LongHasSuffix applies the HasSuffix predicate on the "long" field.
 func LongHasSuffix(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldHasSuffix(FieldLong, v))
 }
 
 // LongEqualFold applies the EqualFold predicate on the "long" field.
 func LongEqualFold(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldEqualFold(FieldLong, v))
 }
 
 // LongContainsFold applies the ContainsFold predicate on the "long" field.
 func LongContainsFold(v string) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldLong), v))
-	})
+	return predicate.Message(sql.FieldContainsFold(FieldLong, v))
 }
 
 // PriorityEQ applies the EQ predicate on the "priority" field.
 func PriorityEQ(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldEQ(FieldPriority, vc))
 }
 
 // PriorityNEQ applies the NEQ predicate on the "priority" field.
 func PriorityNEQ(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldPriority, vc))
 }
 
 // PriorityIn applies the In predicate on the "priority" field.
@@ -509,9 +341,7 @@ func PriorityIn(vs ...enum.Priority) predicate.Message {
 	for i := range v {
 		v[i] = string(vs[i])
 	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldPriority), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldPriority, v...))
 }
 
 // PriorityNotIn applies the NotIn predicate on the "priority" field.
@@ -520,145 +350,101 @@ func PriorityNotIn(vs ...enum.Priority) predicate.Message {
 	for i := range v {
 		v[i] = string(vs[i])
 	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldPriority), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldPriority, v...))
 }
 
 // PriorityGT applies the GT predicate on the "priority" field.
 func PriorityGT(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldGT(FieldPriority, vc))
 }
 
 // PriorityGTE applies the GTE predicate on the "priority" field.
 func PriorityGTE(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldGTE(FieldPriority, vc))
 }
 
 // PriorityLT applies the LT predicate on the "priority" field.
 func PriorityLT(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldLT(FieldPriority, vc))
 }
 
 // PriorityLTE applies the LTE predicate on the "priority" field.
 func PriorityLTE(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldLTE(FieldPriority, vc))
 }
 
 // PriorityContains applies the Contains predicate on the "priority" field.
 func PriorityContains(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldContains(FieldPriority, vc))
 }
 
 // PriorityHasPrefix applies the HasPrefix predicate on the "priority" field.
 func PriorityHasPrefix(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldHasPrefix(FieldPriority, vc))
 }
 
 // PriorityHasSuffix applies the HasSuffix predicate on the "priority" field.
 func PriorityHasSuffix(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldHasSuffix(FieldPriority, vc))
 }
 
 // PriorityEqualFold applies the EqualFold predicate on the "priority" field.
 func PriorityEqualFold(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldEqualFold(FieldPriority, vc))
 }
 
 // PriorityContainsFold applies the ContainsFold predicate on the "priority" field.
 func PriorityContainsFold(v enum.Priority) predicate.Message {
 	vc := string(v)
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldPriority), vc))
-	})
+	return predicate.Message(sql.FieldContainsFold(FieldPriority, vc))
 }
 
 // SequenceIDEQ applies the EQ predicate on the "sequenceID" field.
 func SequenceIDEQ(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldEQ(FieldSequenceID, v))
 }
 
 // SequenceIDNEQ applies the NEQ predicate on the "sequenceID" field.
 func SequenceIDNEQ(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldNEQ(FieldSequenceID, v))
 }
 
 // SequenceIDIn applies the In predicate on the "sequenceID" field.
 func SequenceIDIn(vs ...int) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldSequenceID), v...))
-	})
+	return predicate.Message(sql.FieldIn(FieldSequenceID, vs...))
 }
 
 // SequenceIDNotIn applies the NotIn predicate on the "sequenceID" field.
 func SequenceIDNotIn(vs ...int) predicate.Message {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldSequenceID), v...))
-	})
+	return predicate.Message(sql.FieldNotIn(FieldSequenceID, vs...))
 }
 
 // SequenceIDGT applies the GT predicate on the "sequenceID" field.
 func SequenceIDGT(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldGT(FieldSequenceID, v))
 }
 
 // SequenceIDGTE applies the GTE predicate on the "sequenceID" field.
 func SequenceIDGTE(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldGTE(FieldSequenceID, v))
 }
 
 // SequenceIDLT applies the LT predicate on the "sequenceID" field.
 func SequenceIDLT(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldLT(FieldSequenceID, v))
 }
 
 // SequenceIDLTE applies the LTE predicate on the "sequenceID" field.
 func SequenceIDLTE(v int) predicate.Message {
-	return predicate.Message(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldSequenceID), v))
-	})
+	return predicate.Message(sql.FieldLTE(FieldSequenceID, v))
 }
 
 // HasUser applies the HasEdge predicate on the "user" edge.
@@ -666,7 +452,6 @@ func HasUser() predicate.Message {
 	return predicate.Message(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(UserTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)

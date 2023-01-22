@@ -133,6 +133,7 @@ paths:
   /:
     get:
       description: Provide UI
+      operationId: webIndex
       produces:
       - text/html
       responses:
@@ -141,6 +142,8 @@ paths:
           schema:
             type: string
       summary: Web Index
+      tags:
+      - UI
   /{user_secret}:
     post:
       consumes:
@@ -175,6 +178,8 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
+      tags:
+      - Message
   /{user_secret}/device/{device_id}:
     delete:
       description: Delete device with device_id
@@ -198,6 +203,8 @@ paths:
           schema:
             $ref: '#/definitions/types.Response-bool'
       summary: Delete device
+      tags:
+      - Device
     put:
       description: Create or update device information
       operationId: createDevice
@@ -251,6 +258,8 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Create or update device
+      tags:
+      - Device
   /{user_secret}/devices:
     get:
       description: Delete device with device_id
@@ -269,6 +278,8 @@ paths:
           schema:
             $ref: '#/definitions/types.Response-array_entity_Device'
       summary: Get user devices
+      tags:
+      - User
   /{user_secret}/message/{id}:
     delete:
       description: Delete message record with id
@@ -296,6 +307,8 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Delete message record
+      tags:
+      - Message
     get:
       description: Get message record detail of a message
       operationId: getMessageById
@@ -330,6 +343,8 @@ paths:
           schema:
             $ref: '#/definitions/types.NotFoundResponse'
       summary: Get message record detail
+      tags:
+      - Message
   /{user_secret}/messages:
     get:
       description: Get messages of user with pagination
@@ -365,6 +380,8 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Get messages of user
+      tags:
+      - User
   /{user_secret}/send:
     post:
       description: Send notification to user_id
@@ -414,6 +431,8 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: Send notification
+      tags:
+      - Message
   /alive:
     get:
       description: If the server is alive
@@ -426,6 +445,8 @@ paths:
           schema:
             type: string
       summary: Server Heartbeat
+      tags:
+      - Health
   /check:
     get:
       operationId: checkUserSecret
@@ -443,8 +464,11 @@ paths:
           schema:
             $ref: '#/definitions/types.Response-bool'
       summary: Check if the user secret is valid
+      tags:
+      - User
   /docs:
     get:
+      operationId: docRedirect
       produces:
       - text/plain
       responses:
@@ -453,6 +477,8 @@ paths:
           schema:
             type: string
       summary: Redirect to docs
+      tags:
+      - UI
   /login:
     get:
       operationId: userLogin
@@ -460,6 +486,8 @@ paths:
         "307":
           description: Temporary Redirect
       summary: Login with GitHub
+      tags:
+      - User
   /login/github:
     get:
       operationId: githubOAuthCallback
@@ -485,4 +513,17 @@ paths:
           schema:
             $ref: '#/definitions/types.UnauthorizedResponse'
       summary: OAuth callback for GitHub, redirect to ui with user_secret
+      tags:
+      - User
 swagger: "2.0"
+tags:
+- description: Device management
+  name: Device
+- description: User management
+  name: User
+- description: Message management
+  name: Message
+- description: Health check
+  name: Health
+- description: UI for documentation and WebPush
+  name: UI

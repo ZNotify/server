@@ -16,6 +16,7 @@ import (
 //
 //	@Summary		Get messages of user
 //	@Id				getMessagesByUserSecret
+//	@Tags			User
 //	@Description	Get messages of user with pagination
 //	@Param			user_secret	path	string	true	"Secret of user"
 //	@Param			skip		query	int		false	"The number of records to skip"		default(0)	minimum(0)

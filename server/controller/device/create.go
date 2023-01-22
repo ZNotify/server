@@ -18,6 +18,7 @@ import (
 //
 //	@Summary		Create or update device
 //	@Id				createDevice
+//	@Tags			Device
 //	@Description	Create or update device information
 //	@Param			user_secret	path		string		true	"Secret of user"
 //	@Param			device_id	path		string		true	"device_id should be a valid UUID"
