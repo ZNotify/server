@@ -17,7 +17,7 @@ func Load(path string) {
 		},
 		Database: DatabaseConfiguration{
 			Type: Sqlite,
-			DSN:  "file:memory:main?mode=memory&cache=shared&_fk=1",
+			DSN:  "file:memory:main?mode=memory&cache=shared&_fk=1&_timeout=5000",
 		},
 		Senders: make(map[string]SenderConfiguration),
 	}

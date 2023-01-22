@@ -1,6 +1,6 @@
 database:
   type: sqlite
-  dsn: "file:./data/notify.db?cache=shared&mode=rwc&_journal_mode=WAL&_fk=1"
+  dsn: "file:./data/notify.db?cache=shared&mode=rwc&_journal_mode=WAL&_fk=1&_timeout=5000"
 server:
   host: "127.0.0.1"
   mode: development
