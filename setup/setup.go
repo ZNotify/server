@@ -12,7 +12,7 @@ import (
 	"notify-api/server/controller/device"
 	"notify-api/server/controller/message"
 	"notify-api/server/controller/misc"
-	"notify-api/server/controller/send"
+	cPush "notify-api/server/controller/push"
 	"notify-api/server/controller/user"
 	"notify-api/setup/config"
 	setupMisc "notify-api/setup/misc"
@@ -72,6 +72,7 @@ func setupController(router *gin.Engine) {
 
 	router.GET("/check", types.WrapHandler(user.Check))
 	router.GET("/alive", types.WrapHandler(misc.Alive))
+	router.GET("/webpush", types.WrapHandler(cPush.WebPush))
 
 	loginGroup := router.Group("/login")
 	{
@@ -90,11 +91,8 @@ func setupController(router *gin.Engine) {
 		userGroup.PUT("/device/:device_id", types.WrapHandler(device.Create))
 		userGroup.DELETE("/device/:device_id", types.WrapHandler(device.Delete))
 
-		userGroup.POST("/send", types.WrapHandler(send.Send))
-		userGroup.PUT("/send", types.WrapHandler(send.Send))
-
-		userGroup.POST("", types.WrapHandler(send.Short))
-		userGroup.PUT("", types.WrapHandler(send.Short))
+		userGroup.POST("/send", types.WrapHandler(cPush.Send))
+		userGroup.POST("", types.WrapHandler(cPush.Short))
 
 		push.RegisterRouter(userGroup)
 	}

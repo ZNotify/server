@@ -51,6 +51,10 @@ func Send(ctx context.Context, msg *item.PushMessage) error {
 
 func Init() {
 	for id, senderCfg := range config.Config.Senders {
+		if IsSenderActive(enum.Sender(id)) {
+			zap.S().Fatalf("Sender %s load twice", id)
+		}
+
 		sender, err := GetSender(enum.Sender(id))
 		if err != nil {
 			zap.S().Fatalf("Failed to get sender %s: %v", id, err)

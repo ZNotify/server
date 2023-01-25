@@ -31,6 +31,8 @@ import (
 //	@tag.description	Health check
 //	@tag.name			UI
 //	@tag.description	UI for documentation and WebPush
+//	@tag.name			Push
+//	@tag.description	Endpoint for push service
 //
 //	@license.name		Apache 2.0
 //	@license.url		https://www.apache.org/licenses/LICENSE-2.0.html

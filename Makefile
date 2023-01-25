@@ -20,7 +20,7 @@ unit-test: frontend
 
 dependencies:
 	go mod vendor
-	go install github.com/swaggo/swag/cmd/swag@latest
+	go install github.com/swaggo/swag/cmd/swag@master
 	go install github.com/cosmtrek/air@latest
 	go install entgo.io/ent/cmd/ent@latest
 

@@ -169,6 +169,27 @@ const docTemplate = `{
                 }
             }
         },
+        "/webpush": {
+            "get": {
+                "description": "Check if this znotify instance support webpush and get public key",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Push"
+                ],
+                "summary": "Endpoint for webpush info check",
+                "operationId": "webpush",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response-push_info"
+                        }
+                    }
+                }
+            }
+        },
         "/{user_secret}": {
             "post": {
                 "description": "Send notification to user_id",
@@ -206,6 +227,55 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/types.Response-entity_Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/{user_secret}/conn": {
+            "get": {
+                "description": "Work as a fallback strategy for device without public push provider, each frame in this connection will be a push message",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Push"
+                ],
+                "summary": "Endpoint for websocket connection",
+                "operationId": "websocket",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Device ID, usually a UUID",
+                        "name": "X-Device-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Secret of user",
+                        "name": "user_secret",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Message"
                         }
                     },
                     "400": {
@@ -676,6 +746,17 @@ const docTemplate = `{
                 "SenderWebSocket"
             ]
         },
+        "push.info": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "type": "boolean"
+                },
+                "public_key": {
+                    "type": "string"
+                }
+            }
+        },
         "types.BadRequestResponse": {
             "type": "object",
             "properties": {
@@ -754,6 +835,18 @@ const docTemplate = `{
                 }
             }
         },
+        "types.Response-push_info": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "$ref": "#/definitions/push.info"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
         "types.UnauthorizedResponse": {
             "type": "object",
             "properties": {
@@ -787,6 +880,10 @@ const docTemplate = `{
         {
             "description": "UI for documentation and WebPush",
             "name": "UI"
+        },
+        {
+            "description": "Endpoint for push service",
+            "name": "Push"
         }
     ]
 }`

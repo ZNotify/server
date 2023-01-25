@@ -11,16 +11,30 @@ import (
 	"notify-api/ent/helper"
 	"notify-api/push/item"
 	"notify-api/server/types"
+	_ "notify-api/server/types/entity"
 )
 
 func (h *Host) HandlerPath() string {
-	return "/host/ws"
+	return "/conn"
 }
 
 func (h *Host) HandlerMethod() string {
-	return "GET"
+	return http.MethodGet
 }
 
+// Handler
+//
+//	@Summary		Endpoint for websocket connection
+//	@Id				websocket
+//	@Tags			Push
+//	@Description	Work as a fallback strategy for device without public push provider, each frame in this connection will be a push message
+//	@Param			X-Device-ID	header	string	true	"Device ID, usually a UUID"
+//	@Param			user_secret	path		string			true	"Secret of user"
+//	@Produce		json
+//	@Success		200	{object}	entity.Message
+//	@Failure		400	{object}	types.BadRequestResponse
+//	@Failure		401	{object}	types.UnauthorizedResponse
+//	@Router			/{user_secret}/conn [get]
 func (h *Host) Handler(context *types.Ctx) {
 	deviceId := context.GetHeader("X-Device-ID")
 	if deviceId == "" {

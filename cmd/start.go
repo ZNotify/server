@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"notify-api/setup"
-	config2 "notify-api/setup/config"
+	"notify-api/setup/config"
 )
 
 func start(ctx *cli.Context) error {
@@ -15,20 +15,20 @@ func start(ctx *cli.Context) error {
 	port := ctx.Int("port")
 
 	path := ctx.String("config")
-	config2.Load(path)
+	config.Load(path)
 
 	if host != "" {
-		config2.Config.Server.Host = host
+		config.Config.Server.Host = host
 	}
 	if port != 0 {
-		config2.Config.Server.Port = port
+		config.Config.Server.Port = port
 	}
 
 	var address string
 	if ctx.String("address") != "" {
 		address = ctx.String("address")
 	} else {
-		address = config2.Config.Server.Host + ":" + strconv.Itoa(config2.Config.Server.Port)
+		address = config.Config.Server.Host + ":" + strconv.Itoa(config.Config.Server.Port)
 	}
 
 	zap.S().Infof("Server is running on %s", address)

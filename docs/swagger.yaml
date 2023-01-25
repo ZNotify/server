@@ -59,6 +59,13 @@ definitions:
     - SenderWns
     - SenderTelegram
     - SenderWebSocket
+  push.info:
+    properties:
+      enable:
+        type: boolean
+      public_key:
+        type: string
+    type: object
   types.BadRequestResponse:
     properties:
       body:
@@ -107,6 +114,14 @@ definitions:
     properties:
       body:
         $ref: '#/definitions/entity.Message'
+      code:
+        default: 200
+        type: integer
+    type: object
+  types.Response-push_info:
+    properties:
+      body:
+        $ref: '#/definitions/push.info'
       code:
         default: 200
         type: integer
@@ -180,6 +195,40 @@ paths:
       summary: Send notification
       tags:
       - Message
+  /{user_secret}/conn:
+    get:
+      description: Work as a fallback strategy for device without public push provider,
+        each frame in this connection will be a push message
+      operationId: websocket
+      parameters:
+      - description: Device ID, usually a UUID
+        in: header
+        name: X-Device-ID
+        required: true
+        type: string
+      - description: Secret of user
+        in: path
+        name: user_secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/types.UnauthorizedResponse'
+      summary: Endpoint for websocket connection
+      tags:
+      - Push
   /{user_secret}/device/{device_id}:
     delete:
       description: Delete device with device_id
@@ -515,6 +564,20 @@ paths:
       summary: OAuth callback for GitHub, redirect to ui with user_secret
       tags:
       - User
+  /webpush:
+    get:
+      description: Check if this znotify instance support webpush and get public key
+      operationId: webpush
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response-push_info'
+      summary: Endpoint for webpush info check
+      tags:
+      - Push
 swagger: "2.0"
 tags:
 - description: Device management
@@ -527,3 +590,5 @@ tags:
   name: Health
 - description: UI for documentation and WebPush
   name: UI
+- description: Endpoint for push service
+  name: Push

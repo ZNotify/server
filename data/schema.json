@@ -70,7 +70,7 @@
         "dsn": {
           "type": "string",
           "default": "data/notify.db",
-          "title": "The destination of the database, usually a file path or a connection string."
+          "title": "The destination of the database, usually a file path or a connection string.\nIf you use sqlite database, you must add _fk=1 to your dsn to enable foreign keys."
         }
       },
       "examples": [
@@ -163,7 +163,7 @@
           "type": "array",
           "default": [],
           "title": "The admins of the server.",
-          "description": "The admins of the server, they can do everything. As for now, it is login from GitHub.",
+          "description": "The admins of the server. It is username from GitHub.",
           "minLength": 1
         },
         "sso": {

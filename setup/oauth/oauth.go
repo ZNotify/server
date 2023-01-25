@@ -15,5 +15,6 @@ func Init() {
 		ClientSecret: config.Config.User.SSO.GitHub.ClientSecret,
 		Scopes:       make([]string, 0),
 		Endpoint:     githubOAuth.Endpoint,
+		RedirectURL:  config.Config.Server.URL + "/login/github",
 	}
 }

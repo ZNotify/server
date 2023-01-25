@@ -40,7 +40,7 @@ func Create(context *types.Ctx) {
 	}
 
 	channel := context.PostForm("channel")
-	if !push.IsSenderIdValid(enum.Sender(channel)) {
+	if !push.IsSenderActive(enum.Sender(channel)) {
 		zap.S().Infof("channel %s is not supported", channel)
 		context.JSONError(http.StatusBadRequest, errors.New("channel is not supported"))
 		return

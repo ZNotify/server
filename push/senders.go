@@ -24,7 +24,7 @@ var availableSenders = senders{
 
 var activeSenders = senders{}
 
-func IsSenderIdValid(id enum.Sender) bool {
+func IsSenderActive(id enum.Sender) bool {
 	for _, v := range activeSenders {
 		if v.Name() == id {
 			return true
