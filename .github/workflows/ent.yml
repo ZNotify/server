@@ -1,0 +1,19 @@
+name: Ent CI
+on:
+  push:
+  pull_request:
+    paths:
+      - 'ent/*'
+jobs:
+  ent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - uses: ent/contrib/ci@master
