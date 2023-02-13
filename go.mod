@@ -3,7 +3,7 @@ module notify-api
 go 1.19
 
 require (
-	entgo.io/ent v0.11.7
+	entgo.io/ent v0.11.8
 	firebase.google.com/go/v4 v4.10.0
 	github.com/SherClockHolmes/webpush-go v1.2.0
 	github.com/gin-contrib/cors v1.4.0
