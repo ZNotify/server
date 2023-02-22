@@ -1,4 +1,4 @@
-name: GitHub Release
+name: Release binary to GitHub Release
 
 on:
   workflow_call:

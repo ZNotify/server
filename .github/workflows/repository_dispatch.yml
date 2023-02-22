@@ -1,4 +1,4 @@
-name: Update ui and publish
+name: Update embed UI files
 
 on:
   repository_dispatch:

@@ -1,4 +1,4 @@
-name: Run Tests
+name: Build server binary
 
 on:
   workflow_call:

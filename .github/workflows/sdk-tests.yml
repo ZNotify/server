@@ -1,4 +1,4 @@
-name: Server unit tests
+name: Server SDK unit tests
 
 on:
   workflow_call:
