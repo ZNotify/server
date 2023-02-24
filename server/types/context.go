@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"net/http"
+	"notify-api/server/middleware/serverTiming"
 
 	"github.com/gin-gonic/gin"
 
@@ -14,6 +15,7 @@ type Ctx struct {
 	*gin.Context
 	User     *generate.User
 	IsAuthed bool
+	Timing   *serverTiming.Timing
 }
 
 func (c *Ctx) JSONResult(value any) {
@@ -47,16 +49,14 @@ func (c *Ctx) JSONError(code int, err error) {
 
 func WrapHandler(handler func(*Ctx)) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var user *generate.User
-		value, isAuthed := context.Get(middleware.UserKey)
-		if isAuthed {
-			user = value.(*generate.User)
-		}
+		user, isAuthed := middleware.GetUser(context)
+		timing := middleware.GetTiming(context)
 
 		ctx := &Ctx{
 			Context:  context,
 			User:     user,
 			IsAuthed: isAuthed,
+			Timing:   timing,
 		}
 
 		handler(ctx)

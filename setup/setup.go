@@ -1,12 +1,11 @@
 package setup
 
 import (
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"net/http/pprof"
 	"time"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"notify-api/ent/dao"
 	"notify-api/server/controller/device"
@@ -68,7 +67,7 @@ func setupController(router *gin.Engine) {
 	router.Use(ginzap.Ginzap(zap.L(), time.RFC3339, false))
 	router.Use(ginzap.RecoveryWithZap(zap.L(), true))
 
-	router.Use(middleware.Duration)
+	router.Use(middleware.ServerTiming)
 
 	router.GET("/check", types.WrapHandler(user.Check))
 	router.GET("/alive", types.WrapHandler(misc.Alive))
