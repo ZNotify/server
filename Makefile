@@ -1,5 +1,6 @@
 BIN_DIR = bin
-BINARY = server
+EXE = .exe
+BINARY = server$(EXE)
 
 .PHONY: build frontend build-production build-test unit-test dependencies dev fmt desc gen
 
@@ -41,3 +42,6 @@ gen:
 
 lint:
 	golangci-lint run
+
+analyze:
+	go tool nm "$(BIN_DIR)/$(BINARY)"

@@ -36,3 +36,8 @@ linters-settings:
 
 run:
   timeout: 5m
+
+linters:
+  enable:
+    - asciicheck
+    - bodyclose
