@@ -65,7 +65,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 	}
 
 	size := len(tokens)
-	c := make(chan error, 0)
+	c := make(chan error)
 	for _, v := range tokens {
 		s := &webpush.Subscription{}
 		err = json.Unmarshal([]byte(v), &s)
@@ -74,7 +74,8 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 		}
 
 		go func() {
-			_, err := webpush.SendNotificationWithContext(ctx, data, s, option)
+			resp, err := webpush.SendNotificationWithContext(ctx, data, s, option)
+			_ = resp.Body.Close()
 			c <- err
 		}()
 	}

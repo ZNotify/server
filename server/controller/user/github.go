@@ -41,14 +41,14 @@ func GitHub(context *types.Ctx) {
 		return
 	}
 
-	token, err := oauth.OAuthConf.Exchange(context, code)
+	token, err := oauth.Conf.Exchange(context, code)
 	if err != nil {
 		zap.S().Errorf("Failed to exchange code: %v", err)
 		context.JSONError(http.StatusUnauthorized, err)
 		return
 	}
 
-	oauthClient := oauth.OAuthConf.Client(context, token)
+	oauthClient := oauth.Conf.Client(context, token)
 	client := github.NewClient(oauthClient)
 	githubUser, _, err := client.Users.Get(context, "")
 	if err != nil {

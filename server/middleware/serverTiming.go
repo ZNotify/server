@@ -7,13 +7,13 @@ import (
 
 const timingContextKey = "Timing-Context"
 
-type ServerTimingWriter struct {
+type serverTimingWriter struct {
 	gin.ResponseWriter
 	timing          *serverTiming.Timing
 	fullCycleMetric *serverTiming.Metric
 }
 
-func (w ServerTimingWriter) WriteHeader(code int) {
+func (w serverTimingWriter) WriteHeader(code int) {
 	w.fullCycleMetric.Stop()
 	w.Header().Set(serverTiming.HeaderKey, w.timing.String())
 	w.ResponseWriter.WriteHeader(code)
@@ -22,7 +22,7 @@ func (w ServerTimingWriter) WriteHeader(code int) {
 func ServerTiming(c *gin.Context) {
 	timing := &serverTiming.Timing{}
 
-	c.Writer = &ServerTimingWriter{
+	c.Writer = &serverTimingWriter{
 		c.Writer,
 		timing,
 		timing.NewMetric("FullCycle").Start(),

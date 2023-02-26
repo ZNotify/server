@@ -19,7 +19,7 @@ EXPOSE 14444
 
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /app/server /app/server
+COPY --from=builder /app/bin/server /app/server
 
 VOLUME ["/app/data/"]
 

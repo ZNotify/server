@@ -84,5 +84,4 @@ func Send(context *types.Ctx) {
 	}
 
 	context.JSONResult(entity.FromModelMessage(*msg))
-	return
 }

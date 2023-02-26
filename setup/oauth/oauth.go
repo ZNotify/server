@@ -7,10 +7,10 @@ import (
 	"notify-api/setup/config"
 )
 
-var OAuthConf *oauth2.Config
+var Conf *oauth2.Config
 
 func Init() {
-	OAuthConf = &oauth2.Config{
+	Conf = &oauth2.Config{
 		ClientID:     config.Config.User.SSO.GitHub.ClientID,
 		ClientSecret: config.Config.User.SSO.GitHub.ClientSecret,
 		Scopes:       make([]string, 0),

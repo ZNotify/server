@@ -69,5 +69,4 @@ func Short(context *types.Ctx) {
 	}
 
 	context.JSONResult(entity.FromModelMessage(*msg))
-	return
 }

@@ -49,7 +49,7 @@ jobs:
         with:
           name: ${{ matrix.id }}
           path: |
-            ${{ matrix.binary }}
-            test-${{ matrix.binary }}
+            bin/${{ matrix.binary }}
+            bin/test-${{ matrix.binary }}
           if-no-files-found: error
 

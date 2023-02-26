@@ -17,6 +17,6 @@ import (
 //	@Success	307
 //	@Router		/login [get]
 func Login(context *types.Ctx) {
-	url := oauth.OAuthConf.AuthCodeURL("no_need_to_set_state", oauth2.AccessTypeOnline)
+	url := oauth.Conf.AuthCodeURL("no_need_to_set_state", oauth2.AccessTypeOnline)
 	context.Redirect(http.StatusTemporaryRedirect, url)
 }

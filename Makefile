@@ -1,19 +1,19 @@
-
+BIN_DIR = bin
 BINARY = server
 
 .PHONY: build frontend build-production build-test unit-test dependencies dev fmt desc gen
 
 build:
-	go build -o "$(BINARY)" notify-api
+	go build -o "$(BIN_DIR)/$(BINARY)" notify-api
 
 frontend:
 	go run notify-api/scripts download
 
 build-production: frontend
-	go build -trimpath -ldflags "-s -w" -o "$(BINARY)" notify-api
+	go build -trimpath -ldflags "-s -w" -o "$(BIN_DIR)/$(BINARY)" notify-api
 
 build-test: frontend
-	go build -tags test -o "$(BINARY)" notify-api
+	go build -tags test -o "$(BIN_DIR)/$(BINARY)" notify-api
 
 unit-test: frontend
 	go test -v -tags test ./...
@@ -23,6 +23,7 @@ dependencies:
 	go install github.com/swaggo/swag/cmd/swag@master
 	go install github.com/cosmtrek/air@latest
 	go install entgo.io/ent/cmd/ent@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 dev:
 	air
@@ -37,3 +38,6 @@ desc:
 gen:
 	go run notify-api/scripts ent
 	swag init
+
+lint:
+	golangci-lint run
