@@ -4,7 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var App = &cli.App{
+var Cli = &cli.App{
 	Name:                 "Notify API",
 	Usage:                "This is Znotify api server.",
 	EnableBashCompletion: true,
@@ -16,17 +16,9 @@ var App = &cli.App{
 			Value:   "data/config.yaml",
 		},
 		&cli.StringFlag{
-			Name:  "host",
-			Usage: "Set listen host to `HOST`.",
-		},
-		&cli.IntFlag{
-			Name:  "port",
-			Usage: "Set listen port to `PORT`.",
-		},
-		&cli.StringFlag{
 			Name:  "address",
 			Usage: "Set listen address to `ADDRESS`.",
 		},
 	},
-	Action: start,
+	Action: run,
 }

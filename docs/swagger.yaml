@@ -1,29 +1,71 @@
 definitions:
-  entity.Device:
+  common.BadRequestResponse:
     properties:
-      channel:
-        $ref: '#/definitions/enum.Sender'
-      deviceMeta:
+      body:
         type: string
-      deviceName:
-        type: string
-      identifier:
-        type: string
+      code:
+        default: 400
+        type: integer
     type: object
-  entity.Message:
+  common.NotFoundResponse:
     properties:
-      content:
+      body:
         type: string
-      created_at:
+      code:
+        default: 404
+        type: integer
+    type: object
+  common.Response-array_models_Device:
+    properties:
+      body:
+        items:
+          $ref: '#/definitions/models.Device'
+        type: array
+      code:
+        default: 200
+        type: integer
+    type: object
+  common.Response-array_models_Message:
+    properties:
+      body:
+        items:
+          $ref: '#/definitions/models.Message'
+        type: array
+      code:
+        default: 200
+        type: integer
+    type: object
+  common.Response-bool:
+    properties:
+      body:
+        type: boolean
+      code:
+        default: 200
+        type: integer
+    type: object
+  common.Response-models_Message:
+    properties:
+      body:
+        $ref: '#/definitions/models.Message'
+      code:
+        default: 200
+        type: integer
+    type: object
+  common.Response-push_info:
+    properties:
+      body:
+        $ref: '#/definitions/push.info'
+      code:
+        default: 200
+        type: integer
+    type: object
+  common.UnauthorizedResponse:
+    properties:
+      body:
         type: string
-      id:
-        type: string
-      long:
-        type: string
-      priority:
-        $ref: '#/definitions/enum.Priority'
-      title:
-        type: string
+      code:
+        default: 401
+        type: integer
     type: object
   enum.Priority:
     enum:
@@ -59,80 +101,38 @@ definitions:
     - SenderWns
     - SenderTelegram
     - SenderWebSocket
+  models.Device:
+    properties:
+      channel:
+        $ref: '#/definitions/enum.Sender'
+      deviceMeta:
+        type: string
+      deviceName:
+        type: string
+      identifier:
+        type: string
+    type: object
+  models.Message:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      long:
+        type: string
+      priority:
+        $ref: '#/definitions/enum.Priority'
+      title:
+        type: string
+    type: object
   push.info:
     properties:
       enable:
         type: boolean
       public_key:
         type: string
-    type: object
-  types.BadRequestResponse:
-    properties:
-      body:
-        type: string
-      code:
-        default: 400
-        type: integer
-    type: object
-  types.NotFoundResponse:
-    properties:
-      body:
-        type: string
-      code:
-        default: 404
-        type: integer
-    type: object
-  types.Response-array_entity_Device:
-    properties:
-      body:
-        items:
-          $ref: '#/definitions/entity.Device'
-        type: array
-      code:
-        default: 200
-        type: integer
-    type: object
-  types.Response-array_entity_Message:
-    properties:
-      body:
-        items:
-          $ref: '#/definitions/entity.Message'
-        type: array
-      code:
-        default: 200
-        type: integer
-    type: object
-  types.Response-bool:
-    properties:
-      body:
-        type: boolean
-      code:
-        default: 200
-        type: integer
-    type: object
-  types.Response-entity_Message:
-    properties:
-      body:
-        $ref: '#/definitions/entity.Message'
-      code:
-        default: 200
-        type: integer
-    type: object
-  types.Response-push_info:
-    properties:
-      body:
-        $ref: '#/definitions/push.info'
-      code:
-        default: 200
-        type: integer
-    type: object
-  types.UnauthorizedResponse:
-    properties:
-      body:
-        type: string
-      code:
-        default: 401
-        type: integer
     type: object
 info:
   contact:
@@ -183,15 +183,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/common.Response-models_Message'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/types.BadRequestResponse'
+            $ref: '#/definitions/common.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: Send notification
       tags:
       - Message
@@ -217,15 +217,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/entity.Message'
+            $ref: '#/definitions/models.Message'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/types.BadRequestResponse'
+            $ref: '#/definitions/common.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: Endpoint for websocket connection
       tags:
       - Push
@@ -250,7 +250,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-bool'
+            $ref: '#/definitions/common.Response-bool'
       summary: Delete device
       tags:
       - Device
@@ -297,15 +297,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-bool'
+            $ref: '#/definitions/common.Response-bool'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/types.BadRequestResponse'
+            $ref: '#/definitions/common.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: Create or update device
       tags:
       - Device
@@ -325,7 +325,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-array_entity_Device'
+            $ref: '#/definitions/common.Response-array_models_Device'
       summary: Get user devices
       tags:
       - User
@@ -350,11 +350,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-bool'
+            $ref: '#/definitions/common.Response-bool'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: Delete message record
       tags:
       - Message
@@ -378,19 +378,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/common.Response-models_Message'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/types.BadRequestResponse'
+            $ref: '#/definitions/common.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/types.NotFoundResponse'
+            $ref: '#/definitions/common.NotFoundResponse'
       summary: Get message record detail
       tags:
       - Message
@@ -423,11 +423,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-array_entity_Message'
+            $ref: '#/definitions/common.Response-array_models_Message'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: Get messages of user
       tags:
       - User
@@ -470,15 +470,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-entity_Message'
+            $ref: '#/definitions/common.Response-models_Message'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/types.BadRequestResponse'
+            $ref: '#/definitions/common.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: Send notification
       tags:
       - Message
@@ -511,7 +511,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-bool'
+            $ref: '#/definitions/common.Response-bool'
       summary: Check if the user secret is valid
       tags:
       - User
@@ -556,11 +556,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/types.BadRequestResponse'
+            $ref: '#/definitions/common.BadRequestResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/types.UnauthorizedResponse'
+            $ref: '#/definitions/common.UnauthorizedResponse'
       summary: OAuth callback for GitHub, redirect to ui with user_secret
       tags:
       - User
@@ -574,7 +574,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Response-push_info'
+            $ref: '#/definitions/common.Response-push_info'
       summary: Endpoint for webpush info check
       tags:
       - Push

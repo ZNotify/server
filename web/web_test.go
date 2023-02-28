@@ -15,9 +15,9 @@ func TestWebHandler(t *testing.T) {
 		c, _ := gin.CreateTestContext(w)
 		c.Request = httptest.NewRequest("GET", "/", nil)
 		r := gin.New()
-		r.StaticFS("/fs", StaticHttpFS)
+		r.StaticFS("/web", StaticHttpFS)
 
-		req := httptest.NewRequest("GET", "/fs/robots.txt", nil)
+		req := httptest.NewRequest("GET", "/web/robots.txt", nil)
 		r.ServeHTTP(w, req)
 		if w.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)

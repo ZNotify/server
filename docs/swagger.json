@@ -79,7 +79,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
+                            "$ref": "#/definitions/common.Response-bool"
                         }
                     }
                 }
@@ -148,13 +148,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
+                            "$ref": "#/definitions/common.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -175,7 +175,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-push_info"
+                            "$ref": "#/definitions/common.Response-push_info"
                         }
                     }
                 }
@@ -217,19 +217,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/common.Response-models_Message"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
+                            "$ref": "#/definitions/common.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -266,19 +266,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.Message"
+                            "$ref": "#/definitions/models.Message"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
+                            "$ref": "#/definitions/common.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -347,19 +347,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
+                            "$ref": "#/definitions/common.Response-bool"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
+                            "$ref": "#/definitions/common.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -394,7 +394,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
+                            "$ref": "#/definitions/common.Response-bool"
                         }
                     }
                 }
@@ -424,7 +424,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-array_entity_Device"
+                            "$ref": "#/definitions/common.Response-array_models_Device"
                         }
                     }
                 }
@@ -461,25 +461,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/common.Response-models_Message"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
+                            "$ref": "#/definitions/common.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/types.NotFoundResponse"
+                            "$ref": "#/definitions/common.NotFoundResponse"
                         }
                     }
                 }
@@ -514,13 +514,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-bool"
+                            "$ref": "#/definitions/common.Response-bool"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -567,13 +567,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-array_entity_Message"
+                            "$ref": "#/definitions/common.Response-array_models_Message"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -635,19 +635,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Response-entity_Message"
+                            "$ref": "#/definitions/common.Response-models_Message"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/types.BadRequestResponse"
+                            "$ref": "#/definitions/common.BadRequestResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/types.UnauthorizedResponse"
+                            "$ref": "#/definitions/common.UnauthorizedResponse"
                         }
                     }
                 }
@@ -655,43 +655,105 @@
         }
     },
     "definitions": {
-        "entity.Device": {
+        "common.BadRequestResponse": {
             "type": "object",
             "properties": {
-                "channel": {
-                    "$ref": "#/definitions/enum.Sender"
-                },
-                "deviceMeta": {
+                "body": {
                     "type": "string"
                 },
-                "deviceName": {
-                    "type": "string"
-                },
-                "identifier": {
-                    "type": "string"
+                "code": {
+                    "type": "integer",
+                    "default": 400
                 }
             }
         },
-        "entity.Message": {
+        "common.NotFoundResponse": {
             "type": "object",
             "properties": {
-                "content": {
+                "body": {
                     "type": "string"
                 },
-                "created_at": {
+                "code": {
+                    "type": "integer",
+                    "default": 404
+                }
+            }
+        },
+        "common.Response-array_models_Device": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Device"
+                    }
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
+        "common.Response-array_models_Message": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Message"
+                    }
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
+        "common.Response-bool": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "boolean"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
+        "common.Response-models_Message": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "$ref": "#/definitions/models.Message"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
+        "common.Response-push_info": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "$ref": "#/definitions/push.info"
+                },
+                "code": {
+                    "type": "integer",
+                    "default": 200
+                }
+            }
+        },
+        "common.UnauthorizedResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "long": {
-                    "type": "string"
-                },
-                "priority": {
-                    "$ref": "#/definitions/enum.Priority"
-                },
-                "title": {
-                    "type": "string"
+                "code": {
+                    "type": "integer",
+                    "default": 401
                 }
             }
         },
@@ -737,6 +799,46 @@
                 "SenderWebSocket"
             ]
         },
+        "models.Device": {
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "$ref": "#/definitions/enum.Sender"
+                },
+                "deviceMeta": {
+                    "type": "string"
+                },
+                "deviceName": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Message": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "long": {
+                    "type": "string"
+                },
+                "priority": {
+                    "$ref": "#/definitions/enum.Priority"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "push.info": {
             "type": "object",
             "properties": {
@@ -745,108 +847,6 @@
                 },
                 "public_key": {
                     "type": "string"
-                }
-            }
-        },
-        "types.BadRequestResponse": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 400
-                }
-            }
-        },
-        "types.NotFoundResponse": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 404
-                }
-            }
-        },
-        "types.Response-array_entity_Device": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entity.Device"
-                    }
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 200
-                }
-            }
-        },
-        "types.Response-array_entity_Message": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entity.Message"
-                    }
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 200
-                }
-            }
-        },
-        "types.Response-bool": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "boolean"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 200
-                }
-            }
-        },
-        "types.Response-entity_Message": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "$ref": "#/definitions/entity.Message"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 200
-                }
-            }
-        },
-        "types.Response-push_info": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "$ref": "#/definitions/push.info"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 200
-                }
-            }
-        },
-        "types.UnauthorizedResponse": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "integer",
-                    "default": 401
                 }
             }
         }
