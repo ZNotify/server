@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"notify-api/app/common"
+	"notify-api/app/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,7 @@ func TestIndex(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
 		c.Request = httptest.NewRequest("GET", "/", nil)
+		middleware.ServerTiming(c)
 		common.WrapHandler(WebIndex)(c)
 		if w.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
