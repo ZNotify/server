@@ -72,12 +72,12 @@ func (c *client) writeMessage(msg *item.PushMessage) error {
 	return err
 }
 
-func (c *client) pongHandler(s string) error {
+func (c *client) pongHandler(string) error {
 	c.updateReadDeadline()
 	return nil
 }
 
-func (c *client) pingHandler(s string) error {
+func (c *client) pingHandler(string) error {
 	return c.pong()
 }
 
