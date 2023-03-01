@@ -9,8 +9,6 @@ linters-settings:
     min-occurrences: 3
   gocyclo:
     min-complexity: 15
-  goimports:
-    local-prefixes: github.com/golangci/golangci-lint
   gomnd:
     checks:
       - argument
