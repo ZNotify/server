@@ -7,8 +7,10 @@ BINARY = server$(EXE)
 build:
 	go build -o "$(BIN_DIR)/$(BINARY)" notify-api
 
-frontend:
+app/api/web/static/index.html:
 	go run notify-api/scripts download
+
+frontend: app/api/web/static/index.html
 
 build-production: frontend
 	go build -trimpath -ldflags "-s -w" -o "$(BIN_DIR)/$(BINARY)" notify-api

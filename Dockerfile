@@ -1,12 +1,29 @@
-FROM golang:1.20-alpine as builder
+FROM --platform=$BUILDPLATFORM golang:1.20 as builder
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+ENV CGO_ENABLED 1
+ENV GOOS linux
+ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /app
 
-RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip gcc musl-dev make
+RUN apt update && \
+    apt install -y ca-certificates openssl tzdata wget unzip gcc musl-dev make && \
+    update-ca-certificates && \
+    if [ "$TARGETPLATFORM" = "linux/arm/v8" ]; then \
+        apt install -y gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu; \
+    fi
 
 COPY . .
 
-RUN make build-production BINARY=server
+RUN make frontend && \
+    if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+        make build-production BINARY=server; \
+    elif [ "$TARGETPLATFORM" = "linux/arm/v8" ]; then \
+        GOARCH=arm64 CC=gcc-aarch64-linux-gnu make build-production BINARY=server; \
+    fi
 
 FROM scratch
 

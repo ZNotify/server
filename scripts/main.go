@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -14,5 +15,7 @@ func main() {
 		ent()
 	case "download":
 		download()
+	default:
+		fmt.Println("Unknown command " + os.Args[1])
 	}
 }
