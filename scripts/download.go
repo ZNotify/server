@@ -26,7 +26,7 @@ func download() {
 	isForce := flag.Bool("force", false, "force download")
 	flag.Parse()
 
-	if exist("app/web/static/index.html") && !*isForce {
+	if exist("app/api/web/static/index.html") && !*isForce {
 		log.Println("web/static/index.html exists, skip download")
 		log.Println("if you still want to download, please use -f")
 		return
@@ -75,7 +75,7 @@ func download() {
 			}(rc)
 
 			// remove "build/" from file path
-			target := filepath.Join("app/web/static", file.Name[6:])
+			target := filepath.Join("app/api/web/static", file.Name[6:])
 
 			if file.FileInfo().IsDir() {
 				err := os.MkdirAll(target, file.Mode())
