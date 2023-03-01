@@ -3,7 +3,7 @@ package websocket
 import (
 	"time"
 
-	"github.com/gorilla/websocket"
+	"github.com/fasthttp/websocket"
 )
 
 const (

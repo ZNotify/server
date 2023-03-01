@@ -11,7 +11,7 @@ import (
 	"notify-api/db/dao"
 	"notify-api/db/ent/generate"
 
-	"github.com/gorilla/websocket"
+	"github.com/fasthttp/websocket"
 	"go.uber.org/zap"
 )
 
