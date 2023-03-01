@@ -35,7 +35,8 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19
+          check-latest: true
+          go-version-file: 'go.mod'
           cache: true
 
       - name: Build ${{ matrix.id }} production binary
