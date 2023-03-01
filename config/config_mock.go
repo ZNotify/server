@@ -14,6 +14,7 @@ func Load(path string) *Configuration {
 		Server: ServerConfiguration{
 			Address: "0.0.0.0:14444",
 			Mode:    TestMode,
+			URL:     "http://127.0.0.1:14444",
 		},
 		Database: DatabaseConfiguration{
 			Type: Sqlite,
