@@ -2,9 +2,9 @@ FROM golang:1.20-alpine as builder
 
 WORKDIR /app
 
-COPY . .
-
 RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip gcc musl-dev make
+
+COPY . .
 
 RUN make build-production BINARY=server
 

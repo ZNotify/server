@@ -4,15 +4,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"notify-api/app/common"
-	"notify-api/app/manager/push/item"
-	"notify-api/db/dao"
-	"notify-api/db/helper"
-
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	_ "notify-api/app/models"
+	"notify-api/app/api/common"
+	"notify-api/app/db/dao"
+	"notify-api/app/db/helper"
+	"notify-api/app/manager/push/item"
 )
 
 func (h *Host) HandlerPath() string {

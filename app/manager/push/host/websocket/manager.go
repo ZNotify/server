@@ -3,8 +3,8 @@ package websocket
 import (
 	"sync"
 
+	"notify-api/app/db/ent/generate"
 	"notify-api/app/manager/push/item"
-	"notify-api/db/ent/generate"
 )
 
 var manager = &clientManager{

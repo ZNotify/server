@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "This is Znotify api server.",
-        "title": "Notify API",
+        "title": "ZNotify API",
         "contact": {
             "name": "Issues",
             "url": "https://github.com/ZNotify/server/issues"

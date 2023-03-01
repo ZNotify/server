@@ -3,16 +3,16 @@ package item
 import (
 	"time"
 
+	"notify-api/app/db/dao"
+	"notify-api/app/db/ent/generate"
 	"notify-api/app/manager/push/enum"
-	"notify-api/db/dao"
-	generate2 "notify-api/db/ent/generate"
 
 	"github.com/google/uuid"
 )
 
 type PushMessage struct {
 	ID         uuid.UUID
-	User       *generate2.User
+	User       *generate.User
 	Title      string
 	Content    string
 	Long       string
@@ -21,7 +21,7 @@ type PushMessage struct {
 	SequenceID int
 }
 
-func NewPushMessage(user *generate2.User, title, content, long string, priority enum.Priority) *PushMessage {
+func NewPushMessage(user *generate.User, title, content, long string, priority enum.Priority) *PushMessage {
 	return &PushMessage{
 		ID:         uuid.New(),
 		User:       user,
@@ -34,7 +34,7 @@ func NewPushMessage(user *generate2.User, title, content, long string, priority 
 	}
 }
 
-func FromModelMessageWithUser(msg *generate2.Message, u *generate2.User) *PushMessage {
+func FromModelMessageWithUser(msg *generate.Message, u *generate.User) *PushMessage {
 	return &PushMessage{
 		ID:         msg.ID,
 		User:       u,

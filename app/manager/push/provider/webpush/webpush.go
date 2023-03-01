@@ -6,13 +6,13 @@ import (
 	"errors"
 	"net/http"
 
-	enum2 "notify-api/app/manager/push/enum"
-	pushTypes "notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/item"
-	"notify-api/app/models"
-	"notify-api/db/dao"
-
 	"github.com/SherClockHolmes/webpush-go"
+
+	"notify-api/app/api/models"
+	"notify-api/app/db/dao"
+	"notify-api/app/manager/push/enum"
+	"notify-api/app/manager/push/interfaces"
+	"notify-api/app/manager/push/item"
 )
 
 var client = &http.Client{}
@@ -23,7 +23,7 @@ type Provider struct {
 	Mailto          string
 }
 
-func (p *Provider) Init(cfg pushTypes.Config) error {
+func (p *Provider) Init(cfg interfaces.Config) error {
 	p.VAPIDPublicKey = cfg[VAPIDPublicKey]
 	p.VAPIDPrivateKey = cfg[VAPIDPrivateKey]
 	p.Mailto = cfg[Mailto]
@@ -56,11 +56,11 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 
 	option := p.getOption()
 	switch msg.Priority {
-	case enum2.PriorityHigh:
+	case enum.PriorityHigh:
 		option.Urgency = webpush.UrgencyHigh
-	case enum2.PriorityNormal:
+	case enum.PriorityNormal:
 		option.Urgency = webpush.UrgencyNormal
-	case enum2.PriorityLow:
+	case enum.PriorityLow:
 		option.Urgency = webpush.UrgencyLow
 	}
 
@@ -110,6 +110,6 @@ func (p *Provider) Config() []string {
 	return []string{VAPIDPublicKey, VAPIDPrivateKey, Mailto}
 }
 
-func (p *Provider) Name() enum2.Sender {
-	return enum2.SenderWebPush
+func (p *Provider) Name() enum.Sender {
+	return enum.SenderWebPush
 }

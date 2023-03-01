@@ -3,7 +3,7 @@ package push
 import (
 	"github.com/gin-gonic/gin"
 
-	"notify-api/app/common"
+	"notify-api/app/api/common"
 	"notify-api/app/manager/push/interfaces"
 )
 

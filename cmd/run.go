@@ -4,9 +4,9 @@ import (
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 
-	"notify-api/app/router"
-	"notify-api/bootstrap"
-	"notify-api/global"
+	"notify-api/app/api/router"
+	"notify-api/app/bootstrap"
+	"notify-api/app/global"
 )
 
 func run(ctx *cli.Context) error {

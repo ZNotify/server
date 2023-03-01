@@ -8,13 +8,13 @@ import (
 )
 
 func ent() {
-	err := entc.Generate("./db/ent/schema", &gen.Config{
+	err := entc.Generate("./app/db/ent/schema", &gen.Config{
 		Features: []gen.Feature{
 			gen.FeatureUpsert,
 		},
-		Target:  "./db/ent/generate",
-		Package: "notify-api/db/ent/generate",
-		Schema:  "notify-api/db/ent/schema",
+		Target:  "./app/db/ent/generate",
+		Package: "notify-api/app/db/ent/generate",
+		Schema:  "notify-api/app/db/ent/schema",
 	})
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)

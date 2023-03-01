@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"time"
 
+	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/pkg/errors"
+
+	"notify-api/app/db/dao"
+	"notify-api/app/global"
 	"notify-api/app/manager/push/enum"
 	"notify-api/app/manager/push/interfaces"
 	"notify-api/app/manager/push/item"
-	"notify-api/db/dao"
-	"notify-api/global"
-
-	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/pkg/errors"
 )
 
 type Host struct {

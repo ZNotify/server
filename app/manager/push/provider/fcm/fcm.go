@@ -4,15 +4,15 @@ import (
 	"context"
 	"time"
 
-	enum2 "notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/item"
-	"notify-api/db/dao"
-
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
+
+	"notify-api/app/db/dao"
+	"notify-api/app/manager/push/enum"
+	"notify-api/app/manager/push/interfaces"
+	"notify-api/app/manager/push/item"
 )
 
 type Provider struct {
@@ -48,7 +48,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 	}
 
 	var fcmPriority string
-	if msg.Priority == enum2.PriorityHigh {
+	if msg.Priority == enum.PriorityHigh {
 		fcmPriority = "high"
 	} else {
 		fcmPriority = "normal"
@@ -85,6 +85,6 @@ func (p *Provider) Config() []string {
 	return []string{Credential}
 }
 
-func (p *Provider) Name() enum2.Sender {
-	return enum2.SenderFcm
+func (p *Provider) Name() enum.Sender {
+	return enum.SenderFcm
 }

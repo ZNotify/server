@@ -893,7 +893,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Notify API",
+	Title:            "ZNotify API",
 	Description:      "This is Znotify api server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

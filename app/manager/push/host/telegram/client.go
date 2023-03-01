@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strconv"
 
-	"notify-api/db/dao"
-	"notify-api/db/helper"
-
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
+
+	"notify-api/app/db/dao"
+	"notify-api/app/db/helper"
 )
 
 func (h *Host) setCommand() {

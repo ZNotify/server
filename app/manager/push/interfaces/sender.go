@@ -3,10 +3,10 @@ package interfaces
 import (
 	"context"
 
-	"notify-api/app/common"
+	"notify-api/app/api/common"
+	"notify-api/app/db/ent/generate"
 	"notify-api/app/manager/push/enum"
 	"notify-api/app/manager/push/item"
-	"notify-api/db/ent/generate"
 )
 
 type Config = map[string]string

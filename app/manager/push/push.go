@@ -9,15 +9,14 @@ import (
 	"sync"
 	"time"
 
+	"notify-api/app/db/helper"
+	"notify-api/app/global"
 	"notify-api/app/manager/push/enum"
 	pushTypes "notify-api/app/manager/push/interfaces"
 	"notify-api/app/manager/push/item"
-	"notify-api/db/helper"
-	"notify-api/global"
+	"notify-api/app/utils"
 
 	"go.uber.org/zap"
-
-	"notify-api/utils"
 )
 
 func Send(ctx context.Context, msg *item.PushMessage) error {

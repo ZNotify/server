@@ -5,14 +5,14 @@ import (
 	"sync"
 	"time"
 
-	"notify-api/app/common"
-	"notify-api/app/manager/push/item"
-	"notify-api/app/models"
-	"notify-api/db/dao"
-	"notify-api/db/ent/generate"
-
 	"github.com/fasthttp/websocket"
 	"go.uber.org/zap"
+
+	"notify-api/app/api/common"
+	"notify-api/app/api/models"
+	"notify-api/app/db/dao"
+	"notify-api/app/db/ent/generate"
+	"notify-api/app/manager/push/item"
 )
 
 type client struct {

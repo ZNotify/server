@@ -11,7 +11,7 @@ import (
 
 // Main
 //
-//	@title            Notify API
+//	@title            ZNotify API
 //	@version          1.0
 //	@description      This is Znotify api server.
 //	@path             /
