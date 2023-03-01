@@ -38,6 +38,32 @@ run:
   timeout: 5m
 
 linters:
-  enable:
+  disable:
+    # Broken
+    # Wait for https://github.com/golangci/golangci-lint/issues/3086 to be resolved
     - asciicheck
     - bodyclose
+    - bidichk
+    - contextcheck
+    - cyclop
+    - decorder
+    - depguard
+    - dupl
+    - dupword
+    - errorlint
+    - gocyclo
+    - gosec
+    - gosimple
+    - govet
+    - importas
+    - ineffassign
+    - nilnil
+    - lll
+    - makezero
+    - misspell
+    - nakedret
+    - nilerr
+    - noctx
+    - tparallel
+    - unparam
+    # End broken
