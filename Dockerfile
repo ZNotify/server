@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine as builder
+FROM golang:1.20-alpine as builder
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY . .
 
 RUN apk --update add --no-cache ca-certificates openssl tzdata wget unzip gcc musl-dev make
 
-RUN make build-production
+RUN make build-production BINARY=server
 
 FROM scratch
 

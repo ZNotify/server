@@ -4,6 +4,9 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	"go.uber.org/zap"
 
 	"notify-api/config"
