@@ -1,4 +1,4 @@
-name: Update embed UI files
+name: Update embed UI files CI
 
 on:
   repository_dispatch:
