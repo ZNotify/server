@@ -14,10 +14,10 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
 
+      - uses: ent/contrib/ci@master
+
       - name: Get static
         run: make frontend
-
-      - uses: ent/contrib/ci@master
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
