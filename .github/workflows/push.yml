@@ -7,7 +7,12 @@ on:
 permissions: write-all
 
 jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+
   tests:
+    needs: [ lint ]
     name: Server unit tests
     uses: ./.github/workflows/tests.yml
 
