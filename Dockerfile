@@ -14,7 +14,7 @@ WORKDIR /app
 RUN apt update && \
     apt install -y ca-certificates openssl tzdata wget unzip gcc musl-dev make && \
     update-ca-certificates && \
-    if [ "$TARGETPLATFORM" = "linux/arm/v8" ]; then \
+    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
         apt install -y gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu; \
     fi
 
