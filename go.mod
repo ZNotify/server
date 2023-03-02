@@ -14,6 +14,8 @@ require (
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/google/go-github/v49 v49.1.0
 	github.com/google/uuid v1.3.0
+	github.com/invopop/jsonschema v0.7.0
+	github.com/invopop/yaml v0.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.16
@@ -25,7 +27,6 @@ require (
 	go.uber.org/zap v1.24.0
 	golang.org/x/oauth2 v0.5.0
 	google.golang.org/api v0.111.0
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -66,6 +67,7 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
+	github.com/iancoleman/orderedmap v0.0.0-20190318233801-ac98e3ecb4b0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
@@ -106,4 +108,5 @@ require (
 	google.golang.org/grpc v1.53.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

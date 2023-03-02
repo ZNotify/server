@@ -2,7 +2,7 @@ BIN_DIR = bin
 EXE = .exe
 BINARY = server$(EXE)
 
-.PHONY: build frontend build-production build-test unit-test dependencies dev fmt desc gen
+.PHONY: build frontend build-production build-test unit-test dependencies dev fmt desc gen ent-gen swag-gen
 
 build:
 	go build -o "$(BIN_DIR)/$(BINARY)" notify-api
@@ -38,9 +38,16 @@ fmt:
 desc:
 	go run -mod=mod entgo.io/ent/cmd/ent describe ./schema
 
-gen:
+ent-gen:
 	go run notify-api/scripts ent
+
+swag-gen:
 	swag init
+
+schema-gen:
+	go run -tags schema notify-api/scripts schema
+
+gen: ent-gen swag-gen schema-gen
 
 lint:
 	golangci-lint run

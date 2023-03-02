@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/Configuration",
+  "$defs": {
+    "Configuration": {
+      "properties": {
+        "server": {
+          "$ref": "#/$defs/ServerConfiguration"
+        },
+        "database": {
+          "$ref": "#/$defs/DatabaseConfiguration"
+        },
+        "user": {
+          "$ref": "#/$defs/UserConfiguration"
+        },
+        "senders": {
+          "$ref": "#/$defs/SenderConfiguration"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "server",
+        "database",
+        "user",
+        "senders"
+      ]
+    },
+    "Database": {
+      "type": "string",
+      "enum": [
+        "sqlite",
+        "mysql",
+        "pgsql"
+      ],
+      "title": "Database type",
+      "description": "The type of database to use. Can be one of: sqlite, mysql, pgsql."
+    },
+    "DatabaseConfiguration": {
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/Database"
+        },
+        "dsn": {
+          "type": "string",
+          "title": "Database DSN"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "dsn"
+      ]
+    },
+    "FCMConfig": {
+      "properties": {
+        "credential": {
+          "type": "string",
+          "title": "Firebase messaging credential json"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "credential"
+      ]
+    },
+    "GitHubConfiguration": {
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "title": "GitHub OAuth Client ID"
+        },
+        "client_secret": {
+          "type": "string",
+          "title": "GitHub OAuth Client Secret"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "client_id",
+        "client_secret"
+      ]
+    },
+    "Mode": {
+      "type": "string",
+      "enum": [
+        "test",
+        "development",
+        "production"
+      ],
+      "title": "Server running mode",
+      "description": "The mode the server is running in. Can be one of: test, development, production."
+    },
+    "SSOConfiguration": {
+      "properties": {
+        "github": {
+          "$ref": "#/$defs/GitHubConfiguration",
+          "title": "GitHub OAuth"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "github"
+      ]
+    },
+    "SenderConfiguration": {
+      "properties": {
+        "telegram": {
+          "$ref": "#/$defs/TelegramConfig",
+          "title": "Telegram Sender"
+        },
+        "fcm": {
+          "$ref": "#/$defs/FCMConfig",
+          "title": "Firebase Cloud Messaging Sender"
+        },
+        "websocket": {
+          "type": "boolean",
+          "title": "WebSocket Sender"
+        },
+        "webpush": {
+          "$ref": "#/$defs/WebPushConfig",
+          "title": "Web Push Sender"
+        },
+        "wns": {
+          "type": "boolean",
+          "title": "Windows Notification Service Sender"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "minProperties": 1
+    },
+    "ServerConfiguration": {
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "Server address",
+          "default": "0.0.0.0:14444"
+        },
+        "mode": {
+          "$ref": "#/$defs/Mode"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Server URL",
+          "examples": [
+            "https://push.learningman.top"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "address",
+        "url"
+      ]
+    },
+    "TelegramConfig": {
+      "properties": {
+        "bot_token": {
+          "type": "string",
+          "title": "Telegram bot token"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "bot_token"
+      ]
+    },
+    "UserConfiguration": {
+      "properties": {
+        "admins": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "minItems": 1,
+          "title": "Admins"
+        },
+        "sso": {
+          "$ref": "#/$defs/SSOConfiguration",
+          "title": "SSO"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "admins",
+        "sso"
+      ]
+    },
+    "WebPushConfig": {
+      "properties": {
+        "vapid_public_key": {
+          "type": "string",
+          "title": "VAPID Public Key"
+        },
+        "vapid_private_key": {
+          "type": "string",
+          "title": "VAPID Private Key"
+        },
+        "mail_to": {
+          "type": "string",
+          "format": "email",
+          "title": "Mail to"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "vapid_public_key",
+        "vapid_private_key",
+        "mail_to"
+      ]
+    }
+  },
+  "title": "ZNotify server configuration",
+  "description": "The configuration schema of ZNotify server."
+}

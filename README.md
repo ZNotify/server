@@ -26,7 +26,7 @@ GLOBAL OPTIONS:
 
 配置文件应当被放置在 `data/config.yaml`, 或者通过参数 `config` 指定。
 
-可以使用 [JSON Schema](https://raw.githubusercontent.com/ZNotify/server/master/data/schema.json) 来验证配置文件。
+可以使用 [JSON Schema](https://raw.githubusercontent.com/ZNotify/server/master/docs/schema.json) 来验证配置文件。
 
 ## 请求参数
 ```

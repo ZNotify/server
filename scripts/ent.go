@@ -8,6 +8,7 @@ import (
 )
 
 func ent() {
+	log.Println("running ent codegen")
 	err := entc.Generate("./app/db/ent/schema", &gen.Config{
 		Features: []gen.Feature{
 			gen.FeatureUpsert,

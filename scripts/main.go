@@ -15,6 +15,8 @@ func main() {
 		ent()
 	case "download":
 		download()
+	case "schema":
+		schema()
 	default:
 		fmt.Println("Unknown command " + os.Args[1])
 	}

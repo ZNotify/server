@@ -7,13 +7,13 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"gopkg.in/yaml.v3"
+	"github.com/invopop/yaml"
 )
 
 func Load(path string) *Configuration {
 	var data []byte
 	var err error
-	var mode string
+	var mode Mode
 	if gin.Mode() == gin.DebugMode {
 		mode = DevMode
 	} else {
@@ -27,7 +27,7 @@ func Load(path string) *Configuration {
 		},
 		Database: DatabaseConfiguration{
 			Type: Sqlite,
-			DSN:  "data/notify.db",
+			DSN:  "data/notify.db?_fk=1",
 		},
 		Senders: SenderConfiguration{
 			WebSocket: true,
