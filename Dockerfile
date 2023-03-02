@@ -3,6 +3,8 @@ FROM --platform=$BUILDPLATFORM golang:1.20 as builder
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
+ARG PREFETCHED
+
 ENV CGO_ENABLED 1
 ENV GOOS linux
 ENV DEBIAN_FRONTEND noninteractive
@@ -18,11 +20,18 @@ RUN apt update && \
 
 COPY . .
 
-RUN make frontend && \
-    if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+RUN # if not prefetch, download dependencies \
+    if [ -z "$PREFETCHED" ]; then \
+        make frontend; \
+    fi
+
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
         make build-production BINARY=server; \
     elif [ "$TARGETPLATFORM" = "linux/arm/v8" ]; then \
         GOARCH=arm64 CC=gcc-aarch64-linux-gnu make build-production BINARY=server; \
+    else \
+        echo "Unsupported platform: $TARGETPLATFORM"; \
+        exit 1; \
     fi
 
 FROM scratch
