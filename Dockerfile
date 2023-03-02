@@ -20,12 +20,14 @@ RUN apt update && \
 
 COPY . .
 
-RUN # if not prefetch, download dependencies \
-    if [ -z "$PREFETCHED" ]; then \
+# Download frontend dependencies if not cached
+RUN if [ -z "$PREFETCHED" ]; then \
         make frontend; \
     fi
 
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg \
+    if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
         make build-production BINARY=server; \
     elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
         GOARCH=arm64 CC=aarch64-linux-gnu-gcc make build-production BINARY=server; \
