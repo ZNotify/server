@@ -20,12 +20,6 @@ func Load(path string) *Configuration {
 			Type: Sqlite,
 			DSN:  "file:memory:main?mode=memory&cache=shared&_fk=1&_timeout=5000",
 		},
-		Senders: SenderConfiguration{
-			WebSocket: nil,
-			FCM:       nil,
-			Telegram:  nil,
-			WebPush:   nil,
-			WNS:       nil,
-		},
+		Senders: SenderConfiguration{},
 	}
 }
