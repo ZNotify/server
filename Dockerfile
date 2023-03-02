@@ -28,7 +28,7 @@ RUN # if not prefetch, download dependencies \
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
         make build-production BINARY=server; \
     elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-        GOARCH=arm64 CC=gcc-aarch64-linux-gnu make build-production BINARY=server; \
+        GOARCH=arm64 CC=aarch64-linux-gnu-gcc make build-production BINARY=server; \
     else \
         echo "Unsupported platform: $TARGETPLATFORM"; \
         exit 1; \
