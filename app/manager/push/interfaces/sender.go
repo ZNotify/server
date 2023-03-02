@@ -9,7 +9,7 @@ import (
 	"notify-api/app/manager/push/item"
 )
 
-type Config = map[string]string
+type Config any
 
 type Sender interface {
 	Send(ctx context.Context, msg *item.PushMessage) error
@@ -24,7 +24,6 @@ type SenderWithoutConfig interface {
 type SenderWithConfig interface {
 	Sender
 	Init(config Config) error
-	Config() []string
 }
 
 type SenderWithBackground interface {

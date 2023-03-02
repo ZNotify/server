@@ -9,6 +9,7 @@ import (
 	"github.com/SherClockHolmes/webpush-go"
 
 	"notify-api/app/api/models"
+	"notify-api/app/config/sender"
 	"notify-api/app/db/dao"
 	"notify-api/app/manager/push/enum"
 	"notify-api/app/manager/push/interfaces"
@@ -24,9 +25,13 @@ type Provider struct {
 }
 
 func (p *Provider) Init(cfg interfaces.Config) error {
-	p.VAPIDPublicKey = cfg[VAPIDPublicKey]
-	p.VAPIDPrivateKey = cfg[VAPIDPrivateKey]
-	p.Mailto = cfg[Mailto]
+	config, ok := cfg.(senderConfig.WebPushConfig)
+	if !ok {
+		return errors.New("webpush config type error")
+	}
+	p.VAPIDPublicKey = config.VAPIDPublicKey
+	p.VAPIDPrivateKey = config.VAPIDPrivateKey
+	p.Mailto = config.Mailto
 	return nil
 }
 
@@ -94,20 +99,6 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 			}
 		}
 	}
-}
-
-type Config struct {
-	VAPIDPublicKey  string
-	VAPIDPrivateKey string
-	Mailto          string
-}
-
-const VAPIDPublicKey = "VAPIDPublicKey"
-const VAPIDPrivateKey = "VAPIDPrivateKey"
-const Mailto = "Mailto"
-
-func (p *Provider) Config() []string {
-	return []string{VAPIDPublicKey, VAPIDPrivateKey, Mailto}
 }
 
 func (p *Provider) Name() enum.Sender {

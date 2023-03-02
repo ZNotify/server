@@ -6,13 +6,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"sync"
 	"time"
 
 	"notify-api/app/db/helper"
 	"notify-api/app/global"
 	"notify-api/app/manager/push/enum"
-	pushTypes "notify-api/app/manager/push/interfaces"
+	"notify-api/app/manager/push/interfaces"
 	"notify-api/app/manager/push/item"
 	"notify-api/app/utils"
 
@@ -26,7 +27,7 @@ func Send(ctx context.Context, msg *item.PushMessage) error {
 	var wg sync.WaitGroup
 	wg.Add(len(activeSenders))
 	for _, v := range activeSenders {
-		go func(sender pushTypes.Sender) {
+		go func(sender interfaces.Sender) {
 			defer wg.Done()
 			pe := sender.Send(ctx, msg)
 			if pe != nil {
@@ -49,48 +50,65 @@ func Send(ctx context.Context, msg *item.PushMessage) error {
 }
 
 func Init() {
-	for id, senderCfg := range global.App.Config.Senders {
-		if IsSenderActive(enum.Sender(id)) {
-			zap.S().Fatalf("Sender %s load twice", id)
+	cfgSendersV := reflect.ValueOf(global.App.Config.Senders)
+	if cfgSendersV.IsZero() {
+		zap.S().Fatalf("No sender found in config")
+	}
+
+	for k := 0; k < cfgSendersV.NumField(); k++ {
+		var senderCfg any
+		field := cfgSendersV.Type().Field(k)
+		senderName := field.Name
+		senderCfgField := cfgSendersV.Field(k)
+		senderCfg = senderCfgField.Interface()
+
+		if IsSenderActive(enum.Sender(senderName)) {
+			zap.S().Fatalf("Sender %s load twice", senderName)
 		}
 
-		sender, err := GetSender(enum.Sender(id))
+		sender, err := GetSender(enum.Sender(senderName))
 		if err != nil {
-			zap.S().Fatalf("Failed to get sender %s: %v", id, err)
+			zap.S().Fatalf("Failed to get sender %s: %v", senderName, err)
 		}
 
-		if authSender, ok := sender.(pushTypes.SenderWithConfig); ok {
-			cfgKeys := authSender.Config()
-
-			cfg := make(map[string]string)
-			for _, v := range cfgKeys {
-				value, ok := senderCfg[v]
-				if !ok {
-					zap.S().Fatalf("Sender %s config %s not found", id, v)
-				}
-				cfg[v] = utils.YamlStringClean(value)
+		if cfgSender, ok := sender.(interfaces.SenderWithConfig); ok {
+			if senderCfgField.IsZero() {
+				zap.S().Infof("Sender %s is disabled", senderName)
+				continue
 			}
-			err = authSender.Init(cfg)
+
+			err = cfgSender.Init(senderCfg)
 			if err != nil {
-				zap.S().Fatalf("Sender %s init failed: %v", id, err)
+				zap.S().Fatalf("Sender %s init failed: %v", senderName, err)
 			}
 		} else {
-			cs, ok := sender.(pushTypes.SenderWithoutConfig)
+			cs, ok := sender.(interfaces.SenderWithoutConfig)
 			if ok {
+				enable := senderCfg.(bool)
+				if !enable {
+					zap.S().Infof("Sender %s is disabled", senderName)
+					continue
+				}
+
 				err = cs.Init()
 				if err != nil {
-					zap.S().Fatalf("Sender %s init failed: %v", id, err)
+					zap.S().Fatalf("Sender %s init failed: %v", senderName, err)
 				}
 			}
 		}
 
-		if host, ok := sender.(pushTypes.SenderWithBackground); ok {
-			err := host.Setup()
+		if host, ok := sender.(interfaces.SenderWithBackground); ok {
+			err = host.Setup()
 			if err != nil {
 				zap.S().Fatalf("Sender %s start failed: %v", sender.Name(), err)
 			}
 		}
 
 		activeSenders = append(activeSenders, sender)
+		zap.S().Infof("Sender %s is loaded", senderName)
+	}
+
+	if len(activeSenders) == 0 {
+		zap.S().Fatalf("No sender enabled")
 	}
 }

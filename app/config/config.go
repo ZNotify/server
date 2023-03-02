@@ -29,7 +29,9 @@ func Load(path string) *Configuration {
 			Type: Sqlite,
 			DSN:  "data/notify.db",
 		},
-		Senders: make(map[string]SenderConfiguration),
+		Senders: SenderConfiguration{
+			WebSocket: true,
+		},
 	}
 
 	if path == "ENV" {

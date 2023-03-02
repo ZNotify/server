@@ -34,7 +34,7 @@ func getDatabase() *generate.Client {
 		zap.S().Fatalf("Failed to connect database: %+v", err)
 	}
 
-	if err := client.Schema.Create(context.Background()); err != nil {
+	if err = client.Schema.Create(context.Background()); err != nil {
 		zap.S().Fatalf("Failed to create schema resources: %+v", err)
 	}
 	return client

@@ -2,11 +2,9 @@ database:
   type: sqlite
   dsn: "file:./data/notify.db?cache=shared&mode=rwc&_journal_mode=WAL&_fk=1&_timeout=5000"
 server:
-  host: "127.0.0.1"
+  address: 0.0.0.0:14444
   mode: development
   url: http://localhost:14444
-  port: 14444
-
 user:
   admins: [ 'test' ]
   sso:
@@ -14,12 +12,12 @@ user:
       client_id: ""
       client_secret: ""
 senders:
-  WebSocket:
-  FCM:
-    Credential: ""
-  WebPush:
-    VAPIDPrivateKey: ""
-    VAPIDPublicKey: ""
-    Mailto: ""
-  Telegram:
-    BotToken: ""
+  websocket:
+  fcm:
+    credential: ""
+  webpush:
+    vapid_private_key: ""
+    vapid_public_key: ""
+    mail_to: ""
+  telegram:
+    bot_token: ""

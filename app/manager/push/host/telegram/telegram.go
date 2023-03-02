@@ -9,11 +9,13 @@ import (
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
 
+	"notify-api/app/config/sender"
 	"notify-api/app/db/dao"
 	"notify-api/app/global"
 	"notify-api/app/manager/push/enum"
 	"notify-api/app/manager/push/interfaces"
 	"notify-api/app/manager/push/item"
+	"notify-api/app/utils"
 )
 
 type Host struct {
@@ -65,8 +67,12 @@ func (h *Host) Send(ctx context.Context, msg *item.PushMessage) error {
 	return nil
 }
 
-func (h *Host) Init(cfg interfaces.Config) error {
-	h.BotToken = cfg[BotToken]
+func (h *Host) Init(config interfaces.Config) error {
+	cfg, ok := config.(senderConfig.TelegramConfig)
+	if !ok {
+		return errors.New("telegram config type error")
+	}
+	h.BotToken = utils.YamlStringClean(cfg.BotToken)
 
 	err := tgBot.SetLogger(loggerAdapter)
 	if err != nil {
@@ -89,10 +95,4 @@ func (h *Host) Init(cfg interfaces.Config) error {
 
 func (h *Host) Name() enum.Sender {
 	return enum.SenderTelegram
-}
-
-const BotToken = "BotToken"
-
-func (h *Host) Config() []string {
-	return []string{BotToken}
 }

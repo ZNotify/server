@@ -1,10 +1,19 @@
 package config
 
+import (
+	senderConfig "notify-api/app/config/sender"
+)
+
+// Configuration is the top level configuration.
 type Configuration struct {
-	Server   ServerConfiguration            `yaml:"server"`
-	Database DatabaseConfiguration          `yaml:"database"`
-	User     UserConfiguration              `yaml:"user"`
-	Senders  map[string]SenderConfiguration `yaml:"senders"`
+	// Server configuration
+	Server ServerConfiguration `yaml:"server"`
+	// Database configuration
+	Database DatabaseConfiguration `yaml:"database"`
+	// User configuration
+	User UserConfiguration `yaml:"user"`
+	// Senders configuration,
+	Senders SenderConfiguration `yaml:"senders"`
 }
 
 const (
@@ -45,4 +54,10 @@ type SSOConfiguration struct {
 	GitHub GitHubConfiguration `yaml:"github"`
 }
 
-type SenderConfiguration = map[string]string
+type SenderConfiguration struct {
+	Telegram  senderConfig.TelegramConfig `yaml:"telegram"`
+	FCM       senderConfig.FCMConfig      `yaml:"fcm"`
+	WebSocket bool                        `yaml:"websocket"`
+	WebPush   senderConfig.WebPushConfig  `yaml:"webpush"`
+	WNS       bool                        `yaml:"wns"`
+}

@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
 
+	senderConfig "notify-api/app/config/sender"
 	"notify-api/app/db/dao"
 	"notify-api/app/manager/push/enum"
 	"notify-api/app/manager/push/interfaces"
@@ -21,7 +22,11 @@ type Provider struct {
 }
 
 func (p *Provider) Init(cfg interfaces.Config) error {
-	p.Credential = []byte(cfg[Credential])
+	config, ok := cfg.(senderConfig.FCMConfig)
+	if !ok {
+		return errors.New("fcm config type error")
+	}
+	p.Credential = []byte(config.Credential)
 
 	opt := option.WithCredentialsJSON(p.Credential)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
@@ -77,12 +82,6 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 	}
 	_, err := p.Client.SendMulticast(ctx, &fcmMsg)
 	return err
-}
-
-const Credential = "Credential"
-
-func (p *Provider) Config() []string {
-	return []string{Credential}
 }
 
 func (p *Provider) Name() enum.Sender {
