@@ -1,5 +1,5 @@
 BIN_DIR = bin
-EXE = .exe
+EXE =
 BINARY = server$(EXE)
 
 GO_BUILD_FLAGS = -trimpath -ldflags '-s -w' -o "$(BIN_DIR)/$(BINARY)"
