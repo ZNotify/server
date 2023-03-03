@@ -10,7 +10,7 @@ import (
 
 	"github.com/invopop/jsonschema"
 
-	"notify-api/app/config"
+	"github.com/ZNotify/server/app/config"
 )
 
 func schema() {
@@ -18,11 +18,11 @@ func schema() {
 	r := jsonschema.Reflector{
 		RequiredFromJSONSchemaTags: true,
 	}
-	err := r.AddGoComments("notify-api/app/config", "./")
+	err := r.AddGoComments("github.com/ZNotify/server/app/config", "./")
 	if err != nil {
 		panic(err)
 	}
-	err = r.AddGoComments("notify-api/app/config/sender", "./")
+	err = r.AddGoComments("github.com/ZNotify/server/app/config/sender", "./")
 	if err != nil {
 		panic(err)
 	}

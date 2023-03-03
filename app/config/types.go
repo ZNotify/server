@@ -1,7 +1,7 @@
 package config
 
 import (
-	senderConfig "notify-api/app/config/sender"
+	senderConfig "github.com/ZNotify/server/app/config/sender"
 )
 
 // Configuration is the top level configuration.

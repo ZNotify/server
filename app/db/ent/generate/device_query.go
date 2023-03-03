@@ -6,13 +6,13 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/predicate"
-	"notify-api/app/db/ent/generate/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/predicate"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
 )
 
 // DeviceQuery is the builder for querying Device entities.

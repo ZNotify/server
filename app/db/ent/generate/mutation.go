@@ -6,18 +6,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/predicate"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/manager/push/enum"
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
-
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/predicate"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/google/uuid"
 )
 
 const (

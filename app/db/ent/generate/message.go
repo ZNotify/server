@@ -4,13 +4,13 @@ package generate
 
 import (
 	"fmt"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/manager/push/enum"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/manager/push/enum"
 	"github.com/google/uuid"
 )
 

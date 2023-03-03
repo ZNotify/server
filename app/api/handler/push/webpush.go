@@ -1,10 +1,10 @@
 package push
 
 import (
-	"notify-api/app/api/common"
-	"notify-api/app/manager/push"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/provider/webpush"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/manager/push"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/provider/webpush"
 )
 
 type info struct {

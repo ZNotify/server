@@ -5,8 +5,8 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 
-	"notify-api/app/db/ent/mixin"
-	"notify-api/app/manager/push/enum"
+	"github.com/ZNotify/server/app/db/ent/mixin"
+	"github.com/ZNotify/server/app/manager/push/enum"
 )
 
 type Device struct {

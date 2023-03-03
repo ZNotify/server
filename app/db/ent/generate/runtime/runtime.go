@@ -2,9 +2,9 @@
 
 package runtime
 
-// The schema-stitching logic is generated in notify-api/app/db/ent/generate/runtime.go
+// The schema-stitching logic is generated in github.com/ZNotify/server/app/db/ent/generate/runtime.go
 
 const (
-	Version = "v0.11.8"                                         // Version of ent codegen.
-	Sum     = "h1:M/M0QL1CYCUSdqGRXUrXhFYSDRJPsOOrr+RLEej/gyQ=" // Sum of ent codegen.
+	Version = "v0.11.9"                                         // Version of ent codegen.
+	Sum     = "h1:dbbCkAiPVTRBIJwoZctiSYjB7zxQIBOzVSU5H9VYIQI=" // Sum of ent codegen.
 )

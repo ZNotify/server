@@ -7,8 +7,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"notify-api/app/db/helper"
-	"notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/db/helper"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 func Send(ctx context.Context, msg *item.PushMessage) error {

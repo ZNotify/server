@@ -4,13 +4,13 @@ package generate
 
 import (
 	"fmt"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/manager/push/enum"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/manager/push/enum"
 )
 
 // Device is the model entity for the Device schema.

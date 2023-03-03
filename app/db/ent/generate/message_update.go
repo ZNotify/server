@@ -6,13 +6,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/predicate"
-	"notify-api/app/db/ent/generate/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/predicate"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
 )
 
 // MessageUpdate is the builder for updating Message entities.

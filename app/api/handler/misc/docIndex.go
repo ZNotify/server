@@ -3,7 +3,7 @@ package misc
 import (
 	"net/http"
 
-	"notify-api/app/api/common"
+	"github.com/ZNotify/server/app/api/common"
 )
 
 // DocRedirect godoc

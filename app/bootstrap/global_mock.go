@@ -7,8 +7,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"notify-api/app/db/dao"
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/global"
 )
 
 func initializeGlobalVar() {

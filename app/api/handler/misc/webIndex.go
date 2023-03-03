@@ -1,8 +1,8 @@
 package misc
 
 import (
-	"notify-api/app/api/common"
-	"notify-api/app/api/web"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/api/web"
 )
 
 // WebIndex godoc

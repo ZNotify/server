@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"github.com/urfave/cli/v2"
+
+	"github.com/ZNotify/server/cmd/commands"
 )
 
 var Cli = &cli.App{
@@ -20,5 +22,5 @@ var Cli = &cli.App{
 			Usage: "Set listen address to `ADDRESS`.",
 		},
 	},
-	Action: run,
+	Action: commands.Run,
 }

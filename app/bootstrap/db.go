@@ -9,9 +9,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"go.uber.org/zap"
 
-	"notify-api/app/config"
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/config"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/global"
 )
 
 func getDatabase() *generate.Client {

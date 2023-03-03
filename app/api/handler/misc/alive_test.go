@@ -7,8 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"notify-api/app/api/common"
-	"notify-api/app/api/middleware"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/api/middleware"
 )
 
 func TestAlive(t *testing.T) {

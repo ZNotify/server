@@ -1,8 +1,8 @@
 package device
 
 import (
-	"notify-api/app/api/common"
-	"notify-api/app/db/dao"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/db/dao"
 )
 
 // Delete godoc

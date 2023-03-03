@@ -3,8 +3,8 @@ package user
 import (
 	"net/http"
 
-	"notify-api/app/api/common"
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/global"
 
 	"golang.org/x/oauth2"
 )

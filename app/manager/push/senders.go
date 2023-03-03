@@ -3,13 +3,13 @@ package push
 import (
 	"github.com/pkg/errors"
 
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/host/telegram"
-	"notify-api/app/manager/push/host/websocket"
-	"notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/provider/fcm"
-	"notify-api/app/manager/push/provider/webpush"
-	"notify-api/app/manager/push/provider/wns"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/host/telegram"
+	"github.com/ZNotify/server/app/manager/push/host/websocket"
+	"github.com/ZNotify/server/app/manager/push/interfaces"
+	"github.com/ZNotify/server/app/manager/push/provider/fcm"
+	"github.com/ZNotify/server/app/manager/push/provider/webpush"
+	"github.com/ZNotify/server/app/manager/push/provider/wns"
 )
 
 type senders = []interfaces.Sender

@@ -9,13 +9,13 @@ import (
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
 
-	"notify-api/app/config/sender"
-	"notify-api/app/db/dao"
-	"notify-api/app/global"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/item"
-	"notify-api/app/utils"
+	"github.com/ZNotify/server/app/config/sender"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/global"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/interfaces"
+	"github.com/ZNotify/server/app/manager/push/item"
+	"github.com/ZNotify/server/app/utils"
 )
 
 type Host struct {

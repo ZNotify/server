@@ -5,10 +5,10 @@ import (
 
 	"go.uber.org/zap"
 
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/global"
-	"notify-api/app/manager/push/enum"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/global"
+	"github.com/ZNotify/server/app/manager/push/enum"
 )
 
 type deviceDao struct{}

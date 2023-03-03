@@ -3,8 +3,8 @@ package message
 import (
 	"net/http"
 
-	"notify-api/app/api/common"
-	"notify-api/app/db/dao"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/db/dao"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"

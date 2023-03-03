@@ -8,7 +8,7 @@ import (
 	"golang.org/x/oauth2"
 	githubOAuth "golang.org/x/oauth2/github"
 
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/global"
 )
 
 func isUrl(str string) bool {

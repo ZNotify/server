@@ -4,12 +4,12 @@ package generate
 
 import (
 	"context"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/predicate"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/predicate"
 )
 
 // MessageDelete is the builder for deleting a Message entity.

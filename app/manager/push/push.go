@@ -10,12 +10,12 @@ import (
 	"sync"
 	"time"
 
-	"notify-api/app/db/helper"
-	"notify-api/app/global"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/item"
-	"notify-api/app/utils"
+	"github.com/ZNotify/server/app/db/helper"
+	"github.com/ZNotify/server/app/global"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/interfaces"
+	"github.com/ZNotify/server/app/manager/push/item"
+	"github.com/ZNotify/server/app/utils"
 
 	"go.uber.org/zap"
 )

@@ -5,7 +5,7 @@ package bootstrap
 import (
 	"context"
 
-	"notify-api/app/db/dao"
+	"github.com/ZNotify/server/app/db/dao"
 )
 
 func initializeGlobalVar() {

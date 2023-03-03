@@ -6,14 +6,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/manager/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/manager/push/enum"
 )
 
 // DeviceCreate is the builder for creating a Device entity.

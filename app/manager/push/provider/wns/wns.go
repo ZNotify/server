@@ -3,8 +3,8 @@ package wns
 import (
 	"context"
 
-	"notify-api/app/manager/push/enum"
-	pushTypes "notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	pushTypes "github.com/ZNotify/server/app/manager/push/item"
 )
 
 type Provider struct {

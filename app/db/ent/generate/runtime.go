@@ -3,11 +3,12 @@
 package generate
 
 import (
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/db/ent/schema"
 	"time"
+
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/db/ent/schema"
 )
 
 // The init function reads all schema descriptors with runtime code

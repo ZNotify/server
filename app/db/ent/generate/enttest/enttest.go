@@ -4,13 +4,13 @@ package enttest
 
 import (
 	"context"
-	"notify-api/app/db/ent/generate"
-	// required by schema hooks.
-	_ "notify-api/app/db/ent/generate/runtime"
 
-	"notify-api/app/db/ent/generate/migrate"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	// required by schema hooks.
+	_ "github.com/ZNotify/server/app/db/ent/generate/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/ZNotify/server/app/db/ent/generate/migrate"
 )
 
 type (

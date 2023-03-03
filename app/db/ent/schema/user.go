@@ -5,7 +5,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 
-	"notify-api/app/db/ent/mixin"
+	"github.com/ZNotify/server/app/db/ent/mixin"
 )
 
 type User struct {

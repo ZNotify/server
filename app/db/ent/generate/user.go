@@ -4,11 +4,11 @@ package generate
 
 import (
 	"fmt"
-	"notify-api/app/db/ent/generate/user"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
 )
 
 // User is the model entity for the User schema.

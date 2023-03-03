@@ -9,7 +9,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/global"
 )
 
 func RequireNetwork() {

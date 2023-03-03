@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"notify-api/app/utils"
+	"github.com/ZNotify/server/app/utils"
 )
 
 func initializeLog() {

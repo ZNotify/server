@@ -3,9 +3,9 @@ package item
 import (
 	"time"
 
-	"notify-api/app/db/dao"
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/manager/push/enum"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/manager/push/enum"
 
 	"github.com/google/uuid"
 )

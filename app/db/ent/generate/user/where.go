@@ -3,11 +3,11 @@
 package user
 
 import (
-	"notify-api/app/db/ent/generate/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/ZNotify/server/app/db/ent/generate/predicate"
 )
 
 // ID filters vertices based on their ID field.

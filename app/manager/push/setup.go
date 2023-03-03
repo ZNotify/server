@@ -3,8 +3,8 @@ package push
 import (
 	"github.com/gin-gonic/gin"
 
-	"notify-api/app/api/common"
-	"notify-api/app/manager/push/interfaces"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/manager/push/interfaces"
 )
 
 func RegisterRouter(e *gin.RouterGroup) {

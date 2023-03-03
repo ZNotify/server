@@ -14,8 +14,8 @@ func ent() {
 			gen.FeatureUpsert,
 		},
 		Target:  "./app/db/ent/generate",
-		Package: "notify-api/app/db/ent/generate",
-		Schema:  "notify-api/app/db/ent/schema",
+		Package: "github.com/ZNotify/server/app/db/ent/generate",
+		Schema:  "github.com/ZNotify/server/app/db/ent/schema",
 	})
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)

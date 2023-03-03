@@ -6,8 +6,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 
-	"notify-api/app/db/ent/mixin"
-	"notify-api/app/manager/push/enum"
+	"github.com/ZNotify/server/app/db/ent/mixin"
+	"github.com/ZNotify/server/app/manager/push/enum"
 )
 
 type Message struct {

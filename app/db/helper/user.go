@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"notify-api/app/db/ent/generate"
+	"github.com/ZNotify/server/app/db/ent/generate"
 )
 
 func GetReadableName(u *generate.User) string {

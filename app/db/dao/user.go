@@ -6,10 +6,10 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/global"
 )
 
 type userDao struct{}

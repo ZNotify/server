@@ -6,12 +6,12 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"notify-api/app/api/common"
-	"notify-api/app/api/models"
-	"notify-api/app/db/dao"
-	"notify-api/app/manager/push"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/api/models"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/manager/push"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 // Send godoc

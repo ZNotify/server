@@ -5,11 +5,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/global"
-	"notify-api/app/manager/push/enum"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/global"
+	"github.com/ZNotify/server/app/manager/push/enum"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"

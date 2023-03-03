@@ -7,9 +7,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"notify-api/app/api/common"
-	"notify-api/app/api/models"
-	"notify-api/app/db/dao"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/api/models"
+	"github.com/ZNotify/server/app/db/dao"
 )
 
 // Messages godoc

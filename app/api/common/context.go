@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"notify-api/app/api/middleware"
-	"notify-api/app/api/middleware/serverTiming"
-	"notify-api/app/db/ent/generate"
+	"github.com/ZNotify/server/app/api/middleware"
+	"github.com/ZNotify/server/app/api/middleware/serverTiming"
+	"github.com/ZNotify/server/app/db/ent/generate"
 )
 
 type Context struct {

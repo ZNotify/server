@@ -1,9 +1,12 @@
 package bootstrap
 
-import "github.com/urfave/cli/v2"
+type Args struct {
+	Config  string
+	Address string
+}
 
-func BootStrap(ctx *cli.Context) {
-	initializeConfig(ctx)
+func BootStrap(args Args) {
+	initializeConfig(args)
 	initializeLog()
 
 	checkRequirements()

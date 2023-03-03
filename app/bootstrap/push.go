@@ -1,6 +1,6 @@
 package bootstrap
 
-import "notify-api/app/manager/push"
+import "github.com/ZNotify/server/app/manager/push"
 
 func initializePushManager() {
 	push.Init()

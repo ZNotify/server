@@ -2,7 +2,7 @@ package telegram
 
 var startMessage = `Hello, I'm znotify-bot. 
 
-I can send you notifications from notify-api. 
+I can send you notifications from github.com/ZNotify/server. 
 
 To get available command, please use: /help`
 

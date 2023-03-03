@@ -8,11 +8,11 @@ import (
 	"github.com/fasthttp/websocket"
 	"go.uber.org/zap"
 
-	"notify-api/app/api/common"
-	"notify-api/app/api/models"
-	"notify-api/app/db/dao"
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/api/models"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 type client struct {

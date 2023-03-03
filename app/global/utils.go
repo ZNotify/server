@@ -1,7 +1,7 @@
 package global
 
 import (
-	"notify-api/app/config"
+	"github.com/ZNotify/server/app/config"
 )
 
 func IsProd() bool {

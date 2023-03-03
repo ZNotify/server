@@ -6,15 +6,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/user"
-	"notify-api/app/manager/push/enum"
 	"time"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
+	"github.com/ZNotify/server/app/manager/push/enum"
 	"github.com/google/uuid"
 )
 

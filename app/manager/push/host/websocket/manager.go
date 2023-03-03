@@ -3,8 +3,8 @@ package websocket
 import (
 	"sync"
 
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 var manager = &clientManager{

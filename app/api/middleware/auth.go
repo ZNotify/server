@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"notify-api/app/db/dao"
-	"notify-api/app/db/ent/generate"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/db/ent/generate"
 )
 
 const userSecretKey = "user_secret"

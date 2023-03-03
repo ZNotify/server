@@ -8,8 +8,8 @@ import (
 	tgBot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
 
-	"notify-api/app/db/dao"
-	"notify-api/app/db/helper"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/db/helper"
 )
 
 func (h *Host) setCommand() {

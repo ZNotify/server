@@ -12,17 +12,17 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 
-	"notify-api/app/api/common"
-	"notify-api/app/api/handler/device"
-	"notify-api/app/api/handler/message"
-	"notify-api/app/api/handler/misc"
-	"notify-api/app/api/handler/push"
-	"notify-api/app/api/handler/user"
-	"notify-api/app/api/middleware"
-	"notify-api/app/api/web"
-	"notify-api/app/global"
-	pushManager "notify-api/app/manager/push"
-	"notify-api/docs"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/api/handler/device"
+	"github.com/ZNotify/server/app/api/handler/message"
+	"github.com/ZNotify/server/app/api/handler/misc"
+	"github.com/ZNotify/server/app/api/handler/push"
+	"github.com/ZNotify/server/app/api/handler/user"
+	"github.com/ZNotify/server/app/api/middleware"
+	"github.com/ZNotify/server/app/api/web"
+	"github.com/ZNotify/server/app/global"
+	pushManager "github.com/ZNotify/server/app/manager/push"
+	"github.com/ZNotify/server/docs"
 )
 
 func NewRouter() *gin.Engine {

@@ -1,4 +1,4 @@
-module notify-api
+module github.com/ZNotify/server
 
 go 1.20
 

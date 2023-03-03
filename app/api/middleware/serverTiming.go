@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 
-	"notify-api/app/api/middleware/serverTiming"
+	"github.com/ZNotify/server/app/api/middleware/serverTiming"
 )
 
 const timingContextKey = "Timing-Context"

@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	"notify-api/cmd"
+	"github.com/ZNotify/server/cmd"
 )
 
 // Main

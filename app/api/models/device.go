@@ -1,7 +1,7 @@
 package models
 
 import (
-	"notify-api/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/enum"
 )
 
 type Device struct {

@@ -7,14 +7,14 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"math"
-	"notify-api/app/db/ent/generate/device"
-	"notify-api/app/db/ent/generate/message"
-	"notify-api/app/db/ent/generate/predicate"
-	"notify-api/app/db/ent/generate/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/ZNotify/server/app/db/ent/generate/device"
+	"github.com/ZNotify/server/app/db/ent/generate/message"
+	"github.com/ZNotify/server/app/db/ent/generate/predicate"
+	"github.com/ZNotify/server/app/db/ent/generate/user"
 )
 
 // UserQuery is the builder for querying User entities.

@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"notify-api/app/api/common"
-	"notify-api/app/db/dao"
-	"notify-api/app/global"
-	"notify-api/app/utils"
+	"github.com/ZNotify/server/app/api/common"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/global"
+	"github.com/ZNotify/server/app/utils"
 
 	"github.com/google/go-github/v49/github"
 	"go.uber.org/zap"

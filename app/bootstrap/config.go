@@ -3,20 +3,21 @@ package bootstrap
 import (
 	"net/url"
 
-	"github.com/urfave/cli/v2"
-
-	"notify-api/app/config"
-	"notify-api/app/global"
+	"github.com/ZNotify/server/app/config"
+	"github.com/ZNotify/server/app/global"
 )
 
-func initializeConfig(ctx *cli.Context) {
-	path := ctx.String("config")
+func initializeConfig(args Args) {
+	path := args.Config
+	if path == "" {
+		path = "data/config.yaml"
+	}
 
 	c := config.Load(path)
 
 	var address string
-	if ctx.String("address") != "" {
-		address = ctx.String("address")
+	if args.Address != "" {
+		address = args.Address
 	} else {
 		address = c.Server.Address
 	}

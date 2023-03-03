@@ -8,12 +8,12 @@ import (
 
 	"github.com/SherClockHolmes/webpush-go"
 
-	"notify-api/app/api/models"
-	"notify-api/app/config/sender"
-	"notify-api/app/db/dao"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/api/models"
+	"github.com/ZNotify/server/app/config/sender"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/interfaces"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 var client = &http.Client{}

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"notify-api/app/db/ent/generate"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/item"
+	"github.com/ZNotify/server/app/db/ent/generate"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 type Message struct {

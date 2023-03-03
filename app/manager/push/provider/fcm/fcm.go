@@ -9,11 +9,11 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
 
-	senderConfig "notify-api/app/config/sender"
-	"notify-api/app/db/dao"
-	"notify-api/app/manager/push/enum"
-	"notify-api/app/manager/push/interfaces"
-	"notify-api/app/manager/push/item"
+	senderConfig "github.com/ZNotify/server/app/config/sender"
+	"github.com/ZNotify/server/app/db/dao"
+	"github.com/ZNotify/server/app/manager/push/enum"
+	"github.com/ZNotify/server/app/manager/push/interfaces"
+	"github.com/ZNotify/server/app/manager/push/item"
 )
 
 type Provider struct {

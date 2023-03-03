@@ -5,7 +5,8 @@ package hook
 import (
 	"context"
 	"fmt"
-	"notify-api/app/db/ent/generate"
+
+	"github.com/ZNotify/server/app/db/ent/generate"
 )
 
 // The DeviceFunc type is an adapter to allow the use of ordinary
