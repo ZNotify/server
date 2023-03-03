@@ -2,6 +2,23 @@ BIN_DIR = bin
 EXE = .exe
 BINARY = server$(EXE)
 
+GO_BUILD_FLAGS = -trimpath -ldflags '-s -w' -o "$(BIN_DIR)/$(BINARY)"
+
+IS_LINUX = false
+
+ifeq ($(OS),Windows_NT)
+	EXE = .exe
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		IS_UNIX_LIKE = true
+	endif
+endif
+
+ifeq ($(IS_UNIX_LIKE),true)
+	GO_BUILD_FLAGS = -tags 'osusergo netgo static_build' -trimpath -ldflags '-s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)"
+endif
+
 .PHONY: build frontend build-production build-test unit-test dependencies dev fmt desc gen ent-gen swag-gen
 
 build:
@@ -13,7 +30,7 @@ app/api/web/static/index.html:
 frontend: app/api/web/static/index.html
 
 build-production: frontend
-	go build -tags 'osusergo netgo static_build' -trimpath -ldflags '-s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
+	go build $(GO_BUILD_FLAGS) github.com/ZNotify/server
 
 build-test: frontend
 	go build -tags test -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
