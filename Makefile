@@ -13,7 +13,7 @@ app/api/web/static/index.html:
 frontend: app/api/web/static/index.html
 
 build-production: frontend
-	go build -tags urfave_cli_no_docs -trimpath -ldflags "-s -w" -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
+	go build -tags 'osusergo netgo static_build' -trimpath -ldflags '-s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
 
 build-test: frontend
 	go build -tags test -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
