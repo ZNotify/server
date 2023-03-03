@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 )
 
@@ -18,6 +18,6 @@ func main() {
 	case "schema":
 		schema()
 	default:
-		fmt.Println("Unknown command " + os.Args[1])
+		log.Println("Unknown command " + os.Args[1])
 	}
 }

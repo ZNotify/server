@@ -6,6 +6,8 @@ import (
 
 // Configuration is the top level configuration.
 type Configuration struct {
+	Raw []byte `json:"-"`
+
 	Server   ServerConfiguration   `json:"server" jsonschema:"required"`
 	Database DatabaseConfiguration `json:"database" jsonschema:"required"`
 	User     UserConfiguration     `json:"user" jsonschema:"required"`

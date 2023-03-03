@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "net/http/pprof"
-	"os"
 
 	_ "github.com/joho/godotenv/autoload"
 
@@ -35,8 +34,5 @@ import (
 //	@license.name     Apache 2.0
 //	@license.url      https://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
-	err := cmd.Cli.Run(os.Args)
-	if err != nil {
-		panic(err)
-	}
+	cmd.Execute()
 }

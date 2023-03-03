@@ -5,21 +5,25 @@ ZNotify 服务端。
 ## 启动参数
 
 ```shell
-NAME:
-   ZNotify API - This is Znotify api server.
+This is ZNotify api server.
 
-USAGE:
-   server [global options] command [command options] [arguments...]
+Usage:
+  server [flags]
+  server [command]
+
+Available Commands:
+  check       Check configuration file.
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+
+Flags:
+  -a, --address ADDRESS   Set listen address to ADDRESS. (default "0.0.0.0:14444")
+  -c, --config FILE       Load configuration from FILE, or use ENV to load from environment variable CONFIG. (default "data/config.yaml")
+  -h, --help              help for server
 
 
-COMMANDS:
-   help, h  Shows a list of commands or help for one command
 
-GLOBAL OPTIONS:
-   --config FILE, -c FILE  Load configuration from FILE, or use ENV to load from environment variable CONFIG. (default: "data/config.yaml")
-   --address ADDRESS       Set listen address to ADDRESS.
-   --test                  Enable test mode (default: false)
-   --help, -h              show help (default: false)
+Use "server [command] --help" for more information about a command.
 ```
 
 ## 配置文件

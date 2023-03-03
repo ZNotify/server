@@ -1,14 +1,22 @@
 package bootstrap
 
 import (
-	"net/url"
-
 	"github.com/ZNotify/server/app/config"
 	"github.com/ZNotify/server/app/global"
 )
 
 func initializeConfig(args Args) {
-	path := args.Config
+	cfg := MergeConfig(args)
+	err, errS := cfg.Validate()
+	if err != nil {
+		panic(errS)
+	}
+
+	global.App.Config = cfg
+}
+
+func MergeConfig(args Args) *config.Configuration {
+	path := args.ConfigPath
 	if path == "" {
 		path = "data/config.yaml"
 	}
@@ -27,11 +35,5 @@ func initializeConfig(args Args) {
 
 	c.Server.Address = address
 
-	// test url
-	_, err := url.Parse(c.Server.URL)
-	if err != nil {
-		panic(err)
-	}
-
-	global.App.Config = c
+	return c
 }

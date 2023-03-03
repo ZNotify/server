@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/ZNotify/server/app/config/configuration",
+  "$id": "https://raw.githubusercontent.com/ZNotify/server/master/docs/schema.json",
   "$ref": "#/$defs/Configuration",
   "$defs": {
     "Configuration": {

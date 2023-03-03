@@ -37,9 +37,10 @@ func schema() {
 	senderConfigSchema := s.Definitions[senderConfigName]
 	senderConfigSchema.MinProperties = 1
 
-	// hack to add title
+	// hack to add title and id
 	s.Title = "ZNotify server configuration"
 	s.Description = "The configuration schema of ZNotify server."
+	s.ID = "https://raw.githubusercontent.com/ZNotify/server/master/docs/schema.json"
 
 	content, err := json.MarshalIndent(s, "", "  ")
 	if err != nil {
