@@ -11,11 +11,11 @@ ifeq ($(OS),Windows_NT)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
-		IS_UNIX_LIKE = true
+		IS_LINUX = true
 	endif
 endif
 
-ifeq ($(IS_UNIX_LIKE),true)
+ifeq ($(IS_LINUX),true)
 	GO_BUILD_FLAGS = -tags 'osusergo netgo static_build' -trimpath -ldflags '-s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)"
 endif
 
