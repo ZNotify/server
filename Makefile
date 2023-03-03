@@ -1,6 +1,5 @@
 BIN_DIR = bin
 EXE =
-BINARY = server$(EXE)
 
 GO_BUILD_FLAGS = -trimpath -ldflags '-s -w' -o "$(BIN_DIR)/$(BINARY)"
 
@@ -14,6 +13,8 @@ else
 		IS_LINUX = true
 	endif
 endif
+
+BINARY = server$(EXE)
 
 ifeq ($(IS_LINUX),true)
 	GO_BUILD_FLAGS = -tags 'osusergo netgo static_build' -trimpath -ldflags '-s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)"
