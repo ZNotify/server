@@ -45,6 +45,10 @@ jobs:
       - name: Build ${{ matrix.id }} test binary
         run: make build-test BINARY=test-${{ matrix.binary }}
 
+      - name: Build ${{ matrix.id }} analysis binary
+        if: ${{ matrix.goos == 'linux' }}
+        run: make build-analysis BINARY=analysis-${{ matrix.binary }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -52,5 +56,6 @@ jobs:
           path: |
             bin/${{ matrix.binary }}
             bin/test-${{ matrix.binary }}
+            bin/analysis-${{ matrix.binary }}
           if-no-files-found: error
 

@@ -22,7 +22,7 @@ jobs:
             server-windows/server-windows.exe
             server-macos/server-macos
 
-      - name: Release test binary
+      - name: Release test and analysis binary
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -30,5 +30,6 @@ jobs:
           prerelease: true
           files: |
             server-linux/test-server-linux
+            server-linux/analysis-server-linux
             server-windows/test-server-windows.exe
             server-macos/test-server-macos

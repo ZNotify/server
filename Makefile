@@ -36,6 +36,9 @@ build-production: frontend
 build-test: frontend
 	go build -tags test -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
 
+build-analysis: frontend
+	go build -gcflags="all=-N -l" -o "$(BIN_DIR)/$(BINARY)" github.com/ZNotify/server
+
 unit-test: frontend
 	go test -v -tags test ./...
 
