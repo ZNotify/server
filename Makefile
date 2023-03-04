@@ -17,7 +17,7 @@ endif
 BINARY = server$(EXE)
 
 ifeq ($(IS_LINUX),true)
-	GO_BUILD_FLAGS = -tags 'osusergo netgo static_build' -trimpath -ldflags '-linkmode "external" -s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)"
+	GO_BUILD_FLAGS = -tags 'osusergo netgo static_build sqlite_omit_load_extension sqlite_foreign_keys' -trimpath -ldflags '-linkmode "external" -s -w -extldflags "-fno-PIC -static"' -o "$(BIN_DIR)/$(BINARY)"
 endif
 
 .PHONY: build frontend build-production build-test unit-test dependencies dev fmt desc gen ent-gen swag-gen
