@@ -3,7 +3,7 @@ module github.com/ZNotify/server
 go 1.20
 
 require (
-	entgo.io/ent v0.11.9
+	entgo.io/ent v0.11.10
 	firebase.google.com/go/v4 v4.10.0
 	github.com/SherClockHolmes/webpush-go v1.2.0
 	github.com/fasthttp/websocket v1.5.1
@@ -31,7 +31,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.9.1 // indirect
+	ariga.io/atlas v0.9.2-0.20230303073438-03a4779a6338 // indirect
 	cloud.google.com/go v0.110.0 // indirect
 	cloud.google.com/go/compute v1.18.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
