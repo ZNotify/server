@@ -23,7 +23,7 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.0
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/files v1.0.1
-	github.com/swaggo/gin-swagger v1.5.3
+	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.1
 	go.uber.org/zap v1.24.0
 	golang.org/x/oauth2 v0.9.0
