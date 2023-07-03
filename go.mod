@@ -3,7 +3,7 @@ module github.com/ZNotify/server
 go 1.20
 
 require (
-	entgo.io/ent v0.11.10
+	entgo.io/ent v0.12.3
 	firebase.google.com/go/v4 v4.10.0
 	github.com/SherClockHolmes/webpush-go v1.2.0
 	github.com/fasthttp/websocket v1.5.2
@@ -31,7 +31,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.9.2-0.20230303073438-03a4779a6338 // indirect
+	ariga.io/atlas v0.10.2-0.20230427182402-87a07dfb83bf // indirect
 	cloud.google.com/go v0.110.0 // indirect
 	cloud.google.com/go/compute v1.19.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
@@ -93,13 +93,13 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/arch v0.2.0 // indirect
 	golang.org/x/crypto v0.10.0 // indirect
-	golang.org/x/mod v0.9.0 // indirect
+	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.11.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.9.0 // indirect
 	golang.org/x/text v0.10.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/tools v0.8.1-0.20230428195545-5283a0178901 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/appengine/v2 v2.0.2 // indirect
