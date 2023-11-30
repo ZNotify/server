@@ -5,7 +5,7 @@ go 1.20
 require (
 	entgo.io/ent v0.12.5
 	firebase.google.com/go/v4 v4.10.0
-	github.com/SherClockHolmes/webpush-go v1.2.0
+	github.com/SherClockHolmes/webpush-go v1.3.0
 	github.com/fasthttp/websocket v1.5.2
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/zap v0.1.0
