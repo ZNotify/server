@@ -80,7 +80,7 @@ func (p *Provider) Send(ctx context.Context, msg *item.PushMessage) error {
 		},
 		Tokens: tokens,
 	}
-	_, err := p.Client.SendMulticast(ctx, &fcmMsg)
+	_, err := p.Client.SendEachForMulticast(ctx, &fcmMsg)
 	return err
 }
 
