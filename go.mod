@@ -1,6 +1,6 @@
 module github.com/ZNotify/server
 
-go 1.20
+go 1.22
 
 require (
 	entgo.io/ent v0.12.5
