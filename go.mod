@@ -8,7 +8,7 @@ require (
 	github.com/SherClockHolmes/webpush-go v1.3.0
 	github.com/fasthttp/websocket v1.5.8
 	github.com/gin-contrib/cors v1.7.1
-	github.com/gin-contrib/zap v1.1.0
+	github.com/gin-contrib/zap v1.1.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.8.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
