@@ -7,7 +7,7 @@ require (
 	firebase.google.com/go/v4 v4.14.0
 	github.com/SherClockHolmes/webpush-go v1.3.0
 	github.com/fasthttp/websocket v1.5.8
-	github.com/gin-contrib/cors v1.7.1
+	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-contrib/zap v1.1.3
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.8.1
