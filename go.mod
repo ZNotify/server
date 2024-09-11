@@ -1,9 +1,10 @@
 module github.com/ZNotify/server
 
 go 1.22
+toolchain go1.23.1
 
 require (
-	entgo.io/ent v0.14.0
+	entgo.io/ent v0.14.1
 	firebase.google.com/go/v4 v4.14.1
 	github.com/SherClockHolmes/webpush-go v1.3.0
 	github.com/fasthttp/websocket v1.5.10
@@ -105,13 +106,13 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.9.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
-	golang.org/x/mod v0.17.0 // indirect
+	golang.org/x/mod v0.20.0 // indirect
 	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
-	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
+	golang.org/x/tools v0.24.0 // indirect
 	google.golang.org/appengine/v2 v2.0.2 // indirect
 	google.golang.org/genproto v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240827150818-7e3bb234dfed // indirect
