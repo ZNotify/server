@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	entgo.io/ent v0.14.0
-	firebase.google.com/go/v4 v4.14.1
+	firebase.google.com/go/v4 v4.15.0
 	github.com/SherClockHolmes/webpush-go v1.3.0
 	github.com/fasthttp/websocket v1.5.10
 	github.com/gin-contrib/cors v1.7.1
