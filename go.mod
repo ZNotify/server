@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.14.0
 	firebase.google.com/go/v4 v4.15.1
 	github.com/SherClockHolmes/webpush-go v1.3.0
-	github.com/fasthttp/websocket v1.5.11
+	github.com/fasthttp/websocket v1.5.12
 	github.com/gin-contrib/cors v1.7.3
 	github.com/gin-contrib/zap v1.1.4
 	github.com/gin-gonic/gin v1.10.0
@@ -93,7 +93,7 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.57.0 // indirect
+	github.com/valyala/fasthttp v1.58.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	github.com/zclconf/go-cty v1.13.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
