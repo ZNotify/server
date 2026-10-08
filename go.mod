@@ -1,8 +1,6 @@
 module github.com/ZNotify/server
 
-go 1.23.0
-
-toolchain go1.24.1
+go 1.26.0
 
 require (
 	entgo.io/ent v0.14.4
@@ -28,7 +26,7 @@ require (
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.4
 	go.uber.org/zap v1.27.0
-	golang.org/x/oauth2 v0.28.0
+	golang.org/x/oauth2 v0.37.0
 	google.golang.org/api v0.228.0
 )
 
